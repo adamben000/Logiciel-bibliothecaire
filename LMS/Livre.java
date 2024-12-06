@@ -1,21 +1,21 @@
 package LMS;
 
 public class Livre {
-    private int id;
+    private int livreId;
     private String titre;
     private String auteur;
     private String genre;
     private boolean estEmprunter;
 
     public Livre(int id, String titre, String auteur, String genre, boolean estEmprunter){
-        this.id = id;
+        this.livreId = livreId;
         this.titre = titre;
         this.auteur = auteur;
         this.genre = genre;
         this.estEmprunter = estEmprunter;
     }
-    public int getId(){
-        return id;
+    public int getlivreId(){
+        return livreId;
     }
     public String getTitre(){
         return titre;
@@ -29,8 +29,8 @@ public class Livre {
     public boolean getEstEmprunter(){
         return estEmprunter;
     }
-    public void setId(int newId){
-        this.id = newId;
+    public void setlivreId(int newlivreId){
+        this.livreId = newlivreId;
     }
     public void setTitre(String newTitre){
         this.titre = newTitre;

@@ -2,47 +2,39 @@ package LMS;
 import java.util.*;
 
 public class Utilisateur {
-    private int id;
-    private String nom;
-    private String email;
-    private List<Livre> livresEmpruntes;
+    private int userId;
+    private String username;
+    private String motDePasse;
+    private List livresEmpruntes;
 
-        public Livre(int id, String titre, String auteur, String genre, boolean estEmprunter){
-            this.id = id;
-            this.titre = titre;
-            this.auteur = auteur;
-            this.genre = genre;
-            this.estEmprunter = estEmprunter;
-        }
-        public int getId(){
-            return id;
-        }
-        public String getTitre(){
-            return titre;
-        }
-        public String getAuteur(){
-            return auteur;
-        }
-        public String getGenre(){
-            return genre;
-        }
-        public boolean getEstEmprunter(){
-            return estEmprunter;
-        }
-        public void setId(int newId){
-            this.id = newId;
-        }
-        public void setTitre(String newTitre){
-            this.titre = newTitre;
-        }
-        public void setAuteur(String newAuteur){
-            this.auteur = newAuteur;
-        }
-        public void setGenre(String newGenre){
-            this.genre = newGenre;
-        }
-        public void setEstEmprunter(boolean newEstEmprunter){
-            this.estEmprunter = newEstEmprunter;
-        }
+    public Utilisateur(int userId, String username, String motDePasse, List livresEmpruntes){
+            this.userId = userId;
+            this.username = username;
+            this.motDePasse = motDePasse;
+            this.livresEmpruntes = livresEmpruntes;
     }
+    public int getuserId(){
+        return userId;
+    }
+    public String getusername(){
+        return username;
+    }
+    public String getmotDePasse(){
+        return motDePasse;
+    }
+    public List getlivresEmpruntes(){
+        return livresEmpruntes;
+    }
+    public void setuserId(int newUserId){
+        this.userId = newUserId;
+    }
+    public void setUsername(String newUsername){
+        this.username = newUsername;
+    }
+    public void setMotDePasse(String newMotDePasse){
+        this.motDePasse = newMotDePasse;
+    }
+    public void setLivresEmpruntes(List newLivresEmpruntes){
+        this.livresEmpruntes = newLivresEmpruntes;
+        }
 }
