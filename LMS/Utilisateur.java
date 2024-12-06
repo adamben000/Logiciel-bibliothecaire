@@ -2,10 +2,10 @@ package LMS;
 import java.util.*;
 
 public class Utilisateur {
-    private int userId;
-    private String username;
-    private String motDePasse;
-    private List livresEmpruntes;
+    protected int userId;
+    protected String username;
+    protected String motDePasse;
+    protected List livresEmpruntes;
 
     public Utilisateur(int userId, String username, String motDePasse, List livresEmpruntes){
             this.userId = userId;
