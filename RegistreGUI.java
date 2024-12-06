@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class RegistreGUI extends JFrame implements ActionListener {
+
+
     JLabel titre = new JLabel("Registre");
     JLabel utilisateurTitre = new JLabel("Nom d'utilisateur:");
     JLabel motDePasseTitre = new JLabel("Mot de passe:");
@@ -29,6 +31,8 @@ public class RegistreGUI extends JFrame implements ActionListener {
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
+        enregistrer.setBackground(Color.BLACK);
+        enregistrer.setForeground(Color.WHITE);
 
 
         gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
