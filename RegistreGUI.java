@@ -3,8 +3,6 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class RegistreGUI extends JFrame implements ActionListener {
-    //we
-
     JLabel titre = new JLabel("Registre");
     JLabel utilisateurTitre = new JLabel("Nom d'utilisateur:");
     JLabel motDePasseTitre = new JLabel("Mot de passe:");
