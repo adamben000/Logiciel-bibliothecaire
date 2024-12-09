@@ -78,17 +78,27 @@ public class RegistreGUI extends JFrame implements ActionListener {
 
     public void verification(){
         String nom = utilisateur.getText();
-        String pass = Arrays.toString(motDePasse.getPassword());
+        String pass = new String(motDePasse.getPassword());
+        System.out.println(pass);
 
-        boolean espace = nom.contains(" ");
-        System.out.println(espace);
-        if (espace){
+        boolean espaceNom = nom.contains(" ");
+        if (espaceNom){
             JOptionPane.showMessageDialog(
                     RegistreGUI.this,
-                    "ne pas entrer d'espace pour votre nom d'utilisateur!",
+                    "Ne pas entrer d'espace pour votre nom d'utilisateur!",
                     "Erreur:",
                     JOptionPane.ERROR_MESSAGE);
         }
+
+        boolean espacePass = pass.contains(" ");
+        if (espacePass){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Ne pas entrer d'espace pour votre mot de passe!",
+                    "Erreur:",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
