@@ -6,7 +6,7 @@ public class ConnectionGUI extends JFrame{
 	JLabel titre = new JLabel("Page de connexion");
 	JLabel  utilisateurTitre = new JLabel("Nom d'utilisateur:");
 	JTextField utilisateur = new JTextField("", 10);
-	JLabel  motDePasseTitre = new JLabel("Password:");
+	JLabel  motDePasseTitre = new JLabel("Mot de passe:");
 	JPasswordField motDePasse = new JPasswordField("", 8);
     JButton seConnecterBouton = new JButton("Connexion");
     JButton creationDeCompteBouton = new JButton("Creation de compte");
