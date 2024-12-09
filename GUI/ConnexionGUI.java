@@ -4,7 +4,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ConnectionGUI extends JFrame implements ActionListener{
+public class ConnexionGUI extends JFrame implements ActionListener{
 	JLabel titre = new JLabel("Page de connexion");
 	JLabel  utilisateurTitre = new JLabel("Nom d'utilisateur:");
 	JTextField utilisateur = new JTextField("", 10);
@@ -21,7 +21,7 @@ public class ConnectionGUI extends JFrame implements ActionListener{
 
 
 
-    public ConnectionGUI () {
+    public ConnexionGUI() {
             super("Librairie-Management");
             setSize(600, 400);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -69,7 +69,7 @@ public class ConnectionGUI extends JFrame implements ActionListener{
     }
 
      public static void main (String[] arguments) {
-        ConnectionGUI GUI = new ConnectionGUI();
+        ConnexionGUI GUI = new ConnexionGUI();
         }
 
 }

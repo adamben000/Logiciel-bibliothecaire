@@ -75,13 +75,18 @@ public class RegistreGUI extends JFrame implements ActionListener {
         enregistrer.addActionListener(this);
         setVisible(true);
     }
-
-    public void verification(){
+    private void enleverCharacteres(){
+        motDePasse.setText("");
+        comfirmMotDePasse.setText("");
+    }
+    private void verification(){
         String nom = utilisateur.getText();
         String pass = new String(motDePasse.getPassword());
+        String confirmerPass = new String(comfirmMotDePasse.getPassword());
 
         int nomLength = nom.length();
         int passLength = pass.length();
+
         if (nomLength > 10){
             JOptionPane.showMessageDialog(
                     RegistreGUI.this,
@@ -98,8 +103,23 @@ public class RegistreGUI extends JFrame implements ActionListener {
                     JOptionPane.INFORMATION_MESSAGE);
         }
 
-        boolean espaceNom = nom.contains(" ");
-        if (espaceNom){
+        if (nom.equals("")){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Le champ \"Nom d'utilisateur\" ne peut pas etre vide!",
+                    "Erreur:",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        if (pass.equals("")){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Le champ \"Mot de passe\" ne peut pas etre vide!",
+                    "Erreur:",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        if (nom.contains(" ")){
             JOptionPane.showMessageDialog(
                     RegistreGUI.this,
                     "Ne pas entrer d'espace pour votre nom d'utilisateur!",
@@ -107,15 +127,32 @@ public class RegistreGUI extends JFrame implements ActionListener {
                     JOptionPane.ERROR_MESSAGE);
         }
 
-        boolean espacePass = pass.contains(" ");
-        if (espacePass){
+        if (pass.contains(" ")){
             JOptionPane.showMessageDialog(
                     RegistreGUI.this,
                     "Ne pas entrer d'espace pour votre mot de passe!",
                     "Erreur:",
                     JOptionPane.ERROR_MESSAGE);
         }
+        if (confirmerPass.equals(pass) && nomLength <= 10 && passLength <= 16
+                && !(nom.equals("")) && !(pass.equals("")) && !(nom.contains(" ")) && !(pass.contains(" ")) ){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Succes, compte creer!",
+                    "Info:",
+                    JOptionPane.INFORMATION_MESSAGE);
+            enleverCharacteres();
+            utilisateur.setText("");
 
+        }
+        if (!(confirmerPass.equals(pass))){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Erreur mot de passes different!",
+                    "Erreur:",
+                    JOptionPane.ERROR_MESSAGE);
+            enleverCharacteres();
+        }
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
