@@ -4,9 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.Arrays;
-import  java.awt.Container;
 
-public class RegistreGUI extends JFrame implements ActionListener {
+public class RegistreGUI extends JPanel implements ActionListener {
     JLabel titre = new JLabel("Registre");
     JLabel utilisateurTitre = new JLabel("Nom d'utilisateur:");
     JLabel motDePasseTitre = new JLabel("Mot de passe:");
@@ -24,15 +23,13 @@ public class RegistreGUI extends JFrame implements ActionListener {
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
 
-    public RegistreGUI() {
-        super("Librairie-Management");
-        setSize(600, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    CardLayout cardLayout;
+    JPanel cardPanel;
+
+    public RegistreGUI(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
         setLayout(gridLayout);
-        setLocationRelativeTo(null);
-        setResizable(false);
-
-
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
@@ -73,7 +70,8 @@ public class RegistreGUI extends JFrame implements ActionListener {
         add(retour, gbc);
 
         enregistrer.addActionListener(this);
-        setVisible(true);
+        retour.addActionListener(e -> cardLayout.show(cardPanel, "Connection"));
+
     }
     private void enleverCharacteres(){
         motDePasse.setText("");
@@ -163,7 +161,4 @@ public class RegistreGUI extends JFrame implements ActionListener {
         }
     }
 
-    public static void main(String[] args) {
-        RegistreGUI SomatifGUIRun = new RegistreGUI();
-    }
 }
