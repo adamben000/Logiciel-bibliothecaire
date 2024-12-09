@@ -3,6 +3,8 @@ package GUI;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Arrays;
+import  java.awt.Container;
 
 public class RegistreGUI extends JFrame implements ActionListener {
     JLabel titre = new JLabel("Registre");
@@ -70,11 +72,31 @@ public class RegistreGUI extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.WEST;
         add(retour, gbc);
 
+        enregistrer.addActionListener(this);
         setVisible(true);
     }
 
-    public void actionPerformed(ActionEvent actionEvent) {
+    public void verification(){
+        String nom = utilisateur.getText();
+        String pass = Arrays.toString(motDePasse.getPassword());
 
+        boolean espace = nom.contains(" ");
+        System.out.println(espace);
+        if (espace){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "ne pas entrer d'espace pour votre nom d'utilisateur!",
+                    "Erreur:",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+        String command = actionEvent.getActionCommand();
+
+        if (command == "Enregistrer"){
+            verification();
+        }
     }
 
     public static void main(String[] args) {
