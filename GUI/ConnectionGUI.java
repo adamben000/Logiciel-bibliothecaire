@@ -2,7 +2,9 @@ package GUI;
 
 import java.awt.*;
 import javax.swing.*;
-public class ConnectionGUI extends JFrame{
+import java.awt.event.*;
+
+public class ConnectionGUI extends JFrame implements ActionListener{
 	JLabel titre = new JLabel("Page de connexion");
 	JLabel  utilisateurTitre = new JLabel("Nom d'utilisateur:");
 	JTextField utilisateur = new JTextField("", 10);
@@ -59,6 +61,10 @@ public class ConnectionGUI extends JFrame{
 		  	setVisible(true);
        
      }
+
+    public void actionPerformed(ActionEvent actionEvent) {
+        String command = actionEvent.getActionCommand();
+    }
 
      public static void main (String[] arguments) {
         ConnectionGUI GUI = new ConnectionGUI();
