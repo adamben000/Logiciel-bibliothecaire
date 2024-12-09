@@ -2,12 +2,14 @@ package LMS;
 
 import LMS.Livre;
 import LMS.Utilisateur;
+import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
 
 public class Database {
     private final File livresFichier = new File("db/livres.txt");
     private final File utilisateursFichier = new File("db/utilisateurs.txt");
+    private final File empruntsFichier = new File ("db/emprunts.txt");
 
     private void fichierExiste(File fichier) throws IOException {
         if (!fichier.exists()) {
@@ -19,6 +21,25 @@ public class Database {
         try (PrintWriter pw = new PrintWriter(new FileWriter(fichier))) {
             for (String line : lignes) {
                 pw.println(line);
+            }
+        }
+    }
+    public void emprunterLivre(Utilisateur utilisateur, Livre livre) throws IOException {
+        fichierExiste(empruntsFichier);
+        if (livre.getEstEmprunter()){
+            return;
+        }
+        List<String> lignesEmpruntes = new ArrayList<>();
+
+        try (Scanner sc = new Scanner(empruntsFichier)){
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+                String[] empruntes = donnee.split(",");
+                if (empruntes.length > 0) {
+                }
             }
         }
     }
