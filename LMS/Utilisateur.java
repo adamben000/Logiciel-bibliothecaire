@@ -1,4 +1,6 @@
 package LMS;
+import GUI.RegistreGUI;
+
 import java.util.*;
 
 public class Utilisateur {
