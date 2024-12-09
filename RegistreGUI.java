@@ -14,6 +14,8 @@ public class RegistreGUI extends JFrame implements ActionListener {
 
     JButton enregistrer = new JButton("Enregistrer");
 
+    JButton retour = new JButton("retour");
+
 
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
@@ -58,6 +60,13 @@ public class RegistreGUI extends JFrame implements ActionListener {
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
         enregistrer.setPreferredSize(new Dimension(200, 40));
         add(enregistrer, gbc);
+
+        enregistrer.setBackground(Color.black);
+        enregistrer.setForeground(Color.white);
+
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        add(retour, gbc);
 
         setVisible(true);
     }
