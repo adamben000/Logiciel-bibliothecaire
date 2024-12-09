@@ -11,8 +11,8 @@ public class RegistreGUI extends JFrame implements ActionListener {
     JLabel comfirmMotDePasseTitre = new JLabel("Confirmez votre mot de passe:");
 
     JTextField utilisateur = new JTextField("", 10);
-    JTextField motDePasse = new JTextField("", 10);
-    JTextField comfirmMotDePasse = new JTextField("", 10);
+    JPasswordField motDePasse = new JPasswordField("", 10);
+    JPasswordField comfirmMotDePasse = new JPasswordField("", 10);
 
     JButton enregistrer = new JButton("Enregistrer");
 
