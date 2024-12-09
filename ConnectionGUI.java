@@ -1,7 +1,6 @@
 import java.awt.*;
 import javax.swing.*;
 public class ConnectionGUI extends JFrame{
-//we
 	JLabel titre = new JLabel("Page de connexion");
 	JLabel  utilisateurTitre = new JLabel("Nom d'utilisateur:");
 	JTextField utilisateur = new JTextField("", 10);
