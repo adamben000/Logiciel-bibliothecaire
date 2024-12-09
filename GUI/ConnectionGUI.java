@@ -12,6 +12,7 @@ public class ConnectionGUI extends JFrame implements ActionListener{
 	JPasswordField motDePasse = new JPasswordField("", 8);
     JButton seConnecterBouton = new JButton("Connexion");
     JButton creationDeCompteBouton = new JButton("Creation de compte");
+    JLabel creationDeCompteLabel = new JLabel("Pas de compte?");
 
 
     GridBagLayout gridLayout = new GridBagLayout();
@@ -51,8 +52,9 @@ public class ConnectionGUI extends JFrame implements ActionListener{
             seConnecterBouton.setPreferredSize(new Dimension(200, 40));
             add(seConnecterBouton, gbc);
 
-            gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 1;
-            gbc.anchor = GridBagConstraints.WEST;
+            gbc.gridx = 0; gbc.gridy = 5;
+            add(creationDeCompteLabel, gbc);
+            gbc.gridx = 1; gbc.gridy = 5;
             add(creationDeCompteBouton, gbc);
 
             seConnecterBouton.setBackground(Color.black);
