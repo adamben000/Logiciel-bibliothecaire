@@ -21,7 +21,7 @@ public class RegistreGUI extends JFrame implements ActionListener {
     GridBagConstraints gbc = new GridBagConstraints();
 
     public RegistreGUI() {
-        super("Registre");
+        super("Librairie-Management");
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(gridLayout);
