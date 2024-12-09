@@ -17,8 +17,8 @@ public class ConnectionGUI extends JFrame implements ActionListener{
 
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
-   
-   
+
+
 
 
     public ConnectionGUI () {
@@ -48,20 +48,20 @@ public class ConnectionGUI extends JFrame implements ActionListener{
             gbc.gridx = 1; gbc.gridy = 2;
             add(motDePasse, gbc);
 
-            gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2;
+            gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2; gbc.anchor = GridBagConstraints.CENTER;
             seConnecterBouton.setPreferredSize(new Dimension(200, 40));
             add(seConnecterBouton, gbc);
 
-            gbc.gridx = 0; gbc.gridy = 5;
+            gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 1; gbc.anchor = GridBagConstraints.LINE_END;
             add(creationDeCompteLabel, gbc);
-            gbc.gridx = 1; gbc.gridy = 5;
+            gbc.gridx = 1; gbc.gridy = 5; gbc.anchor = GridBagConstraints.LINE_START;
             add(creationDeCompteBouton, gbc);
 
             seConnecterBouton.setBackground(Color.black);
             seConnecterBouton.setForeground(Color.white);
 
 		  	setVisible(true);
-       
+
      }
 
     public void actionPerformed(ActionEvent actionEvent) {
