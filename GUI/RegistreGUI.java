@@ -79,7 +79,24 @@ public class RegistreGUI extends JFrame implements ActionListener {
     public void verification(){
         String nom = utilisateur.getText();
         String pass = new String(motDePasse.getPassword());
-        System.out.println(pass);
+
+        int nomLength = nom.length();
+        int passLength = pass.length();
+        if (nomLength > 10){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Ne pas entrer plus de 10 caracteres pour votre nom d'utilisateur.",
+                    "Info:",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        if (passLength > 16){
+            JOptionPane.showMessageDialog(
+                    RegistreGUI.this,
+                    "Ne pas entrer plus de 16 caracteres pour votre mot de passe.",
+                    "Info:",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
 
         boolean espaceNom = nom.contains(" ");
         if (espaceNom){
