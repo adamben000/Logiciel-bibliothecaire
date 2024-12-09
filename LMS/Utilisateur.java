@@ -13,23 +13,23 @@ public class Utilisateur {
             this.motDePasse = motDePasse;
             this.livresEmpruntes = livresEmpruntes;
     }
-    public int getuserId(){
+    public int getUserId(){
         return userId;
     }
 
-    public String getusername(){
+    public String getUsername(){
         return username;
     }
 
-    public String getmotDePasse(){
+    public String getMotDePasse(){
         return motDePasse;
     }
 
-    public List<String> getlivresEmpruntes(){
+    public List<String> getLivresEmpruntes(){
         return livresEmpruntes;
     }
 
-    public void setuserId(int newUserId){
+    public void setUserId(int newUserId){
         this.userId = newUserId;
     }
 

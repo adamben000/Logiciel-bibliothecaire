@@ -1,6 +1,7 @@
 package LMS;
 
 import LMS.Livre;
+import LMS.Utilisateur;
 import java.util.*;
 import java.io.*;
 
@@ -19,6 +20,71 @@ public class Database {
             for (String line : lignes) {
                 pw.println(line);
             }
+        }
+    }
+    public void ajouterUtilisateur(Utilisateur utilisateur) throws IOException {
+        fichierExiste(utilisateursFichier);
+        boolean utilisateurExiste = false;
+        List<String> lignesUtilisateur = new ArrayList<>();
+        try (Scanner sc = new Scanner(utilisateursFichier)){
+            while (sc.hasNextLine()){
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()){
+                    continue;
+                }
+
+                String[] utilisateurs = donnee.split(",");
+                if (utilisateurs.length > 0 && Integer.parseInt(utilisateurs[0].trim()) == utilisateur.getUserId()){
+                    String ligneActualiser = utilisateur.getUserId() + "," + utilisateur.getUsername() + "," +
+                            utilisateur.getMotDePasse() + "," + utilisateur.getLivresEmpruntes();
+                    lignesUtilisateur.add(ligneActualiser);
+                    utilisateurExiste = true;
+                } else {
+                    lignesUtilisateur.add(donnee);
+                }
+            }
+
+            if (!utilisateurExiste){
+                String nouvelleLigne = utilisateur.getUserId() + "," + utilisateur.getUsername() + "," +
+                        utilisateur.getMotDePasse() + "," + utilisateur.getLivresEmpruntes();
+                lignesUtilisateur.add(nouvelleLigne);
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        try{
+            ecrireFichier(lignesUtilisateur, utilisateursFichier);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void supprimerUtilisateur(Utilisateur utilisateur) throws IOException {
+        fichierExiste(utilisateursFichier);
+        List<String> lignesUtlisateur = new ArrayList<>();
+        try (Scanner sc = new Scanner(utilisateursFichier)) {
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+                String[] utilisateurs = donnee.split(",");
+                if (utilisateurs.length > 0 && Integer.parseInt(utilisateurs[0].trim()) == utilisateur.getUserId()) {
+                    continue;
+                } else {
+                    lignesUtlisateur.add(donnee);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            ecrireFichier(lignesUtlisateur, utilisateursFichier);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
