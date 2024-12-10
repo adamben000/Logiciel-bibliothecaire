@@ -20,7 +20,6 @@ public class Main {
         frame.add(cardPanel);
         frame.setVisible(true);
 
-        // Show the initial card
         cardLayout.show(cardPanel, "Connection");
     }
 }
