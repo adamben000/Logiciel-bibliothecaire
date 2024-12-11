@@ -1,9 +1,14 @@
 package GUI;
 
+import LMS.Database;
+import LMS.Utilisateur;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegistreGUI extends JPanel implements ActionListener {
     JLabel titre = new JLabel("Registre");
@@ -77,88 +82,80 @@ public class RegistreGUI extends JPanel implements ActionListener {
         motDePasse.setText("");
         comfirmMotDePasse.setText("");
     }
-    private void verification(){
+    private boolean verification(){
         String nom = utilisateur.getText();
         String pass = new String(motDePasse.getPassword());
         String confirmerPass = new String(comfirmMotDePasse.getPassword());
 
-        int nomLength = nom.length();
-        int passLength = pass.length();
+        List<String> errorMessages = new ArrayList<>();
 
-        if (nomLength > 10){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Ne pas entrer plus de 10 caracteres pour votre nom d'utilisateur.",
-                    "Info:",
-                    JOptionPane.INFORMATION_MESSAGE);
+        if (nom.isEmpty()){
+            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
+        } else if (nom.length()>10){
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre nom d'utilisateur.");
+        } else if (nom.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour votre nom d'utilisateur!");
         }
 
-        if (passLength > 16){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Ne pas entrer plus de 16 caracteres pour votre mot de passe.",
-                    "Info:",
-                    JOptionPane.INFORMATION_MESSAGE);
+        if (pass.isEmpty()){
+            errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
+        } else if (pass.length()>10){
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre mot de passe.");
+        } else if (pass.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
         }
 
-        if (nom.equals("")){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Le champ \"Nom d'utilisateur\" ne peut pas etre vide!",
-                    "Erreur:",
-                    JOptionPane.ERROR_MESSAGE);
+        if (!pass.equals(confirmerPass)){
+            errorMessages.add("Erreur mot de passe differents!");
         }
 
-        if (pass.equals("")){
+        if (!errorMessages.isEmpty()) {
             JOptionPane.showMessageDialog(
                     RegistreGUI.this,
-                    "Le champ \"Mot de passe\" ne peut pas etre vide!",
-                    "Erreur:",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-        if (nom.contains(" ")){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Ne pas entrer d'espace pour votre nom d'utilisateur!",
-                    "Erreur:",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
-        if (pass.contains(" ")){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Ne pas entrer d'espace pour votre mot de passe!",
-                    "Erreur:",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        if (confirmerPass.equals(pass) && nomLength <= 10 && passLength <= 16
-                && !(nom.equals("")) && !(pass.equals("")) && !(nom.contains(" ")) && !(pass.contains(" ")) ){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Succes, compte creer!",
-                    "Info:",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    String.join("\n", errorMessages),
+                    "Erreurs:",
+                    JOptionPane.ERROR_MESSAGE
+            );
             enleverCharacteres();
-            utilisateur.setText("");
-
-        }
-        if (!(confirmerPass.equals(pass))){
-            JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
-                    "Erreur mot de passes different!",
-                    "Erreur:",
-                    JOptionPane.ERROR_MESSAGE);
-            enleverCharacteres();
+            return false;
+        } else {
+            return true;
         }
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
-        if (command == "Enregistrer"){
-            verification();
+        if (command.equals("Enregistrer")){
+            String nom = utilisateur.getText();
+            String pass = new String(motDePasse.getPassword());
+            Utilisateur utilisateurCree = new Utilisateur(nom, pass, null);
+
+            if(verification()){
+                Database db = new Database();
+                try {
+                    if (db.checkUtilisateur(nom)){
+                        db.ajouterUtilisateur(utilisateurCree);
+                        JOptionPane.showMessageDialog(
+                                RegistreGUI.this,
+                                "Succes, compte creer!",
+                                "Info:",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                        enleverCharacteres();
+                        utilisateur.setText("");
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                RegistreGUI.this,
+                                "Nom d'utilisateur deja pris!",
+                                "Erreur:",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
-
 }
