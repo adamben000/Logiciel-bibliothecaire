@@ -3,16 +3,22 @@ package LMS;
 import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
+import java.io.IOException;
 
 public class Database {
     private final File livresFichier = new File("db/livres.txt");
     private final File utilisateursFichier = new File("db/utilisateurs.txt");
     private final File empruntsFichier = new File ("db/emprunts.txt");
 
-    private void fichierExiste(File fichier) throws IOException {
+    private void fichierExiste(File fichier){
         if (!fichier.isFile()) {
-            fichier.getParentFile().mkdirs();
-            fichier.createNewFile();
+            try{
+                if(fichier.createNewFile()){
+                    System.out.println("Fichier cree");
+                };
+            }catch (IOException e){
+                System.out.println("Erreur");
+            }
         }
     }
     public boolean utilisateurExiste (String username, String password) throws IOException {
