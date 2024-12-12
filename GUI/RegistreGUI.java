@@ -31,6 +31,8 @@ public class RegistreGUI extends JPanel implements ActionListener {
     CardLayout cardLayout;
     JPanel cardPanel;
 
+    private Database db = new Database();
+
     public RegistreGUI(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
@@ -132,7 +134,6 @@ public class RegistreGUI extends JPanel implements ActionListener {
             Utilisateur utilisateurCree = new Utilisateur(nom, pass, null);
 
             if(verification()){
-                Database db = new Database();
                 try {
                     if (db.checkUtilisateur(nom)){
                         db.ajouterUtilisateur(utilisateurCree);

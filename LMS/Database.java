@@ -15,7 +15,26 @@ public class Database {
             fichier.createNewFile();
         }
     }
+    public boolean utilisateurExiste (String username, String password) throws IOException {
+        fichierExiste(utilisateursFichier);
+        try (Scanner sc = new Scanner(utilisateursFichier)){
+            while (sc.hasNextLine()){
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()){
+                    continue;
+                }
 
+                String[] utilisateurs = donnee.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(username) && utilisateurs[1].trim().equals(password) ){
+                    return true;
+                }
+            }
+            return false;
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean checkUtilisateur(String username) throws IOException {
         fichierExiste(utilisateursFichier);
         try (Scanner sc = new Scanner(utilisateursFichier)){

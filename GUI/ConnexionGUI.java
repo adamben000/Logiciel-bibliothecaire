@@ -1,8 +1,14 @@
 package GUI;
 
+import LMS.Database;
+import LMS.Utilisateur;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ConnexionGUI extends JPanel implements ActionListener{
     JLabel titre = new JLabel("Page de connexion");
@@ -21,6 +27,8 @@ public class ConnexionGUI extends JPanel implements ActionListener{
     CardLayout cardLayout;
     JPanel cardPanel;
 
+
+    private Database db = new Database();
 
     public ConnexionGUI(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
@@ -59,12 +67,82 @@ public class ConnexionGUI extends JPanel implements ActionListener{
         seConnecterBouton.setBackground(Color.black);
         seConnecterBouton.setForeground(Color.white);
 
+        seConnecterBouton.addActionListener(this);
+
         creationDeCompteBouton.addActionListener(e -> cardLayout.show(cardPanel, "Register"));
 
+    }
+    private boolean verification(){
+        String nom = utilisateur.getText();
+        String pass = new String(motDePasse.getPassword());
+
+        List<String> errorMessages = new ArrayList<>();
+
+        if (nom.isEmpty()){
+            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
+        } else if (nom.length()>10){
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre nom d'utilisateur.");
+        } else if (nom.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour votre nom d'utilisateur!");
+        }
+
+        if (pass.isEmpty()){
+            errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
+        } else if (pass.length()>10){
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre mot de passe.");
+        } else if (pass.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    ConnexionGUI.this,
+                    String.join("\n", errorMessages),
+                    "Erreurs:",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            enleverCharacteres();
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void enleverCharacteres(){
+        utilisateur.setText("");
+        motDePasse.setText("");
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
+
+        if (command.equals("Connexion")){
+            String nom = utilisateur.getText();
+            String pass = new String(motDePasse.getPassword());
+
+            if(verification()){
+                try {
+                    if (db.utilisateurExiste(nom, pass)){
+                        JOptionPane.showMessageDialog(
+                                ConnexionGUI.this,
+                                "Connexion succes!",
+                                "Info:",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                        enleverCharacteres();
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                ConnexionGUI.this,
+                                "Utilisateur ou mot de passe incorrecte!",
+                                "Erreur:",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 
