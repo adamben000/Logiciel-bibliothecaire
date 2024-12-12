@@ -2,7 +2,7 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class AdminGUI_optionStack extends JFrame{
+public class AdminGUI_optionStack extends JPanel{
     JLabel titre = new JLabel ("Page Administrateur");
     JButton utilisateurs_Page = new JButton("Utilisateurs");
     JButton livres_Page = new JButton("Livres");
@@ -11,7 +11,11 @@ public class AdminGUI_optionStack extends JFrame{
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
 
-    public AdminGUI_optionStack(){
+    CardLayout cardLayout;
+    JPanel cardPanel;
+
+
+    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel){
 
         setSize(400, 400);
         setLayout(gridLayout);
@@ -38,10 +42,6 @@ public class AdminGUI_optionStack extends JFrame{
 
         setVisible(true);
 
-    }
-
-    public static void main(String[] args){
-        AdminGUI_optionStack GUI = new AdminGUI_optionStack();
     }
 
 }

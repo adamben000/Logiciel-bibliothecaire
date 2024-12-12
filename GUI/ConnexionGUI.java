@@ -131,7 +131,7 @@ public class ConnexionGUI extends JPanel implements ActionListener{
                         );
                         enleverCharacteres();
                     } else if (db.checkAdmin(nom, pass)) {
-
+                        cardLayout.show(cardPanel, "Admin");
                     } else {
                         JOptionPane.showMessageDialog(
                                 ConnexionGUI.this,
