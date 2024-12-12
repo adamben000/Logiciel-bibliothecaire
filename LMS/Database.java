@@ -21,6 +21,13 @@ public class Database {
             }
         }
     }
+    public boolean checkAdmin(String username, String password){
+        if (username.equals("admin") && password.equals("7425")){
+            return true;
+        }
+        return false;
+    }
+
     public boolean utilisateurExiste (String username, String password) throws IOException {
         fichierExiste(utilisateursFichier);
         try (Scanner sc = new Scanner(utilisateursFichier)){

@@ -130,6 +130,8 @@ public class ConnexionGUI extends JPanel implements ActionListener{
                                 JOptionPane.INFORMATION_MESSAGE
                         );
                         enleverCharacteres();
+                    } else if (db.checkAdmin(nom, pass)) {
+
                     } else {
                         JOptionPane.showMessageDialog(
                                 ConnexionGUI.this,
