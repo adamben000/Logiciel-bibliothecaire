@@ -17,7 +17,6 @@ public class AdminGUI_optionStack extends JPanel{
 
     public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel){
 
-        setSize(400, 400);
         setLayout(gridLayout);
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
