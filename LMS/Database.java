@@ -50,6 +50,9 @@ public class Database {
     }
     public boolean checkUtilisateur(String username) throws IOException {
         fichierExiste(utilisateursFichier);
+        if (username.equals("admin")){
+            return false;
+        }
         try (Scanner sc = new Scanner(utilisateursFichier)){
             while (sc.hasNextLine()){
                 String donnee = sc.nextLine().trim();
