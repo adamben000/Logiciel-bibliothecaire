@@ -113,6 +113,15 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
         utilisateurFCreate.setText("");
         motDePasseFCreate.setText("");
     }
+    public void refreshTable(){
+        DefaultTableModel model = (DefaultTableModel) j.getModel();
+        model.setRowCount(0);
+
+        String[][] data = loadUsernamesFromFile();
+        for (String[] row : data) {
+            model.addRow(row);
+        }
+    }
 
     public void actionPerformed( ActionEvent actionEvent ) {
         String command = actionEvent.getActionCommand();
@@ -128,14 +137,7 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
                             "Info:",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    DefaultTableModel model = (DefaultTableModel) j.getModel();
-                    model.setRowCount(0);
-
-                    String[][] data = loadUsernamesFromFile();
-                    for (String[] row : data) {
-                        model.addRow(row);
-                    }
-
+                    refreshTable();
                     enleverCharacteres();
                 } else {
                     JOptionPane.showMessageDialog(
@@ -165,14 +167,7 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
                             "Info:",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    DefaultTableModel model = (DefaultTableModel) j.getModel();
-                    model.setRowCount(0);
-
-                    String[][] data = loadUsernamesFromFile();
-                    for (String[] row : data) {
-                        model.addRow(row);
-                    }
-
+                    refreshTable();
                     enleverCharacteres();
                 } else {
                     JOptionPane.showMessageDialog(
