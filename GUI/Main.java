@@ -14,13 +14,14 @@ public class Main {
         CardLayout cardLayout = new CardLayout();
         JPanel cardPanel = new JPanel(cardLayout);
 
-        cardPanel.add(new ConnexionGUI(cardLayout, cardPanel), "Connection");
-        cardPanel.add(new RegistreGUI(cardLayout, cardPanel), "Register");
-        cardPanel.add(new AdminGUI_optionStack(cardLayout, cardPanel), "Admin");
+        cardPanel.add(new ConnexionGUI(cardLayout, cardPanel), "Connexion");
+        cardPanel.add(new RegistreGUI(cardLayout, cardPanel), "Registre");
+        cardPanel.add(new AdminGUI_optionStack(cardLayout, cardPanel), "AdminOptionStack");
+        cardPanel.add(new AdminGUI_optionStack(cardLayout, cardPanel), "AdminUtilisateur");
 
         frame.add(cardPanel);
         frame.setVisible(true);
 
-        cardLayout.show(cardPanel, "Connection");
+        cardLayout.show(cardPanel, "Connexion");
     }
 }

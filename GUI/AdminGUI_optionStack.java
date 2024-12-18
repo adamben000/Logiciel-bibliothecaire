@@ -39,7 +39,7 @@ public class AdminGUI_optionStack extends JPanel{
         gbc.gridx = 0; gbc.gridy = 4;
         add(deconnexion, gbc);
 
-        deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connection"));
+        deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
 
         setVisible(true);
 

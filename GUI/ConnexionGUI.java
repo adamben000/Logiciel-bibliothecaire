@@ -69,7 +69,7 @@ public class ConnexionGUI extends JPanel implements ActionListener{
 
         seConnecterBouton.addActionListener(this);
 
-        creationDeCompteBouton.addActionListener(e -> cardLayout.show(cardPanel, "Register"));
+        creationDeCompteBouton.addActionListener(e -> cardLayout.show(cardPanel, "Registre"));
 
     }
     private boolean verification(){
@@ -132,7 +132,7 @@ public class ConnexionGUI extends JPanel implements ActionListener{
                         enleverCharacteres();
                     } else if (db.checkAdmin(nom, pass)) {
                         enleverCharacteres();
-                        cardLayout.show(cardPanel, "Admin");
+                        cardLayout.show(cardPanel, "AdminOptionStack");
                     } else {
                         JOptionPane.showMessageDialog(
                                 ConnexionGUI.this,

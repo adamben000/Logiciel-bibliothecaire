@@ -77,7 +77,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
         add(retour, gbc);
 
         enregistrer.addActionListener(this);
-        retour.addActionListener(e -> cardLayout.show(cardPanel, "Connection"));
+        retour.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
 
     }
     private void enleverCharacteres(){
