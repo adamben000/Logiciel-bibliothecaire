@@ -6,49 +6,103 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+
 
 public class AdminUtilisateur extends JFrame implements ActionListener {
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
+    JPanel panel3 = new JPanel();
     GridLayout laGrid = new GridLayout(2,1);
-    JButton button;
+
+    // Panel 2
+    JLabel utilisateur = new JLabel("utilisateur:");
+    JTextField utilisateurF = new JTextField("", 10);
+    JButton supprimerB = new JButton("Supprimer") ;
+
+    JLabel utilisateurLCreate = new JLabel("utilisateur:");
+    JTextField utilisateurFCreate = new JTextField("", 10);
+
+    JLabel motDePasseLCreate = new JLabel("mot de passe:");
+    JTextField motDePasseFCreate = new JTextField("", 10);
+    JButton ajouterB = new JButton("Ajouter");
+
+    GridBagConstraints gbc = new GridBagConstraints();
+
+
 
     JTable j;
     AdminUtilisateur() {
-        // Frame Initialization
         setTitle("Liste des Utilisateurs");
-        setSize(600, 300);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(laGrid);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // ================= Panel 1: JTable =================
-        // Data to be displayed in the JTable
         String[][] data = loadUsernamesFromFile();
         String[] columnNames = {"Utilisateurs"};
 
-        // Initialize JTable
-        j = new JTable(data, columnNames);
+        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // I put this prevent admin from editing the usernames
+            }
+        };
+
+        j = new JTable(model);
         j.setBounds(30, 40, 200, 300);
 
-        // Wrap JTable in JScrollPane
         JScrollPane sp = new JScrollPane(j);
-        panel1.setLayout(new BorderLayout()); // Add JTable to panel1
+        panel1.setLayout(new BorderLayout());
         panel1.add(sp, BorderLayout.CENTER);
 
-        // ================= Panel 2: Button =================
-        button = new JButton("Supprimer");
-        button.setPreferredSize(new Dimension(100, 30));
-        button.addActionListener(this); // Attach ActionListener
-        panel2.add(button); // Add button to panel2
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
 
-        // ================= Add Panels to Frame =================
-        add(panel1); // Add panel1 (JTable) to the frame
-        add(panel2); // Add panel2 (Button) to the frame
+        // Panel 2
+        panel2.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(10, 10, 10, 10);
 
-        // Set frame visibility
+        gbc.gridx = 0; gbc.gridy = 0;
+        panel2.add(utilisateur, gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0;
+        panel2.add(utilisateurF, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
+        panel2.add(supprimerB, gbc);
+
+        // panel 3
+        panel3.setLayout(new GridBagLayout());
+        GridBagConstraints gbc1 = new GridBagConstraints();
+        gbc1.fill = GridBagConstraints.HORIZONTAL;
+        gbc1.insets = new Insets(10, 10, 10, 10);
+
+        gbc1.gridx = 0; gbc1.gridy = 0;
+        panel3.add(utilisateurLCreate, gbc1);
+        gbc1.gridx = 1; gbc1.gridy = 0;
+        panel3.add(utilisateurFCreate, gbc1);
+
+        gbc1.gridx = 0; gbc1.gridy = 1;
+        panel3.add(motDePasseLCreate, gbc1);
+        gbc1.gridx = 1; gbc1.gridy = 1;
+        panel3.add(motDePasseFCreate, gbc1);
+
+        gbc1.gridx = 0; gbc1.gridy = 3; gbc1.gridwidth = 2;
+        panel3.add(ajouterB, gbc1);
+
+        add(panel1, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        bottomPanel.add(panel2);
+        bottomPanel.add(panel3);
+
+        supprimerB.addActionListener(this);
+
         setVisible(true);
+
     }
 
     public void actionPerformed( ActionEvent actionEvent ) {
