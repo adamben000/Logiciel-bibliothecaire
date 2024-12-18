@@ -27,6 +27,26 @@ public class Database {
         }
         return false;
     }
+    public boolean utilisateurExisteSansPass (String username) throws IOException {
+        fichierExiste(utilisateursFichier);
+        try (Scanner sc = new Scanner(utilisateursFichier)){
+            while (sc.hasNextLine()){
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()){
+                    continue;
+                }
+
+                String[] utilisateurs = donnee.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(username)){
+                    return true;
+                }
+            }
+            return false;
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public boolean utilisateurExiste (String username, String password) throws IOException {
         fichierExiste(utilisateursFichier);
@@ -107,6 +127,34 @@ public class Database {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public void supprimerUtilisateur(String utilisateur){
+        fichierExiste(utilisateursFichier);
+        List<String> lignesUtilisateur = new ArrayList<>();
+        try (Scanner sc = new Scanner(utilisateursFichier)){
+            while (sc.hasNextLine()){
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()){
+                    continue;
+                }
+
+                String[] utilisateurs = donnee.split(",");
+                if (utilisateurs.length > 0 && !(utilisateurs[0].trim().equals(utilisateur))){
+                    lignesUtilisateur.add(donnee);
+                } else {
+                    continue;
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+
+        try{
+            ecrireFichier(lignesUtilisateur, utilisateursFichier);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void ecrireFichier(List<String> lignes, File fichier) throws IOException {

@@ -1,4 +1,7 @@
 package GUI;
+import LMS.Database;
+import LMS.Utilisateur;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -29,7 +32,7 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
 
     GridBagConstraints gbc = new GridBagConstraints();
 
-
+    private Database db = new Database();
 
     JTable j;
     AdminUtilisateur() {
@@ -100,13 +103,90 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
         bottomPanel.add(panel3);
 
         supprimerB.addActionListener(this);
+        ajouterB.addActionListener(this);
 
         setVisible(true);
 
     }
+    public void enleverCharacteres(){
+        utilisateurF.setText("");
+        utilisateurFCreate.setText("");
+        motDePasseFCreate.setText("");
+    }
 
     public void actionPerformed( ActionEvent actionEvent ) {
         String command = actionEvent.getActionCommand();
+        if (command.equals("Supprimer")){
+            String nom = utilisateurF.getText();
+
+            try {
+                if (db.utilisateurExisteSansPass(nom)){
+                    db.supprimerUtilisateur(nom);
+                    JOptionPane.showMessageDialog(
+                            AdminUtilisateur.this,
+                            "Compte supprimer!",
+                            "Info:",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    DefaultTableModel model = (DefaultTableModel) j.getModel();
+                    model.setRowCount(0);
+
+                    String[][] data = loadUsernamesFromFile();
+                    for (String[] row : data) {
+                        model.addRow(row);
+                    }
+
+                    enleverCharacteres();
+                } else {
+                    JOptionPane.showMessageDialog(
+                            AdminUtilisateur.this,
+                            "Compte n'existe pas!",
+                            "Erreur:",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if (command.equals("Ajouter")){
+            String nom = utilisateurFCreate.getText();
+            String pass = motDePasseFCreate.getText();
+            Utilisateur utilisateur1 = new Utilisateur(nom,pass,null);
+
+            try {
+                if (!db.utilisateurExisteSansPass(nom)){
+                    db.ajouterUtilisateur(utilisateur1);
+                    JOptionPane.showMessageDialog(
+                            AdminUtilisateur.this,
+                            "Compte ajouter!",
+                            "Info:",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                    DefaultTableModel model = (DefaultTableModel) j.getModel();
+                    model.setRowCount(0);
+
+                    String[][] data = loadUsernamesFromFile();
+                    for (String[] row : data) {
+                        model.addRow(row);
+                    }
+
+                    enleverCharacteres();
+                } else {
+                    JOptionPane.showMessageDialog(
+                            AdminUtilisateur.this,
+                            "Compte existe deja!",
+                            "Erreur:",
+                            JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     private String[][] loadUsernamesFromFile() {
         ArrayList<String[]> dataList = new ArrayList<>();
@@ -132,7 +212,7 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        AdminUtilisateur JeuDevinettesRun = new AdminUtilisateur();
+        new AdminUtilisateur();
 
     }
 
