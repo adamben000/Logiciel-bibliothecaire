@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 //AchTestV12
 
-public class AdminUtilisateur extends JFrame implements ActionListener {
+public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
     JPanel panel3 = new JPanel();
@@ -34,14 +34,15 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
 
     private Database db = new Database();
 
+    CardLayout cardLayout;
+    JPanel cardPanel;
+
     JTable j;
-    AdminUtilisateur() {
-        setTitle("Liste des Utilisateurs");
+    public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
         setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(laGrid);
-        setLocationRelativeTo(null);
-        setResizable(false);
 
         String[][] data = loadUsernamesFromFile();
         String[] columnNames = {"Utilisateurs"};
@@ -205,10 +206,4 @@ public class AdminUtilisateur extends JFrame implements ActionListener {
         }
         return data;
     }
-
-    public static void main(String[] args) {
-        new AdminUtilisateur();
-
-    }
-
 }

@@ -17,7 +17,7 @@ public class Main {
         cardPanel.add(new ConnexionGUI(cardLayout, cardPanel), "Connexion");
         cardPanel.add(new RegistreGUI(cardLayout, cardPanel), "Registre");
         cardPanel.add(new AdminGUI_optionStack(cardLayout, cardPanel), "AdminOptionStack");
-        cardPanel.add(new AdminGUI_optionStack(cardLayout, cardPanel), "AdminUtilisateur");
+        cardPanel.add(new AdminUtilisateur(cardLayout, cardPanel), "AdminUtilisateur");
 
         frame.add(cardPanel);
         frame.setVisible(true);

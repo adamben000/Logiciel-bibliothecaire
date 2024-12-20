@@ -40,6 +40,7 @@ public class AdminGUI_optionStack extends JPanel{
         add(deconnexion, gbc);
 
         deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
+        utilisateurs_Page.addActionListener(e -> cardLayout.show(cardPanel, "AdminUtilisateur"));
 
         setVisible(true);
 
