@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 //AchTestV12
 
@@ -16,12 +17,12 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel1 = new JPanel();
     JPanel panel2 = new JPanel();
     JPanel panel3 = new JPanel();
-    GridLayout laGrid = new GridLayout(2,1);
+    GridLayout laGrid = new GridLayout(2, 1);
 
     // Panel 2
     JLabel utilisateur = new JLabel("utilisateur:");
     JTextField utilisateurF = new JTextField("", 10);
-    JButton supprimerB = new JButton("Supprimer") ;
+    JButton supprimerB = new JButton("Supprimer");
 
     JLabel utilisateurLCreate = new JLabel("utilisateur:");
     JTextField utilisateurFCreate = new JTextField("", 10);
@@ -38,6 +39,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel cardPanel;
 
     JTable j;
+
     public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
@@ -69,13 +71,17 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
-        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
         panel2.add(utilisateur, gbc);
 
-        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.gridx = 1;
+        gbc.gridy = 0;
         panel2.add(utilisateurF, gbc);
 
-        gbc.gridx = 0; gbc.gridy = 1; gbc.gridwidth = 2;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
         panel2.add(supprimerB, gbc);
 
         // panel 3
@@ -84,17 +90,23 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         gbc1.fill = GridBagConstraints.HORIZONTAL;
         gbc1.insets = new Insets(10, 10, 10, 10);
 
-        gbc1.gridx = 0; gbc1.gridy = 0;
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
         panel3.add(utilisateurLCreate, gbc1);
-        gbc1.gridx = 1; gbc1.gridy = 0;
+        gbc1.gridx = 1;
+        gbc1.gridy = 0;
         panel3.add(utilisateurFCreate, gbc1);
 
-        gbc1.gridx = 0; gbc1.gridy = 1;
+        gbc1.gridx = 0;
+        gbc1.gridy = 1;
         panel3.add(motDePasseLCreate, gbc1);
-        gbc1.gridx = 1; gbc1.gridy = 1;
+        gbc1.gridx = 1;
+        gbc1.gridy = 1;
         panel3.add(motDePasseFCreate, gbc1);
 
-        gbc1.gridx = 0; gbc1.gridy = 3; gbc1.gridwidth = 2;
+        gbc1.gridx = 0;
+        gbc1.gridy = 3;
+        gbc1.gridwidth = 2;
         panel3.add(ajouterB, gbc1);
 
         add(panel1, BorderLayout.CENTER);
@@ -109,12 +121,52 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         setVisible(true);
 
     }
-    public void enleverCharacteres(){
+
+    private boolean verification() {
+        String nom = utilisateurFCreate.getText();
+        String pass = motDePasseFCreate.getText();
+
+        List<String> errorMessages = new ArrayList<>();
+
+        if (nom.isEmpty()) {
+            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
+        } else if (nom.length() > 10) {
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour nom d'utilisateur.");
+        } else if (nom.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour nom d'utilisateur!");
+        }
+
+        if (pass.isEmpty()) {
+            errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
+        } else if (pass.length() > 10) {
+            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour mot de passe.");
+        } else if (pass.contains(" ")) {
+            errorMessages.add("Ne peut pas entrer d'espace pour mot de passe!");
+        }
+
+        if (!errorMessages.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    AdminUtilisateur.this,
+                    String.join("\n", errorMessages),
+                    "Erreurs:",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            enleverCharacteres();
+            return false;
+        } else {
+            return true;
+        }
+
+
+    }
+
+    public void enleverCharacteres() {
         utilisateurF.setText("");
         utilisateurFCreate.setText("");
         motDePasseFCreate.setText("");
     }
-    public void refreshTable(){
+
+    public void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
@@ -124,13 +176,13 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         }
     }
 
-    public void actionPerformed( ActionEvent actionEvent ) {
+    public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
-        if (command.equals("Supprimer")){
+        if (command.equals("Supprimer")) {
             String nom = utilisateurF.getText();
 
             try {
-                if (db.utilisateurExisteSansPass(nom)){
+                if (db.utilisateurExisteSansPass(nom)) {
                     db.supprimerUtilisateur(nom);
                     JOptionPane.showMessageDialog(
                             AdminUtilisateur.this,
@@ -154,37 +206,39 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             }
 
         }
-        if (command.equals("Ajouter")){
+        if (command.equals("Ajouter")) {
             String nom = utilisateurFCreate.getText();
             String pass = motDePasseFCreate.getText();
-            Utilisateur utilisateur1 = new Utilisateur(nom,pass,null);
+            Utilisateur utilisateur1 = new Utilisateur(nom, pass, null);
 
-            try {
-                if (!db.utilisateurExisteSansPass(nom)){
-                    db.ajouterUtilisateur(utilisateur1);
-                    JOptionPane.showMessageDialog(
-                            AdminUtilisateur.this,
-                            "Compte ajouter!",
-                            "Info:",
-                            JOptionPane.INFORMATION_MESSAGE
-                    );
-                    refreshTable();
-                    enleverCharacteres();
-                } else {
-                    JOptionPane.showMessageDialog(
-                            AdminUtilisateur.this,
-                            "Compte existe deja!",
-                            "Erreur:",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+            if (verification()) {
+                try {
+                    if (!db.utilisateurExisteSansPass(nom)) {
+                        db.ajouterUtilisateur(utilisateur1);
+                        JOptionPane.showMessageDialog(
+                                AdminUtilisateur.this,
+                                "Compte ajouter!",
+                                "Info:",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                        refreshTable();
+                        enleverCharacteres();
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                AdminUtilisateur.this,
+                                "Compte existe deja!",
+                                "Erreur:",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
+            }
         }
     }
-    private String[][] loadUsernamesFromFile() {
+    private String[][] loadUsernamesFromFile () {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
             String line;
