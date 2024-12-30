@@ -30,6 +30,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     JLabel motDePasseLCreate = new JLabel("mot de passe:");
     JTextField motDePasseFCreate = new JTextField("", 10);
     JButton ajouterB = new JButton("Ajouter");
+    JButton retourB = new JButton("Retour");
 
     GridBagConstraints gbc = new GridBagConstraints();
 
@@ -40,7 +41,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
     JTable j;
 
-    public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel) {
+    public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setSize(800, 600);
@@ -84,6 +85,10 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         gbc.gridwidth = 2;
         panel2.add(supprimerB, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel2.add(retourB, gbc);
+
         // panel 3
         panel3.setLayout(new GridBagLayout());
         GridBagConstraints gbc1 = new GridBagConstraints();
@@ -118,6 +123,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
 
+        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
         setVisible(true);
 
     }

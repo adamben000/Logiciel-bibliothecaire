@@ -15,7 +15,7 @@ public class AdminGUI_optionStack extends JPanel{
     JPanel cardPanel;
 
 
-    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel){
+    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame frame){
 
         setLayout(gridLayout);
 
@@ -40,7 +40,8 @@ public class AdminGUI_optionStack extends JPanel{
         add(deconnexion, gbc);
 
         deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
-        utilisateurs_Page.addActionListener(e -> cardLayout.show(cardPanel, "AdminUtilisateur"));
+        utilisateurs_Page.addActionListener(e -> {frame.setSize(800,600);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminUtilisateur");});
+        livres_Page.addActionListener(e ->{frame.setSize(800,600);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminLivres");});
 
         setVisible(true);
 
