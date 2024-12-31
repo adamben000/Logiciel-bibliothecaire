@@ -8,7 +8,7 @@ import java.io.IOException;
 public class Database {
     private final File livresFichier = new File("db/livres.txt");
     private final File utilisateursFichier = new File("db/utilisateurs.txt");
-    private final File empruntsFichier = new File ("db/emprunts.txt");
+    private final File empruntsFichier = new File ("db/emprunts.txt.txt");
 
     private void fichierExiste(File fichier){
         if (!fichier.isFile()) {
