@@ -20,17 +20,17 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     GridLayout laGrid = new GridLayout(2,1);
 
     // Panel 2
-    JLabel utilisateurL = new JLabel("utilisateur:");
+    JLabel utilisateurL = new JLabel("Utilisateur:");
     JTextField utilisateurF = new JTextField("", 10);
-    JButton retournerLeLivreB = new JButton("retourner le livre") ;
-    JButton retourB = new JButton("retour");
+    JButton retournerLeLivreB = new JButton("Retourner le livre") ;
+    JButton retourB = new JButton("Retour");
 
     // Panel 3
-    JLabel utilisateurEmpruntL = new JLabel("utilisateur:");
+    JLabel utilisateurEmpruntL = new JLabel("Utilisateur:");
     JTextField utilisateurEmpruntF = new JTextField("", 10);
     JLabel LivreEmprunterL = new JLabel("Livre emprunté:");
     JTextField LivreEmprunterF = new JTextField("", 10);
-    JButton emprunteB = new JButton("emperunté");
+    JButton emprunteB = new JButton("Emprunté");
 
     GridBagConstraints gbc = new GridBagConstraints();
 
