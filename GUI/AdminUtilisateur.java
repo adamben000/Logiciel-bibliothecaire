@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
-//AchTestV12
 
 public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel1 = new JPanel();
