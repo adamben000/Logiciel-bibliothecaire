@@ -161,10 +161,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         } else {
             return true;
         }
-
-
     }
-
     public void enleverCharacteres() {
         utilisateurF.setText("");
         utilisateurFCreate.setText("");
@@ -214,7 +211,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         if (command.equals("Ajouter")) {
             String nom = utilisateurFCreate.getText();
             String pass = motDePasseFCreate.getText();
-            Utilisateur utilisateur1 = new Utilisateur(nom, pass, null);
+            Utilisateur utilisateur1 = new Utilisateur(nom, pass);
 
             if (verification()) {
                 try {

@@ -1,4 +1,6 @@
 package GUI;
+import LMS.Database;
+
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -34,10 +36,11 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
     GridBagConstraints gbc = new GridBagConstraints();
 
-
-
     JTable j;
     JTable j1;
+
+    private Database db = new Database();
+
     public AdminEmprunts(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
         setSize(1000, 600);
         setLayout(laGrid);
@@ -120,14 +123,97 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         bottomPanel.add(panel2);
         bottomPanel.add(panel3);
 
+        retournerLeLivreB.addActionListener(this);
+        emprunteB.addActionListener(this);
+
         retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
 
         setVisible(true);
 
     }
 
-    public void actionPerformed( ActionEvent actionEvent ) {
+    public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
+
+        if (command.equals("Retourner le livre")) {
+            String utilisateur = utilisateurF.getText();
+            try {
+                if (!db.utilisateurExisteSansPass(utilisateur)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Utilisateur n'existe pas!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                int selectedRow = j.getSelectedRow();
+                if (selectedRow == -1) {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez sélectionner un livre à retourner",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                String titre = (String) j.getValueAt(selectedRow, 1);
+
+                db.retournerLivre(utilisateur, titre);
+                refreshTable();
+
+                JOptionPane.showMessageDialog(this,
+                        "Livre retourné avec succès",
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        else if (command.equals("Emprunté")) {
+            String utilisateur = utilisateurEmpruntF.getText();
+            String titre = LivreEmprunterF.getText();
+
+            try {
+                if (utilisateur.isEmpty() || titre.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Veuillez remplir tous les champs",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!db.utilisateurExisteSansPass(utilisateur)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Utilisateur n'existe pas!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!db.livreDisponible(titre)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Livre non disponible",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                db.emprunterLivre(utilisateur, titre);
+                refreshTable();
+
+                JOptionPane.showMessageDialog(this,
+                        "Livre emprunté avec succès",
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+                utilisateurEmpruntF.setText("");
+                LivreEmprunterF.setText("");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
     private String[][] loadDataEmprunts() {
         ArrayList<String[]> dataList = new ArrayList<>();
@@ -170,6 +256,15 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             data[i] = dataList.get(i);
         }
         return data;
+    }
+    public void refreshTable() {
+        DefaultTableModel model = (DefaultTableModel) j.getModel();
+        model.setRowCount(0);
+
+        String[][] data = loadDataEmprunts();
+        for (String[] row : data) {
+            model.addRow(row);
+        }
     }
 
 }

@@ -131,7 +131,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
         if (command.equals("Enregistrer")){
             String nom = utilisateur.getText();
             String pass = new String(motDePasse.getPassword());
-            Utilisateur utilisateurCree = new Utilisateur(nom, pass, null);
+            Utilisateur utilisateurCree = new Utilisateur(nom, pass);
 
             if(verification()){
                 try {

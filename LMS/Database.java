@@ -1,6 +1,5 @@
 package LMS;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.io.*;
 import java.io.IOException;
@@ -15,19 +14,16 @@ public class Database {
             try{
                 if(fichier.createNewFile()){
                     System.out.println("Fichier cree");
-                };
-            }catch (IOException e){
+                }
+            } catch (IOException e){
                 System.out.println("Erreur");
             }
         }
     }
-    public boolean checkAdmin(String username, String password){
-        if (username.equals("admin") && password.equals("7425")){
-            return true;
-        }
-        return false;
+    public boolean checkAdmin(String utilisateur, String motDePasse){
+        return utilisateur.equals("admin") && motDePasse.equals("7425");
     }
-    public boolean utilisateurExisteSansPass (String username) throws IOException {
+    public boolean utilisateurExisteSansPass (String utilisateur) throws IOException {
         fichierExiste(utilisateursFichier);
         try (Scanner sc = new Scanner(utilisateursFichier)){
             while (sc.hasNextLine()){
@@ -37,7 +33,7 @@ public class Database {
                 }
 
                 String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(username)){
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur)){
                     return true;
                 }
             }
@@ -48,7 +44,7 @@ public class Database {
         return false;
     }
 
-    public boolean utilisateurExiste (String username, String password) throws IOException {
+    public boolean utilisateurExiste (String utilisateur, String motDePasse) throws IOException {
         fichierExiste(utilisateursFichier);
         try (Scanner sc = new Scanner(utilisateursFichier)){
             while (sc.hasNextLine()){
@@ -58,7 +54,7 @@ public class Database {
                 }
 
                 String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(username) && utilisateurs[1].trim().equals(password) ){
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur) && utilisateurs[1].trim().equals(motDePasse) ){
                     return true;
                 }
             }
@@ -68,9 +64,9 @@ public class Database {
         }
         return false;
     }
-    public boolean checkUtilisateur(String username) throws IOException {
+    public boolean checkUtilisateur(String utilisateur) throws IOException {
         fichierExiste(utilisateursFichier);
-        if (username.equals("admin")){
+        if (utilisateur.equals("admin")){
             return false;
         }
         try (Scanner sc = new Scanner(utilisateursFichier)){
@@ -81,7 +77,7 @@ public class Database {
                 }
 
                 String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(username)){
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur)){
                     return false;
                 }
             }
@@ -93,7 +89,6 @@ public class Database {
     }
 
     public void ajouterUtilisateur(Utilisateur utilisateur) throws IOException {
-        estNull(utilisateur);
         fichierExiste(utilisateursFichier);
         boolean utilisateurExiste = false;
         List<String> lignesUtilisateur = new ArrayList<>();
@@ -106,7 +101,7 @@ public class Database {
 
                 String[] utilisateurs = donnee.split(",");
                 if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur.getUsername())){
-                    String ligneActualiser = utilisateur.getUsername() + "," + utilisateur.getMotDePasse() + "," + utilisateur.getLivresEmpruntes();
+                    String ligneActualiser = utilisateur.getUsername() + "," + utilisateur.getMotDePasse();
                     lignesUtilisateur.add(ligneActualiser);
                     utilisateurExiste = true;
                 } else {
@@ -115,7 +110,7 @@ public class Database {
             }
 
             if (!utilisateurExiste){
-                String nouvelleLigne = utilisateur.getUsername() + "," + utilisateur.getMotDePasse() + "," + utilisateur.getLivresEmpruntes();
+                String nouvelleLigne = utilisateur.getUsername() + "," + utilisateur.getMotDePasse();
                 lignesUtilisateur.add(nouvelleLigne);
             }
         } catch (IOException e){
@@ -141,8 +136,6 @@ public class Database {
                 String[] utilisateurs = donnee.split(",");
                 if (utilisateurs.length > 0 && !(utilisateurs[0].trim().equals(utilisateur))){
                     lignesUtilisateur.add(donnee);
-                } else {
-                    continue;
                 }
             }
         } catch (IOException e){
@@ -156,54 +149,11 @@ public class Database {
         }
 
     }
-
-    public void ecrireFichier(List<String> lignes, File fichier) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fichier))) {
-            for (String line : lignes) {
-                pw.println(line);
-            }
-        }
-    }
-    public void estNull(Object object){
-        if (object==null){
-            throw new IllegalArgumentException("Ne peut pas etre nulle!");
-        }
-    }
-
-    public void emprunterLivre(Utilisateur utilisateur, Livre livre) throws IOException {
-        estNull(livre);
-        estNull(utilisateur);
-        fichierExiste(empruntsFichier);
-
-        if (livre.getEstEmprunter()){
-            return;
-        }
-        livre.setEstEmprunter(true);
-        ajouterLivre(livre);
-
-        LocalDate dateEmprunt = LocalDate.now();
-        LocalDate dateRetour = dateEmprunt.plusWeeks(2);
-
-        List<String> lignesEmpruntes = new ArrayList<>();
-
-        try (Scanner sc = new Scanner(empruntsFichier)){
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()) {
-                    continue;
-                }
-                String[] empruntes = donnee.split(",");
-                if (empruntes.length > 0) {
-                }
-            }
-        }
-    }
-
     public void ajouterLivre(Livre livre) throws IOException {
-        estNull(livre);
         fichierExiste(livresFichier);
-        boolean livreExiste = false;
-        List<String> lignesLivre = new ArrayList<>();
+        List<String> lignesLivres = new ArrayList<>();
+        boolean livreExistant = false;
+
         try (Scanner sc = new Scanner(livresFichier)) {
             while (sc.hasNextLine()) {
                 String donnee = sc.nextLine().trim();
@@ -213,58 +163,115 @@ public class Database {
 
                 String[] livres = donnee.split(",");
                 if (livres.length > 0 && Integer.parseInt(livres[0].trim()) == livre.getLivreId()) {
-                    String ligneActualiser = livre.getLivreId() + "," + livre.getTitre() + "," +
-                            livre.getAuteur() + "," + livre.getGenre() + "," +
-                            livre.getQuantite() + "," + livre.getEstEmprunter();
-                    lignesLivre.add(ligneActualiser);
-                    livreExiste = true;
+                    String ligneActualiser = livre.getLivreId() + "," + livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite();
+                    lignesLivres.add(ligneActualiser);
+                    livreExistant = true;
                 } else {
-                    lignesLivre.add(donnee);
+                    lignesLivres.add(donnee);
                 }
             }
+        }
 
-            if (!livreExiste) {
-                String nouvelleLigne = livre.getLivreId() + "," + livre.getTitre() + "," +
-                        livre.getAuteur() + "," + livre.getGenre() + "," +
-                        livre.getQuantite() + "," + livre.getEstEmprunter();
-                lignesLivre.add(nouvelleLigne);
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
+        if (!livreExistant) {
+            String nouvelleLigne = livre.getLivreId() + "," + livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite();
+            lignesLivres.add(nouvelleLigne);
         }
 
         try {
-            ecrireFichier(lignesLivre, livresFichier);
+            ecrireFichier(lignesLivres, livresFichier);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public void supprimerLivre(int livreId) throws IOException {
+        fichierExiste(livresFichier);
+        List<String> lignesLivres = new ArrayList<>();
+
+        try (Scanner sc = new Scanner(livresFichier)) {
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+                if (livres.length > 0 && Integer.parseInt(livres[0].trim()) != livreId) {
+                    lignesLivres.add(donnee);
+                }
+            }
+        }
+        try {
+            ecrireFichier(lignesLivres, livresFichier);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void supprimerLivre (Livre livre) throws IOException {
-        estNull(livre);
+    public void emprunterLivre(String utilisateur, String livreId) throws IOException {
+        fichierExiste(empruntsFichier);
+    }
+    public void retournerLivre(String utilisateur, String livreId) throws IOException {
+        fichierExiste(empruntsFichier);
+        updateBookQuantity(livreId, 1);
+    }
+    public void updateBookQuantity(String titre, int nombre){
         fichierExiste(livresFichier);
-        List<String> lignesLivre = new ArrayList<>();
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()) {
+        List<String> lignesLivres = new ArrayList<>();
+        try (Scanner sc = new Scanner(livresFichier)){
+            while (sc.hasNextLine()){
+                String donnee = sc.nextLine();
+                if (donnee.isEmpty()){
                     continue;
                 }
+
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && Integer.parseInt(livres[0].trim()) == livre.getLivreId()) {
-                    continue;
+                if (livres.length > 0 && livres[0].trim().equals(titre)){
+                    int quantite = Integer.parseInt(livres[3]) + nombre;
+                    String ligneActualiser = titre + "," + livres[1] + "," + livres[2] + "," + quantite + "," + livres[4];
+                    lignesLivres.add(ligneActualiser);
                 } else {
-                    lignesLivre.add(donnee);
+                    lignesLivres.add(donnee);
                 }
             }
         } catch (IOException e){
             e.printStackTrace();
         }
 
-        try {
-            ecrireFichier(lignesLivre, livresFichier);
+        try{
+            ecrireFichier(lignesLivres, livresFichier);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+    }
+    public boolean livreDisponible(String livreId) throws IOException {
+        fichierExiste(livresFichier);
+        try (Scanner sc = new Scanner(livresFichier)) {
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+                if (livres.length > 0 && livres[0].trim().equals(livreId)) {
+                    int quantite = Integer.parseInt(livres[3]);
+                    if (quantite == 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void ecrireFichier(List<String> lignes, File fichier) throws IOException {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(fichier))) {
+            for (String line : lignes) {
+                pw.println(line);
+            }
         }
     }
 }
