@@ -94,14 +94,14 @@ public class RegistreGUI extends JPanel implements ActionListener {
         if (nom.isEmpty()){
             errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
         } else if (nom.length()>10){
-            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre nom d'utilisateur.");
+            errorMessages.add("Ne peut pas entrer plus de 10 characteres pour votre nom d'utilisateur.");
         } else if (nom.contains(" ")) {
             errorMessages.add("Ne peut pas entrer d'espace pour votre nom d'utilisateur!");
         }
 
         if (pass.isEmpty()){
             errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
-        } else if (pass.length()>10){
+        } else if (pass.length()>16){
             errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre mot de passe.");
         } else if (pass.contains(" ")) {
             errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
