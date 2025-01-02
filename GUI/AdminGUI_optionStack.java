@@ -11,10 +11,6 @@ public class AdminGUI_optionStack extends JPanel{
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
 
-    CardLayout cardLayout;
-    JPanel cardPanel;
-
-
     public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame frame){
 
         setLayout(gridLayout);

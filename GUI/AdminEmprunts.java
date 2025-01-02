@@ -12,9 +12,6 @@ import javax.swing.table.DefaultTableModel;
 
 
 public class AdminEmprunts extends JPanel implements ActionListener {
-    CardLayout cardLayout;
-    JPanel cardPanel;
-
     JPanel panel1 = new JPanel();
     JPanel panel4 = new JPanel();
     JPanel panel2 = new JPanel();

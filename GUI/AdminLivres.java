@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
 public class AdminLivres extends JPanel implements ActionListener{
-    CardLayout cardLayout;
-    JPanel cardPanel;
     GridLayout grid = new GridLayout(2,1);
     JPanel panelLivres = new JPanel();
     JPanel panel2 = new JPanel();
