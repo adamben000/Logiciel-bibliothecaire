@@ -75,6 +75,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         j.setRowSelectionAllowed(false);
         j.setColumnSelectionAllowed(false);
         j.setFocusable(false);
+        j.getTableHeader().setResizingAllowed(false);
 
         JScrollPane sp = new JScrollPane(j);
         panel1.setLayout(new BorderLayout());

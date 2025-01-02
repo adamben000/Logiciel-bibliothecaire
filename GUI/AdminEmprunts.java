@@ -80,6 +80,8 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         j1.setColumnSelectionAllowed(false);
         j.setFocusable(false);
         j1.setFocusable(false);
+        j.getTableHeader().setResizingAllowed(false);
+        j1.getTableHeader().setResizingAllowed(false);
 
         JPanel topPanel = new JPanel(new GridLayout(1,2));
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
