@@ -15,7 +15,7 @@ public class AdminLivres extends JPanel implements ActionListener{
     JPanel panel3 = new JPanel();
 
     //Panel 2
-    JLabel livreL = new JLabel("Nom du livre:");
+    JLabel livreL = new JLabel("Livre ID:");
     JTextField livreF = new JTextField("", 10);
     JButton supprimerB = new JButton("Supprimer");
     JButton retourB = new JButton("Retour");

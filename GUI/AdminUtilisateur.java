@@ -22,14 +22,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     GridLayout laGrid = new GridLayout(2, 1);
 
     // Panel 2
-    JLabel utilisateur = new JLabel("utilisateur:");
+    JLabel utilisateur = new JLabel("Utilisateur:");
     JTextField utilisateurF = new JTextField("", 10);
     JButton supprimerB = new JButton("Supprimer");
 
-    JLabel utilisateurLCreate = new JLabel("utilisateur:");
+    JLabel utilisateurLCreate = new JLabel("Utilisateur:");
     JTextField utilisateurFCreate = new JTextField("", 10);
 
-    JLabel motDePasseLCreate = new JLabel("mot de passe:");
+    JLabel motDePasseLCreate = new JLabel("Mot de passe:");
     JTextField motDePasseFCreate = new JTextField("", 10);
     JButton ajouterB = new JButton("Ajouter");
     JButton retourB = new JButton("Retour");
