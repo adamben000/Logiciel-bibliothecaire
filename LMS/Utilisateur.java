@@ -1,5 +1,4 @@
 package LMS;
-import GUI.RegistreGUI;
 
 public class Utilisateur {
     private String username;

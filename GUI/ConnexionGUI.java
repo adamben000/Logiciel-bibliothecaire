@@ -1,7 +1,6 @@
 package GUI;
 
 import LMS.Database;
-import LMS.Utilisateur;
 
 import java.awt.*;
 import javax.swing.*;
