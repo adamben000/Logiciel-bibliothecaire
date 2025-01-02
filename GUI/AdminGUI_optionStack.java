@@ -36,9 +36,9 @@ public class AdminGUI_optionStack extends JPanel{
         add(deconnexion, gbc);
 
         deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
-        utilisateurs_Page.addActionListener(e -> {frame.setSize(800,600);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminUtilisateur");});
-        livres_Page.addActionListener(e ->{frame.setSize(800,600);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminLivres");});
-        emprunts_Page.addActionListener(e ->{frame.setSize(1000, 600);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminEmprunts");});
+        utilisateurs_Page.addActionListener(e -> {frame.setSize(800,600);frame.setTitle("Utilisateurs-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminUtilisateur");});
+        livres_Page.addActionListener(e ->{frame.setSize(800,600);frame.setTitle("Livres-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminLivres");});
+        emprunts_Page.addActionListener(e ->{frame.setSize(1000, 600);frame.setTitle("Emprunts-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminEmprunts");});
 
         setVisible(true);
 

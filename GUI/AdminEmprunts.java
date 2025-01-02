@@ -43,7 +43,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         setLayout(laGrid);
 
         String[][] data = loadDataEmprunts();
-        String[] columnNames = {"Utilisateur", "Livre emprunté","Date d'Emprunt", "Date de retour"};
+        String[] columnNames = {"Utilisateur", "Livre emprunté","ID","Date d'Emprunt", "Date de retour"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -52,7 +52,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         };
 
         String[][] data1 = loadDataFromLivres();
-        String[] columnNames1 = {"Nom des livres", "quantité"};
+        String[] columnNames1 = {"Nom des livres","ID", "quantité"};
         DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -71,6 +71,15 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         JScrollPane sp1 = new JScrollPane(j1);
         panel4.setLayout(new BorderLayout());
         panel4.add(sp1, BorderLayout.CENTER);
+
+        j.getTableHeader().setReorderingAllowed(false);
+        j1.getTableHeader().setReorderingAllowed(false);
+        j.setRowSelectionAllowed(false);
+        j.setColumnSelectionAllowed(false);
+        j1.setRowSelectionAllowed(false);
+        j1.setColumnSelectionAllowed(false);
+        j.setFocusable(false);
+        j1.setFocusable(false);
 
         JPanel topPanel = new JPanel(new GridLayout(1,2));
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
@@ -123,7 +132,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         retournerLeLivreB.addActionListener(this);
         emprunteB.addActionListener(this);
 
-        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
+        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setTitle("Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
 
         setVisible(true);
 
@@ -219,7 +228,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
                 // Récupère uniquement les informations nécessaires : emprunteur, date début, date fin, titre du livre
-                String[] empruntData = {rowData[0], rowData[1], rowData[2], rowData[3]};
+                String[] empruntData = {rowData[0], rowData[1], rowData[2], rowData[3], rowData[4]};
                 dataList.add(empruntData);
             }
         } catch (IOException e) {
@@ -241,7 +250,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
                 // Récupère uniquement le nom du livre (index 0) et la quantité (index 3)
-                String[] bookData = {rowData[0], rowData[3]};
+                String[] bookData = {rowData[0], rowData[4],rowData[3]};
                 dataList.add(bookData);
             }
         } catch (IOException e) {

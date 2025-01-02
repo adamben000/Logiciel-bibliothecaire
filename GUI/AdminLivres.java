@@ -41,7 +41,7 @@ public class AdminLivres extends JPanel implements ActionListener{
         setLayout(grid);
 
         String[][] data = loadDataFromLivres();
-        String[] columnNames = {"Livres","Auteur","Genre","Quantite"};
+        String[] columnNames = {"Livres","Auteur","Genre","Quantite","ID"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -51,7 +51,10 @@ public class AdminLivres extends JPanel implements ActionListener{
 
         j = new JTable(model);
         j.setBounds(30, 40, 200, 300);
-
+        j.getTableHeader().setReorderingAllowed(false);
+        j.setRowSelectionAllowed(false);
+        j.setColumnSelectionAllowed(false);
+        j.setFocusable(false);
         JScrollPane sp = new JScrollPane(j);
         panelLivres.setLayout(new BorderLayout());
         panelLivres.add(sp, BorderLayout.CENTER);
@@ -117,7 +120,7 @@ public class AdminLivres extends JPanel implements ActionListener{
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
 
-        retourB.addActionListener(e ->{frame.setSize(600,400);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
+        retourB.addActionListener(e ->{frame.setSize(600,400);frame.setTitle("Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
         setVisible(true);
     }
     private String[][] loadDataFromLivres() {

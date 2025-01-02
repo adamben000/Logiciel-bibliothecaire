@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumnModel;
 
 public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel1 = new JPanel();
@@ -58,6 +61,20 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
         j = new JTable(model);
         j.setBounds(30, 40, 200, 300);
+
+        // centrer les noms
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        centerRenderer.setVerticalAlignment(JLabel.CENTER);
+        for (int i = 0; i < j.getColumnCount(); i++) {
+            j.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+
+        // enlever le bleu quand on clique
+        j.getTableHeader().setReorderingAllowed(false);
+        j.setRowSelectionAllowed(false);
+        j.setColumnSelectionAllowed(false);
+        j.setFocusable(false);
 
         JScrollPane sp = new JScrollPane(j);
         panel1.setLayout(new BorderLayout());
@@ -122,7 +139,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
 
-        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
+        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setTitle("Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
         setVisible(true);
 
     }
