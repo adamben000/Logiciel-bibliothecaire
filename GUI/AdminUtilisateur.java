@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
 
 public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel1 = new JPanel();

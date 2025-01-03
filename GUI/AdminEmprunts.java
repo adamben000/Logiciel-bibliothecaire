@@ -199,7 +199,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
                     return;
                 }
 
-                if (!db.livreDisponible(titre)) {
+                if (!db.livreDisponible(titre, 0)) {
                     JOptionPane.showMessageDialog(this,
                             "Livre non disponible",
                             "Erreur",
