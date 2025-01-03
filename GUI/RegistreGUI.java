@@ -90,10 +90,10 @@ public class RegistreGUI extends JPanel implements ActionListener {
         String confirmerPass = new String(comfirmMotDePasse.getPassword());
 
         List<String> errorMessages = new ArrayList<>();
+
         if (nom.contains(",")){
             errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir de virgule!");
-        }
-        if (nom.isEmpty()){
+        } else if (nom.isEmpty()){
             errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
         } else if (nom.length()>10){
             errorMessages.add("Ne peut pas entrer plus de 10 characteres pour votre nom d'utilisateur.");
@@ -107,12 +107,9 @@ public class RegistreGUI extends JPanel implements ActionListener {
             errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre mot de passe.");
         } else if (pass.contains(" ")) {
             errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
-        }
-
-        if (pass.contains(",")){
+        } else if (pass.contains(",")) {
             errorMessages.add("Le \"Mot de passe\" ne peut pas contenir de virgule!");
-        }
-        if (!pass.equals(confirmerPass)){
+        } else if (!pass.equals(confirmerPass)){
             errorMessages.add("Erreur mot de passe differents!");
         }
 
