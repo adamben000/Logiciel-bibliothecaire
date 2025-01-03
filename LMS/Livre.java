@@ -46,11 +46,6 @@ public class Livre {
     public int getQuantite() {
         return quantite;
     }
-
-    public void setLivreId(int newlivreId) {
-        this.livreId = newlivreId;
-    }
-
     public void setTitre(String newTitre) {
         this.titre = newTitre;
     }
