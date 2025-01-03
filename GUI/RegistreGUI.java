@@ -91,7 +91,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
 
         List<String> errorMessages = new ArrayList<>();
         if (nom.contains(",")){
-            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir des virgules!");
+            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir de virgule!");
         }
         if (nom.isEmpty()){
             errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
@@ -110,7 +110,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
         }
 
         if (pass.contains(",")){
-            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir des virgules!");
+            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir de virgule!");
         }
         if (!pass.equals(confirmerPass)){
             errorMessages.add("Erreur mot de passe differents!");

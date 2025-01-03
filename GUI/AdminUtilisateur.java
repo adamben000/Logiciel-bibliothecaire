@@ -157,6 +157,8 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             errorMessages.add("Ne peut pas entrer plus de 10 characteres pour nom d'utilisateur.");
         } else if (nom.contains(" ")) {
             errorMessages.add("Ne peut pas entrer d'espace pour nom d'utilisateur!");
+        } else if (nom.contains(",")) {
+            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir de virgule!");
         }
 
         if (pass.isEmpty()) {
@@ -165,6 +167,8 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             errorMessages.add("Ne peut pas entrer plus de 16 characteres pour mot de passe.");
         } else if (pass.contains(" ")) {
             errorMessages.add("Ne peut pas entrer d'espace pour mot de passe!");
+        } else if (pass.contains(",")) {
+            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir de virgule!");
         }
 
         if (!errorMessages.isEmpty()) {
