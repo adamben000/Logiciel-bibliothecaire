@@ -162,8 +162,8 @@ public class Database {
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && Integer.parseInt(livres[0].trim()) == livre.getLivreId()) {
-                    String ligneActualiser = livre.getLivreId() + "," + livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite();
+                if (livres.length > 0 && Integer.parseInt(livres[4].trim()) == livre.getLivreId()) {
+                    String ligneActualiser = livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite() + "," + livre.getLivreId();
                     lignesLivres.add(ligneActualiser);
                     livreExistant = true;
                 } else {
@@ -173,7 +173,7 @@ public class Database {
         }
 
         if (!livreExistant) {
-            String nouvelleLigne = livre.getLivreId() + "," + livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite();
+            String nouvelleLigne = livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite() + "," + livre.getLivreId();
             lignesLivres.add(nouvelleLigne);
         }
 
@@ -183,7 +183,7 @@ public class Database {
             e.printStackTrace();
         }
     }
-    public void supprimerLivre(int livreId) throws IOException {
+    public void supprimerLivre(String livreId) throws IOException {
         fichierExiste(livresFichier);
         List<String> lignesLivres = new ArrayList<>();
 
@@ -195,7 +195,7 @@ public class Database {
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && Integer.parseInt(livres[0].trim()) != livreId) {
+                if (livres.length > 0 && !(livres[4].equals(livreId))) {
                     lignesLivres.add(donnee);
                 }
             }
@@ -214,7 +214,7 @@ public class Database {
         fichierExiste(empruntsFichier);
         updateBookQuantity(livreId, 1);
     }
-    public void updateBookQuantity(String titre, int nombre){
+    public void updateBookQuantity(String livreId, int quantiter){
         fichierExiste(livresFichier);
         List<String> lignesLivres = new ArrayList<>();
         try (Scanner sc = new Scanner(livresFichier)){
@@ -225,9 +225,9 @@ public class Database {
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[0].trim().equals(titre)){
-                    int quantite = Integer.parseInt(livres[3]) + nombre;
-                    String ligneActualiser = titre + "," + livres[1] + "," + livres[2] + "," + quantite + "," + livres[4];
+                if (livres.length > 0 && livres[4].trim().equals(livreId)){
+                    int quantite = Integer.parseInt(livres[3]) + quantiter;
+                    String ligneActualiser = livres[0] + "," + livres[1] + "," + livres[2] + "," + quantite + "," + livreId;
                     lignesLivres.add(ligneActualiser);
                 } else {
                     lignesLivres.add(donnee);
@@ -244,7 +244,56 @@ public class Database {
         }
 
     }
-    public boolean livreDisponible(String livreId) throws IOException {
+    public boolean supprimerDefinitementCheck(String livreId){
+        fichierExiste(livresFichier);
+        fichierExiste(empruntsFichier);
+        try (Scanner sc = new Scanner(livresFichier)) {
+            boolean quantiteLivre = true;
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+                if (livres.length > 0 && livres[4].trim().equals(livreId)) {
+                    int quantite = Integer.parseInt(livres[3]);
+                    if (quantite == 0) {
+                        quantiteLivre = true;
+                    } else {
+                        quantiteLivre = false;
+                    }
+                }
+            }
+            if (!quantiteLivre) {
+                return false;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        try (Scanner sc = new Scanner(empruntsFichier)) {
+            int quantiteReel = 0;
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+                if (livres.length > 0 && livres[2].equals(livreId)) {
+                    quantiteReel+=1;
+                }
+            }
+            if (quantiteReel>0){
+                return false;
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    public boolean livreDisponible(String livreId, int quantiterPrise) throws IOException {
         fichierExiste(livresFichier);
         try (Scanner sc = new Scanner(livresFichier)) {
             while (sc.hasNextLine()) {
@@ -254,15 +303,60 @@ public class Database {
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[0].trim().equals(livreId)) {
+                if (livres.length > 0 && livres[4].equals(livreId)) {
                     int quantite = Integer.parseInt(livres[3]);
-                    if (quantite == 0) {
+                    if ((quantite-quantiterPrise)<0) {
                         return false;
                     } else {
                         return true;
                     }
                 }
             }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean livreExiste(Livre livre) {
+        fichierExiste(livresFichier); // Ensure the file exists
+        try (Scanner sc = new Scanner(livresFichier)) {
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine().trim();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+
+                String livreTitre = livres[0].replaceAll("\\s", "").toLowerCase();
+                String livreT = livre.getTitre().replaceAll("\\s", "").toLowerCase();
+
+                if (livreTitre.equals(livreT)) {
+                    return true;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean livreExiste(String livreId){
+        fichierExiste(livresFichier);
+        try (Scanner sc = new Scanner(livresFichier)) {
+            while (sc.hasNextLine()) {
+                String donnee = sc.nextLine();
+                if (donnee.isEmpty()) {
+                    continue;
+                }
+
+                String[] livres = donnee.split(",");
+                if (livres.length > 0 && livres[4].equals(livreId)){
+                    return true;
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
         }
         return false;
     }
