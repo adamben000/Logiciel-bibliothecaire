@@ -41,7 +41,5 @@ public class AdminGUI_optionStack extends JPanel{
         emprunts_Page.addActionListener(e ->{frame.setSize(1000, 600);frame.setTitle("Emprunts-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminEmprunts");});
 
         setVisible(true);
-
     }
-
 }
