@@ -90,7 +90,9 @@ public class RegistreGUI extends JPanel implements ActionListener {
         String confirmerPass = new String(comfirmMotDePasse.getPassword());
 
         List<String> errorMessages = new ArrayList<>();
-
+        if (nom.contains(",")){
+            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir des virgules!");
+        }
         if (nom.isEmpty()){
             errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
         } else if (nom.length()>10){
@@ -107,6 +109,9 @@ public class RegistreGUI extends JPanel implements ActionListener {
             errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
         }
 
+        if (pass.contains(",")){
+            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir des virgules!");
+        }
         if (!pass.equals(confirmerPass)){
             errorMessages.add("Erreur mot de passe differents!");
         }
