@@ -27,7 +27,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     // Panel 3
     JLabel utilisateurEmpruntL = new JLabel("Utilisateur:");
     JTextField utilisateurEmpruntF = new JTextField("", 10);
-    JLabel LivreEmprunterL = new JLabel("Livre emprunté:");
+    JLabel LivreEmprunterL = new JLabel("Livre ID:");
     JTextField LivreEmprunterF = new JTextField("", 10);
     JButton emprunteB = new JButton("Emprunté");
 
@@ -144,96 +144,90 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         String command = actionEvent.getActionCommand();
 
         if (command.equals("Retourner le livre")) {
-            String utilisateur = utilisateurF.getText();
-            try {
-                if (!db.utilisateurExisteSansPass(utilisateur)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Utilisateur n'existe pas!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
+            String utilisateur = utilisateurF.getText().trim();
 
-                int selectedRow = j.getSelectedRow();
-                if (selectedRow == -1) {
-                    JOptionPane.showMessageDialog(this,
-                            "Veuillez sélectionner un livre à retourner",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                String titre = (String) j.getValueAt(selectedRow, 1);
-
-                db.retournerLivre(utilisateur, titre);
-                refreshTable();
-
+            if (utilisateur.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Livre retourné avec succès",
-                        "Succès",
-                        JOptionPane.INFORMATION_MESSAGE);
+                        "Veuillez remplir le champ \"Utilisateur:\"",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            try {
+                if (db.retournerLivre(utilisateur)) {
+                    refreshTable();
+                    refreshTable2();
+                    utilisateurF.setText("");
+                    LivreEmprunterF.setText("");
+                    JOptionPane.showMessageDialog(this,
+                            "Livre retourné avec succès!",
+                            "Info",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur lors du retour: livre non trouvé ou mauvais utilisateur",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
 
         else if (command.equals("Emprunté")) {
-            String utilisateur = utilisateurEmpruntF.getText();
-            String titre = LivreEmprunterF.getText();
+            String utilisateur = utilisateurEmpruntF.getText().trim();
+            String livreId = LivreEmprunterF.getText().trim();
+
+            if (utilisateur.isEmpty() || livreId.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez remplir tous les champs",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             try {
-                if (utilisateur.isEmpty() || titre.isEmpty()) {
+                if (db.emprunterLivre(utilisateur, livreId)) {
+                    refreshTable();
+                    refreshTable2();
+                    utilisateurEmpruntF.setText("");
+                    LivreEmprunterF.setText("");
                     JOptionPane.showMessageDialog(this,
-                            "Veuillez remplir tous les champs",
+                            "Livre emprunté avec succès",
+                            "Succès",
+                            JOptionPane.INFORMATION_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Livre non disponible ou utilisateur a déjà un emprunt ou utilisateur n'existe pas",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
-                    return;
                 }
-
-                if (!db.utilisateurExisteSansPass(utilisateur)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Utilisateur n'existe pas!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (!db.livreDisponible(titre, 0)) {
-                    JOptionPane.showMessageDialog(this,
-                            "Livre non disponible",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                db.emprunterLivre(utilisateur, titre);
-                refreshTable();
-
-                JOptionPane.showMessageDialog(this,
-                        "Livre emprunté avec succès",
-                        "Succès",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                utilisateurEmpruntF.setText("");
-                LivreEmprunterF.setText("");
-
             } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
     }
+
     private String[][] loadDataEmprunts() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/emprunts.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
-                // Récupère uniquement les informations nécessaires : emprunteur, date début, date fin, titre du livre
                 String[] empruntData = {rowData[0], rowData[1], rowData[2], rowData[3], rowData[4]};
                 dataList.add(empruntData);
             }
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
@@ -251,11 +245,11 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
-                // Récupère uniquement le nom du livre (index 0) et la quantité (index 3)
                 String[] bookData = {rowData[0], rowData[4],rowData[3]};
                 dataList.add(bookData);
             }
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
@@ -272,6 +266,16 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         String[][] data = loadDataEmprunts();
         for (String[] row : data) {
             model.addRow(row);
+        }
+    }
+
+    public void refreshTable2() {
+        DefaultTableModel model2 = (DefaultTableModel) j1.getModel();
+        model2.setRowCount(0);
+
+        String[][] data1 = loadDataFromLivres();
+        for (String[] row : data1) {
+            model2.addRow(row);
         }
     }
 

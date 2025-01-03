@@ -122,13 +122,13 @@ public class ConnexionGUI extends JPanel implements ActionListener{
             if(verification()){
                 try {
                     if (db.utilisateurExiste(nom, pass)){
+                        enleverCharacteres();
                         JOptionPane.showMessageDialog(
                                 ConnexionGUI.this,
                                 "Connexion succes!",
                                 "Info:",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
-                        enleverCharacteres();
                     } else if (db.checkAdmin(nom, pass)) {
                         enleverCharacteres();
                         cardLayout.show(cardPanel, "AdminOptionStack");

@@ -139,14 +139,14 @@ public class RegistreGUI extends JPanel implements ActionListener {
                 try {
                     if (db.checkUtilisateur(nom)){
                         db.ajouterUtilisateur(utilisateurCree);
+                        enleverCharacteres();
+                        utilisateur.setText("");
                         JOptionPane.showMessageDialog(
                                 RegistreGUI.this,
                                 "Succes, compte creer!",
                                 "Info:",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
-                        enleverCharacteres();
-                        utilisateur.setText("");
                     } else {
                         JOptionPane.showMessageDialog(
                                 RegistreGUI.this,

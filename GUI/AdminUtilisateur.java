@@ -150,24 +150,21 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         List<String> errorMessages = new ArrayList<>();
 
         if (nom.isEmpty()) {
-            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
+            errorMessages.add("Le champ \"Nom d'utilisateur\" est requis.");
         } else if (nom.length() > 10) {
-            errorMessages.add("Ne peut pas entrer plus de 10 characteres pour nom d'utilisateur.");
-        } else if (nom.contains(" ")) {
-            errorMessages.add("Ne peut pas entrer d'espace pour nom d'utilisateur!");
-        } else if (nom.contains(",")) {
-            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir de virgule!");
+            errorMessages.add("Le nom d'utilisateur ne peut pas dépasser 10 caractères.");
+        } else if (nom.contains(" ") || nom.contains(",")) {
+            errorMessages.add("Le nom d'utilisateur ne peut contenir ni espaces ni virgules.");
         }
 
         if (pass.isEmpty()) {
-            errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
+            errorMessages.add("Le champ \"Mot de passe\" est requis.");
         } else if (pass.length() > 16) {
-            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour mot de passe.");
-        } else if (pass.contains(" ")) {
-            errorMessages.add("Ne peut pas entrer d'espace pour mot de passe!");
-        } else if (pass.contains(",")) {
-            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir de virgule!");
+            errorMessages.add("Le mot de passe ne peut pas dépasser 16 caractères.");
+        } else if (pass.contains(" ") || pass.contains(",")) {
+            errorMessages.add("Le mot de passe ne peut contenir ni espaces ni virgules.");
         }
+
 
         if (!errorMessages.isEmpty()) {
             JOptionPane.showMessageDialog(
@@ -200,20 +197,31 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
+
         if (command.equals("Supprimer")) {
             String nom = utilisateurF.getText();
+            if (db.aEmprunt(nom)){
+                JOptionPane.showMessageDialog(
+                        AdminUtilisateur.this,
+                        "Impossible de supprimer le compte car a un emprunt en cours!",
+                        "Erreur:",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
 
             try {
                 if (db.utilisateurExisteSansPass(nom)) {
                     db.supprimerUtilisateur(nom);
+                    refreshTable();
+                    enleverCharacteres();
                     JOptionPane.showMessageDialog(
                             AdminUtilisateur.this,
                             "Compte supprimer!",
                             "Info:",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    refreshTable();
-                    enleverCharacteres();
+                    return;
                 } else {
                     JOptionPane.showMessageDialog(
                             AdminUtilisateur.this,
@@ -221,10 +229,15 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
                             "Erreur:",
                             JOptionPane.ERROR_MESSAGE
                     );
-
+                    return;
                 }
             } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
+                return;
             }
 
         }
@@ -237,14 +250,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
                 try {
                     if (!db.utilisateurExisteSansPass(nom)) {
                         db.ajouterUtilisateur(utilisateur1);
+                        refreshTable();
+                        enleverCharacteres();
                         JOptionPane.showMessageDialog(
                                 AdminUtilisateur.this,
                                 "Compte ajouter!",
                                 "Info:",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
-                        refreshTable();
-                        enleverCharacteres();
                     } else {
                         JOptionPane.showMessageDialog(
                                 AdminUtilisateur.this,
@@ -254,9 +267,12 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
                         );
                     }
                 } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur système",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                 }
-
             }
         }
     }
@@ -272,6 +288,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
                 }
             }
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 

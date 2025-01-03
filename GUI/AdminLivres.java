@@ -195,6 +195,7 @@ public class AdminLivres extends JPanel implements ActionListener {
                 dataList.add(rowData);
             }
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
@@ -247,18 +248,19 @@ public class AdminLivres extends JPanel implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
                         return;
                     }
-                    try{
+
+                    try {
                         int livreIdInt = Integer.parseInt(livreF.getText());
                         int quantiter = Integer.parseInt(livreQuantiterF.getText());
                         if (db.livreDisponible(livreId, quantiter)) {
                             db.updateBookQuantity(livreId, quantiter * -1);
+                            refreshTable();
+                            livreF.setText("");
+                            livreQuantiterF.setText("");
                             JOptionPane.showMessageDialog(this,
                                     quantiter+" livre/s a été rétiré/s!",
                                     "Info",
                                     JOptionPane.INFORMATION_MESSAGE);
-                            refreshTable();
-                            livreF.setText("");
-                            livreQuantiterF.setText("");
                             return;
                         } else if (!db.livreDisponible(livreId, quantiter)) {
                             JOptionPane.showMessageDialog(this,
@@ -275,7 +277,12 @@ public class AdminLivres extends JPanel implements ActionListener {
                         return;
                     }
             } catch (IOException e){
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
+                return;
             }
         }
         if (command.equals("Ajouter")) {
@@ -286,7 +293,6 @@ public class AdminLivres extends JPanel implements ActionListener {
                         "Veuillez remplir tous les champs",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
-                return;
             }
             try{
                 int livreIdInt = Integer.parseInt(livreF.getText());
@@ -294,13 +300,14 @@ public class AdminLivres extends JPanel implements ActionListener {
 
                 if (db.livreExiste(livreId)) {
                     db.updateBookQuantity(livreId, quantiter);
+                    refreshTable();
+                    livreF.setText("");
+                    livreQuantiterF.setText("");
                     JOptionPane.showMessageDialog(this,
                             quantiter+" livre/s a été ajouté/s!",
                             "Info",
                             JOptionPane.INFORMATION_MESSAGE);
-                    refreshTable();
-                    livreF.setText("");
-                    livreQuantiterF.setText("");
+                    return;
                 } else if (!db.livreExiste(livreId)) {
                     JOptionPane.showMessageDialog(this,
                             "Livre n'existe pas!",
@@ -327,17 +334,17 @@ public class AdminLivres extends JPanel implements ActionListener {
                         Livre livre = new Livre(livreTitre,auteur,genre,quantite);
                         if (!db.livreExiste(livre)){
                             db.ajouterLivre(livre);
+                            refreshTable();
+                            livreCF.setText("");
+                            auteurF.setText("");
+                            genreF.setText("");
+                            quantiteF.setText("");
                             JOptionPane.showMessageDialog(
                                     AdminLivres.this,
                                     "Livre ajouté!",
                                     "Info:",
                                     JOptionPane.INFORMATION_MESSAGE
                             );
-                            refreshTable();
-                            livreCF.setText("");
-                            auteurF.setText("");
-                            genreF.setText("");
-                            quantiteF.setText("");
                             return;
                         } else {
                             JOptionPane.showMessageDialog(
@@ -346,10 +353,6 @@ public class AdminLivres extends JPanel implements ActionListener {
                                     "Erreur:",
                                     JOptionPane.ERROR_MESSAGE
                             );
-                            livreCF.setText("");
-                            auteurF.setText("");
-                            genreF.setText("");
-                            quantiteF.setText("");
                             return;
                         }
                     } catch (NumberFormatException e){
@@ -357,10 +360,16 @@ public class AdminLivres extends JPanel implements ActionListener {
                                 "La quantité ne peut pas contenir de lettres ou d'espaces!",
                                 "Erreur",
                                 JOptionPane.ERROR_MESSAGE);
+                        return;
                     }
                 }
             } catch (IOException e){
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
+                return;
             }
         }
         if (command.equals("Supprimer définitivement")){
@@ -375,12 +384,12 @@ public class AdminLivres extends JPanel implements ActionListener {
                 }
                 if (db.supprimerDefinitementCheck(livreId) && db.livreExiste(livreId)){
                     db.supprimerLivre(livreId);
+                    refreshTable();
+                    livreIDF.setText("");
                     JOptionPane.showMessageDialog(this,
                             "Le livre a été supprimé!",
                             "Info",
                             JOptionPane.INFORMATION_MESSAGE);
-                    refreshTable();
-                    livreIDF.setText("");
                 } else if (!db.supprimerDefinitementCheck(livreId) || !db.livreExiste(livreId)){
                     JOptionPane.showMessageDialog(this,
                             "Livre n'existe pas ou le livre n'a pas une quantité de 0 ou le livre est emprunté!",
@@ -388,6 +397,10 @@ public class AdminLivres extends JPanel implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur système",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
             }
         }
