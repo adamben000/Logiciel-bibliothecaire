@@ -1,1 +1,2 @@
-Les Misérables,Victor Hugo,Drama,5,null
+Les Misérables,Victor Hugo,Drame,6,6,1400
+Les Contemplations,Victor Hugo,Poesie,6,6,1970
