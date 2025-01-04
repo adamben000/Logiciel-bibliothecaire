@@ -239,43 +239,43 @@ public class AdminLivres extends JPanel implements ActionListener {
 
         if (command.equals("Retirer")) {
             try {
-                    String livreId = livreF.getText();
-                    String quantiterS = livreQuantiterF.getText();
-                    if (quantiterS.isEmpty() || livreId.isEmpty()){
+                String livreId = livreF.getText();
+                String quantiterS = livreQuantiterF.getText();
+                if (quantiterS.isEmpty() || livreId.isEmpty()){
                     JOptionPane.showMessageDialog(this,
                             "Veuillez remplir tous les champs",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
+                    return;
+                }
 
-                    try {
-                        int livreIdInt = Integer.parseInt(livreF.getText());
-                        int quantiter = Integer.parseInt(livreQuantiterF.getText());
-                        if (db.livreDisponible(livreId, quantiter)) {
-                            db.updateBookQuantity(livreId, quantiter * -1);
-                            refreshTable();
-                            livreF.setText("");
-                            livreQuantiterF.setText("");
-                            JOptionPane.showMessageDialog(this,
-                                    quantiter+" livre/s a été rétiré/s!",
-                                    "Info",
-                                    JOptionPane.INFORMATION_MESSAGE);
-                            return;
-                        } else if (!db.livreDisponible(livreId, quantiter)) {
-                            JOptionPane.showMessageDialog(this,
-                                    "Livre n'existe pas ou pas assez de livres!",
-                                    "Erreur",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                    } catch (NumberFormatException e){
+                try {
+                    int livreIdInt = Integer.parseInt(livreF.getText());
+                    int quantiter = Integer.parseInt(livreQuantiterF.getText());
+                    if (db.livreDisponible(livreId, quantiter)) {
+                        db.updateBookQuantity(livreId, quantiter * -1);
+                        refreshTable();
+                        livreF.setText("");
+                        livreQuantiterF.setText("");
                         JOptionPane.showMessageDialog(this,
-                                "Les champs ne peuvent pas contenir de lettres ou d'espaces!",
+                                quantiter+" livre/s a été rétiré/s!",
+                                "Info",
+                                JOptionPane.INFORMATION_MESSAGE);
+                        return;
+                    } else if (!db.livreDisponible(livreId, quantiter)) {
+                        JOptionPane.showMessageDialog(this,
+                                "Livre n'existe pas ou pas assez de livres!",
                                 "Erreur",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
+                } catch (NumberFormatException e){
+                    JOptionPane.showMessageDialog(this,
+                            "Les champs ne peuvent pas contenir de lettres ou d'espaces!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             } catch (IOException e){
                 JOptionPane.showMessageDialog(this,
                         "Erreur système",

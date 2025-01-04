@@ -52,7 +52,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         };
 
         String[][] data1 = loadDataFromLivres();
-        String[] columnNames1 = {"Nom des livres","ID", "quantité"};
+        String[] columnNames1 = {"Nom des livres","ID", "Quantité"};
         DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
             @Override
             public boolean isCellEditable(int row, int column) {
