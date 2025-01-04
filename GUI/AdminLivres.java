@@ -358,7 +358,7 @@ public class AdminLivres extends JPanel implements ActionListener {
                     } catch (NumberFormatException e){
                         JOptionPane.showMessageDialog(this,
                                 "La quantité ne peut pas contenir de lettres ou d'espaces!",
-                                "Erreur",
+                                "Erreur:",
                                 JOptionPane.ERROR_MESSAGE);
                         return;
                     }
