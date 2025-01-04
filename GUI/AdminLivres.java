@@ -51,7 +51,7 @@ public class AdminLivres extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
 
         String[][] data = loadDataFromLivres();
-        String[] columnNames = {"Livres", "Auteur", "Genre", "Quantité", "ID"};
+        String[] columnNames = {"Livres", "Auteur", "Genre", "Quantité", "Disponibles", "ID"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
