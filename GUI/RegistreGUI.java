@@ -33,7 +33,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
 
     private Database db = new Database();
 
-    public RegistreGUI(CardLayout cardLayout, JPanel cardPanel) {
+    public RegistreGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setLayout(gridLayout);
@@ -77,7 +77,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
         add(retour, gbc);
 
         enregistrer.addActionListener(this);
-        retour.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
+        retour.addActionListener(e -> {frame.setTitle("Connexion-Librairie");cardLayout.show(cardPanel, "Connexion");});
 
     }
     private void enleverCharacteres(){

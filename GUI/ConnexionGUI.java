@@ -19,6 +19,8 @@ public class ConnexionGUI extends JPanel implements ActionListener{
     JButton creationDeCompteBouton = new JButton("Creation de compte");
     JLabel creationDeCompteLabel = new JLabel("Pas de compte?");
 
+    //sauvegarder le nom
+    public String nomUtilisateur;
 
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
@@ -29,10 +31,9 @@ public class ConnexionGUI extends JPanel implements ActionListener{
 
     private Database db = new Database();
 
-    public ConnexionGUI(CardLayout cardLayout, JPanel cardPanel) {
+    public ConnexionGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
-
         setLayout(gridLayout);
 
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -66,10 +67,53 @@ public class ConnexionGUI extends JPanel implements ActionListener{
         seConnecterBouton.setBackground(Color.black);
         seConnecterBouton.setForeground(Color.white);
 
-        seConnecterBouton.addActionListener(this);
+        seConnecterBouton.addActionListener(e -> {
+            String nom = utilisateur.getText();
+            String pass = new String(motDePasse.getPassword());
 
-        creationDeCompteBouton.addActionListener(e -> cardLayout.show(cardPanel, "Registre"));
+            if(verification()){
+                try {
+                    if (db.utilisateurExiste(nom, pass)){
+                        enleverCharacteres();
+                        nomUtilisateur = nom;
+                        Component[] components = cardPanel.getComponents();
+                        for (Component component : components) {
+                            if (component instanceof Utilisateur) {
+                                cardPanel.remove(component);
+                            }
+                        }
 
+                        Component[] components1 = cardPanel.getComponents();
+                        for (Component component1 : components1) {
+                            if (component1 instanceof Utilisateur) {
+                                Utilisateur Utilisateur = (Utilisateur) component1;
+                                Utilisateur.refreshTable();
+                            }
+                        }
+                        cardPanel.add(new Utilisateur(cardLayout, cardPanel, frame, nomUtilisateur), "Utilisateur");
+                        frame.setSize(1003,600);
+                        frame.setTitle("Utilisateurs-Librairie");
+                        frame.setLocationRelativeTo(null);
+                        cardLayout.show(cardPanel, "Utilisateur");
+
+
+                    } else if (db.checkAdmin(nom, pass)) {
+                        enleverCharacteres();
+                        cardLayout.show(cardPanel, "AdminOptionStack");
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                ConnexionGUI.this,
+                                "Utilisateur ou mot de passe incorrecte!",
+                                "Erreur:",
+                                JOptionPane.ERROR_MESSAGE
+                        );
+                    }
+                } catch (IOException e1) {
+                    System.out.println("erreur");
+                }
+            }
+        });
+        creationDeCompteBouton.addActionListener(e -> {frame.setTitle("Registre-Librairie");cardLayout.show(cardPanel, "Registre");});
     }
     private boolean verification(){
         String nom = utilisateur.getText();
@@ -116,36 +160,8 @@ public class ConnexionGUI extends JPanel implements ActionListener{
         String command = actionEvent.getActionCommand();
 
         if (command.equals("Connexion")){
-            String nom = utilisateur.getText();
-            String pass = new String(motDePasse.getPassword());
 
-            if(verification()){
-                try {
-                    if (db.utilisateurExiste(nom, pass)){
-                        enleverCharacteres();
-                        JOptionPane.showMessageDialog(
-                                ConnexionGUI.this,
-                                "Connexion succes!",
-                                "Info:",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-                    } else if (db.checkAdmin(nom, pass)) {
-                        enleverCharacteres();
-                        cardLayout.show(cardPanel, "AdminOptionStack");
-                    } else {
-                        JOptionPane.showMessageDialog(
-                                ConnexionGUI.this,
-                                "Utilisateur ou mot de passe incorrecte!",
-                                "Erreur:",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
-
 
 }

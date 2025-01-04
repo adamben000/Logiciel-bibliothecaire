@@ -52,7 +52,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         };
 
         String[][] data1 = loadDataFromLivres();
-        String[] columnNames1 = {"Nom des livres","ID", "Quantité"};
+        String[] columnNames1 = {"Nom des livres","ID", "Disponibles"};
         DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -245,7 +245,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] rowData = line.split(",");
-                String[] bookData = {rowData[0], rowData[4],rowData[3]};
+                String[] bookData = {rowData[0], rowData[5],rowData[4]};
                 dataList.add(bookData);
             }
         } catch (IOException e) {
