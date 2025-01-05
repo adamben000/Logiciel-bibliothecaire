@@ -163,15 +163,24 @@ public class AdminEmprunts extends JPanel implements ActionListener {
                     return;
                 }
 
+                int joursRetard = db.enRetard(utilisateur);
                 if (db.retournerLivre(utilisateur)) {
                     refreshTable();
                     refreshTable2();
                     utilisateurF.setText("");
                     LivreEmprunterF.setText("");
-                    JOptionPane.showMessageDialog(this,
-                            "Livre retourné avec succès !",
-                            "Info",
-                            JOptionPane.INFORMATION_MESSAGE);
+
+                    if (joursRetard > 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "Livre retourné en retard de " + joursRetard + " jours",
+                                "Info",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Livre retourné avec succès !",
+                                "Info",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this,
                             "Erreur : Aucun emprunt trouvé pour cet utilisateur.",

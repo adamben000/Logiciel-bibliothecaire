@@ -289,6 +289,29 @@ public class Database {
 
         return true;
     }
+    public int enRetard(String nomUtilisateur) throws IOException {
+        verifierFichier(fichierEmprunts);
+
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
+                    continue;
+                }
+                String[] donnees = ligne.split(",");
+
+                if (donnees[0].equals(nomUtilisateur)) {
+                    java.time.LocalDate dateRetour = java.time.LocalDate.parse(donnees[4]);
+                    java.time.LocalDate dateActuelle = java.time.LocalDate.now();
+                    if (dateActuelle.isAfter(dateRetour)) {
+                        return (int) java.time.temporal.ChronoUnit.DAYS.between(dateRetour, dateActuelle);
+                    }
+                    return 0;
+                }
+            }
+        }
+        return 0;
+    }
 
     public boolean retournerLivre(String nomUtilisateur) throws IOException {
         verifierFichier(fichierEmprunts);
