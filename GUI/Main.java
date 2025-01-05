@@ -20,7 +20,7 @@ public class Main {
         cardPanel.add(new AdminUtilisateur(cardLayout, cardPanel, frame), "AdminUtilisateur");
         cardPanel.add(new AdminLivres(cardLayout, cardPanel, frame), "AdminLivres");
         cardPanel.add(new AdminEmprunts(cardLayout, cardPanel, frame), "AdminEmprunts");
-        cardPanel.add(new Utilisateur(cardLayout, cardPanel, frame, null), "Utilisateur");
+        cardPanel.add(new UtilisateurGUI(cardLayout, cardPanel, frame, null), "Utilisateur");
 
         frame.add(cardPanel);
         frame.setVisible(true);

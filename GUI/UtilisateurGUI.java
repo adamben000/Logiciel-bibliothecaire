@@ -18,7 +18,7 @@ import javax.swing.event.*;
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 
-public class Utilisateur extends JPanel implements ActionListener {
+public class UtilisateurGUI extends JPanel implements ActionListener {
 
     private Database db = new Database();
 
@@ -49,7 +49,7 @@ public class Utilisateur extends JPanel implements ActionListener {
         }
     }
 
-    public Utilisateur(CardLayout cardLayout, JPanel cardPanel, JFrame frame, String nomUtilisateur) {
+    public UtilisateurGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame, String nomUtilisateur) {
         setSize(1003, 600);
         this.nomUtilisateur = nomUtilisateur;
 
@@ -359,9 +359,9 @@ public class Utilisateur extends JPanel implements ActionListener {
             emprunterBouton.setVisible(false);
             retournerBouton.setVisible(true);
         } else if (infoEmprunt[0].equals("PAS_D_EMPRUNT")) {
-            livreEmprunter.setText("Livre emprunter: Aucun livre");
+            livreEmprunter.setText("Livre emprunter:Aucun livre");
             dateDEmprunt.setText("Date d'emprunt :Aucune");
-            dateDERemise.setText("Date de remise: Aucune");
+            dateDERemise.setText("Date de remise:Aucune");
             retournerBouton.setVisible(false);
             emprunterBouton.setVisible(true);
         }else{
