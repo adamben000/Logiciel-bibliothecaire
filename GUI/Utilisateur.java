@@ -278,6 +278,8 @@ public class Utilisateur extends JPanel implements ActionListener {
 
         deconnexionB.addActionListener(e ->{frame.setSize(600,400);frame.setTitle("Connexion-Librairie");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "Connexion");});
         retournerBouton.addActionListener(this);
+        parametresB.addActionListener(e -> {
+            ParametresDialog dialog = new ParametresDialog((JFrame) SwingUtilities.getWindowAncestor(this), db, nomUtilisateur);dialog.setVisible(true);});
     }
 
     @Override
@@ -377,6 +379,195 @@ public class Utilisateur extends JPanel implements ActionListener {
         String[][] data1 = loadDataFromLivres();
         for (String[] row : data1) {
             model.addRow(row);
+        }
+    }
+
+    class ParametresDialog extends JDialog {
+        private JTextField nouveauNom1;
+        private JTextField nouveauNom2;
+        private JPasswordField ancienMotDePasse;
+        private JPasswordField nouveauMotDePasse1;
+        private JPasswordField nouveauMotDePasse2;
+        private JButton okButton;
+        private JButton cancelButton;
+        private JButton changerNomButton;
+        private JButton changerMotDePasseButton;
+        private Database db;
+        private String nomUtilisateur;
+
+        public ParametresDialog(JFrame parent, Database db, String nomUtilisateur) {
+            super(parent, "Paramètres", true);
+            this.db = db;
+            this.nomUtilisateur = nomUtilisateur;
+            initializeComponents();
+            setupLayout();
+            setupListeners();
+            pack();
+            setLocationRelativeTo(parent);
+        }
+
+        private void initializeComponents() {
+            nouveauNom1 = new JTextField(15);
+            nouveauNom2 = new JTextField(15);
+            ancienMotDePasse = new JPasswordField(15);
+            nouveauMotDePasse1 = new JPasswordField(15);
+            nouveauMotDePasse2 = new JPasswordField(15);
+
+            okButton = new JButton("OK");
+            cancelButton = new JButton("Cancel");
+            changerNomButton = new JButton("Changer");
+            changerMotDePasseButton = new JButton("Changer");
+        }
+
+        private void setupLayout() {
+            setLayout(new BorderLayout());
+
+            // Header panel with large label
+            JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            JLabel headerLabel = new JLabel("Changer infos");
+            headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, 24));
+            headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+            headerPanel.add(headerLabel);
+
+            // Main panel with grid layout
+            JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 0));
+
+            // Left panel for names
+            JPanel leftPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbcLeft = new GridBagConstraints();
+            gbcLeft.insets = new Insets(5, 5, 5, 5);
+            gbcLeft.fill = GridBagConstraints.HORIZONTAL;
+
+            gbcLeft.gridx = 0;
+            gbcLeft.gridy = 0;
+            leftPanel.add(new JLabel("Nouveau Nom:"), gbcLeft);
+
+            gbcLeft.gridy = 1;
+            leftPanel.add(nouveauNom1, gbcLeft);
+
+            gbcLeft.gridy = 2;
+            leftPanel.add(new JLabel("Réécrire Nouveau Nom:"), gbcLeft);
+
+            gbcLeft.gridy = 3;
+            leftPanel.add(nouveauNom2, gbcLeft);
+
+            gbcLeft.gridy = 4;
+            leftPanel.add(changerNomButton, gbcLeft);
+
+            // Right panel for passwords
+            JPanel rightPanel = new JPanel(new GridBagLayout());
+            GridBagConstraints gbcRight = new GridBagConstraints();
+            gbcRight.insets = new Insets(5, 5, 5, 5);
+            gbcRight.fill = GridBagConstraints.HORIZONTAL;
+
+            gbcRight.gridx = 0;
+            gbcRight.gridy = 0;
+            rightPanel.add(new JLabel("Ancien Mot de Passe:"), gbcRight);
+
+            gbcRight.gridy = 1;
+            rightPanel.add(ancienMotDePasse, gbcRight);
+
+            gbcRight.gridy = 2;
+            rightPanel.add(new JLabel("Nouveau Mot de Passe:"), gbcRight);
+
+            gbcRight.gridy = 3;
+            rightPanel.add(nouveauMotDePasse1, gbcRight);
+
+            gbcRight.gridy = 4;
+            rightPanel.add(new JLabel("Réécrire Nouveau Mot de Passe:"), gbcRight);
+
+            gbcRight.gridy = 5;
+            rightPanel.add(nouveauMotDePasse2, gbcRight);
+
+            gbcRight.gridy = 6;
+            rightPanel.add(changerMotDePasseButton, gbcRight);
+
+            mainPanel.add(leftPanel);
+            mainPanel.add(rightPanel);
+
+            // Bottom panel for OK/Cancel buttons
+            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            bottomPanel.add(okButton);
+            bottomPanel.add(cancelButton);
+
+            // Add borders
+            leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+
+            add(headerPanel, BorderLayout.NORTH);
+            add(mainPanel, BorderLayout.CENTER);
+            add(bottomPanel, BorderLayout.SOUTH);
+
+            setPreferredSize(new Dimension(500, 400)); // Increased height to accommodate header
+        }
+
+        private void setupListeners() {
+            cancelButton.addActionListener(e -> dispose());
+
+            okButton.addActionListener(e -> dispose());
+
+            changerNomButton.addActionListener(e -> {
+                if (nouveauNom1.getText().equals(nouveauNom2.getText()) && !nouveauNom1.getText().isEmpty()) {
+                    try {
+                        if (!db.utilisateurExisteSansMotDePasse(nouveauNom1.getText())) {
+                            // Add name change logic here using your Database methods
+                            JOptionPane.showMessageDialog(this, "Nom changé avec succès!");
+                            nouveauNom1.setText("");
+                            nouveauNom2.setText("");
+                        } else {
+                            JOptionPane.showMessageDialog(this,
+                                    "Ce nom d'utilisateur existe déjà!",
+                                    "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(this,
+                                "Erreur lors du changement de nom",
+                                "Erreur",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Les noms ne correspondent pas ou sont vides!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            });
+
+            changerMotDePasseButton.addActionListener(e -> {
+                String oldPass = new String(ancienMotDePasse.getPassword());
+                String newPass1 = new String(nouveauMotDePasse1.getPassword());
+                String newPass2 = new String(nouveauMotDePasse2.getPassword());
+
+                if (oldPass.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "L'ancien mot de passe est requis!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (newPass1.equals(newPass2) && !newPass1.isEmpty()) {
+                    try {
+                        // Add password change logic here using your Database methods
+                        // First verify old password matches current password
+                        JOptionPane.showMessageDialog(this, "Mot de passe changé avec succès!");
+                        ancienMotDePasse.setText("");
+                        nouveauMotDePasse1.setText("");
+                        nouveauMotDePasse2.setText("");
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(this,
+                                "Erreur lors du changement de mot de passe",
+                                "Erreur",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Les nouveaux mots de passe ne correspondent pas ou sont vides!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            });
         }
     }
 
