@@ -64,6 +64,7 @@ public class AdminGUI_optionStack extends JPanel{
                     AdminEmprunts adminEmprunts = (AdminEmprunts) component;
                     adminEmprunts.refreshTable();
                     adminEmprunts.refreshTable2();
+                    adminEmprunts.refreshTable3();
                 }
             }
             frame.setSize(1000, 600);frame.setTitle("Emprunts-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminEmprunts");});

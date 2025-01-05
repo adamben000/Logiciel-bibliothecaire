@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -134,6 +135,8 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
         bottomPanel.add(panel2);
         bottomPanel.add(panel3);
+        panel2.setBorder(new LineBorder(Color.BLACK, 1));
+        panel3.setBorder(new LineBorder(Color.BLACK, 1));
 
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
