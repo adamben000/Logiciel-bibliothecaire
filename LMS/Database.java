@@ -363,6 +363,23 @@ public class Database {
         throw new IOException("Livre non trouvé !");
     }
 
+    public String[] detecterEmprunt(String nomUtilisateur) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("db/emprunts.txt"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] empruntInfo = line.split(",");
+                if (empruntInfo[0].equals(nomUtilisateur)) {
+                    return empruntInfo;
+                }
+            }
+            return new String[]{"PAS_D_EMPRUNT"};
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur: Fichier introuvable.");
+        }
+        return null;
+    }
+
     public void mettreAJourQuantiteLivre(String idLivre, int changementQuantite) throws IOException {
         verifierFichier(fichierLivres);
         List<String> lignesLivres = new ArrayList<>();

@@ -98,18 +98,20 @@ public class ConnexionGUI extends JPanel implements ActionListener {
                             }
                         }
 
-                        Component[] components1 = cardPanel.getComponents();
-                        for (Component component1 : components1) {
-                            if (component1 instanceof Utilisateur) {
-                                Utilisateur Utilisateur = (Utilisateur) component1;
-                                Utilisateur.refreshTable();
-                            }
-                        }
                         cardPanel.add(new Utilisateur(cardLayout, cardPanel, frame, nomUtilisateur), "Utilisateur");
                         frame.setSize(1003, 600);
                         frame.setTitle("Utilisateurs-Librairie");
                         frame.setLocationRelativeTo(null);
                         cardLayout.show(cardPanel, "Utilisateur");
+
+                        Component[] components1 = cardPanel.getComponents();
+                        for (Component component1 : components1) {
+                            if (component1 instanceof Utilisateur) {
+                                Utilisateur Utilisateur = (Utilisateur) component1;
+                                Utilisateur.refreshTable();
+                                Utilisateur.empruntDetection();
+                            }
+                        }
 
 
                     } else if (db.verifierAdmin(nom, pass)) {
