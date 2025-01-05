@@ -22,7 +22,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
 
     JButton enregistrer = new JButton("Enregistrer");
 
-    JButton retour = new JButton("retour");
+    JButton retour = new JButton("Retour");
 
 
     GridBagLayout gridLayout = new GridBagLayout();
