@@ -111,7 +111,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         panelGauche.add(deconnexionPanel,BorderLayout.SOUTH);
 
         JPanel mainPanelGauche = new JPanel();
-        emprunterBouton.setText("emprunter");
+        emprunterBouton.setText("Emprunter");
         livreEmprunter.setText("Livre emprunter: ");
         dateDEmprunt.setText("Date d'emprunt: ");
         dateDERemise.setText("Date de remise: ");
