@@ -84,47 +84,57 @@ public class RegistreGUI extends JPanel implements ActionListener {
         motDePasse.setText("");
         comfirmMotDePasse.setText("");
     }
-    private boolean verification(){
+    private boolean verification() {
         String nom = utilisateur.getText();
         String pass = new String(motDePasse.getPassword());
         String confirmerPass = new String(comfirmMotDePasse.getPassword());
 
         List<String> errorMessages = new ArrayList<>();
 
-        if (nom.contains(",")){
-            errorMessages.add("Le \"Nom d'utilisateur\" ne peut pas contenir de virgule!");
-        } else if (nom.isEmpty()){
-            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas etre vide!");
-        } else if (nom.length()>10){
-            errorMessages.add("Ne peut pas entrer plus de 10 characteres pour votre nom d'utilisateur.");
-        } else if (nom.contains(" ")) {
-            errorMessages.add("Ne peut pas entrer d'espace pour votre nom d'utilisateur!");
+        if (nom.isEmpty()) {
+            errorMessages.add("Le champ \"Nom d'utilisateur\" ne peut pas être vide !");
+        } else {
+            if (nom.length() > 10) {
+                errorMessages.add("Le nom d'utilisateur ne peut pas dépasser 10 caractères.");
+            }
+            if (nom.contains(" ")) {
+                errorMessages.add("Le nom d'utilisateur ne peut pas contenir d'espace.");
+            }
+            if (nom.contains(",")) {
+                errorMessages.add("Le nom d'utilisateur ne peut pas contenir de virgule.");
+            }
         }
 
-        if (pass.isEmpty()){
-            errorMessages.add("Le champ \"Mot de passe\" ne peut pas etre vide!");
-        } else if (pass.length()>16){
-            errorMessages.add("Ne peut pas entrer plus de 16 characteres pour votre mot de passe.");
-        } else if (pass.contains(" ")) {
-            errorMessages.add("Ne peut pas entrer d'espace pour votre mot de passe!");
-        } else if (pass.contains(",")) {
-            errorMessages.add("Le \"Mot de passe\" ne peut pas contenir de virgule!");
-        } else if (!pass.equals(confirmerPass)){
-            errorMessages.add("Erreur mot de passe differents!");
+        if (pass.isEmpty()) {
+            errorMessages.add("Le champ \"Mot de passe\" ne peut pas être vide !");
+        } else {
+            if (pass.length() > 16) {
+                errorMessages.add("Le mot de passe ne peut pas dépasser 16 caractères.");
+            }
+            if (pass.contains(" ")) {
+                errorMessages.add("Le mot de passe ne peut pas contenir d'espace.");
+            }
+            if (pass.contains(",")) {
+                errorMessages.add("Le mot de passe ne peut pas contenir de virgule.");
+            }
+        }
+
+        if (!pass.equals(confirmerPass)) {
+            errorMessages.add("Le mot de passe et sa confirmation ne correspondent pas.");
         }
 
         if (!errorMessages.isEmpty()) {
             JOptionPane.showMessageDialog(
-                    RegistreGUI.this,
+                    this,
                     String.join("\n", errorMessages),
-                    "Erreurs:",
+                    "Erreurs :",
                     JOptionPane.ERROR_MESSAGE
             );
             enleverCharacteres();
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -137,7 +147,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
 
             if(verification()){
                 try {
-                    if (db.checkUtilisateur(nom)){
+                    if (db.verifierNomUtilisateur(nom)){
                         db.ajouterUtilisateur(utilisateurCree);
                         enleverCharacteres();
                         utilisateur.setText("");
@@ -150,7 +160,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
                     } else {
                         JOptionPane.showMessageDialog(
                                 RegistreGUI.this,
-                                "Nom d'utilisateur deja pris!",
+                                "Ce nom d'utilisateur est déjà pris. Veuillez en choisir un autre.",
                                 "Erreur:",
                                 JOptionPane.ERROR_MESSAGE
                         );

@@ -148,31 +148,39 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
             if (utilisateur.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Veuillez remplir le champ \"Utilisateur:\"",
+                        "Veuillez remplir le champ \"Utilisateur:\".",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
+                if (!db.utilisateurExisteSansMotDePasse(utilisateur)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : L'utilisateur spécifié n'existe pas.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (db.retournerLivre(utilisateur)) {
                     refreshTable();
                     refreshTable2();
                     utilisateurF.setText("");
                     LivreEmprunterF.setText("");
                     JOptionPane.showMessageDialog(this,
-                            "Livre retourné avec succès!",
+                            "Livre retourné avec succès !",
                             "Info",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Erreur lors du retour: livre non trouvé ou mauvais utilisateur",
+                            "Erreur : Aucun emprunt trouvé pour cet utilisateur.",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur système",
+                        "Erreur système lors du retour du livre.",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
@@ -185,31 +193,63 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
             if (utilisateur.isEmpty() || livreId.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Veuillez remplir tous les champs",
+                        "Veuillez remplir tous les champs : Utilisateur et Livre ID.",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try {
+                if (!db.utilisateurExisteSansMotDePasse(utilisateur)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : L'utilisateur spécifié n'existe pas.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (db.aEmprunt(utilisateur)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : Cet utilisateur a déjà un emprunt actif.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!db.livreExiste(livreId)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : Le livre spécifié n'existe pas.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!db.livreDisponible(livreId, 1)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : Le livre spécifié n'est pas disponible.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
                 if (db.emprunterLivre(utilisateur, livreId)) {
                     refreshTable();
                     refreshTable2();
                     utilisateurEmpruntF.setText("");
                     LivreEmprunterF.setText("");
                     JOptionPane.showMessageDialog(this,
-                            "Livre emprunté avec succès",
+                            "Livre emprunté avec succès !",
                             "Succès",
                             JOptionPane.INFORMATION_MESSAGE);
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Livre non disponible ou utilisateur a déjà un emprunt ou utilisateur n'existe pas",
+                            "Erreur inattendue lors de l'emprunt.",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur système",
+                        "Erreur système lors de l'emprunt.",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();

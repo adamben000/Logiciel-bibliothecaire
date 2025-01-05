@@ -195,214 +195,286 @@ public class AdminLivres extends JPanel implements ActionListener {
                 dataList.add(rowData);
             }
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Erreur lors du chargement des livres. Vérifiez le fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
         return dataList.toArray(new String[0][]);
     }
 
     public void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
-
         String[][] data = loadDataFromLivres();
         for (String[] row : data) {
             model.addRow(row);
         }
     }
 
-    public boolean verification(){
+    public boolean verification() {
         String livreTitre = livreCF.getText();
         String auteur = auteurF.getText();
         String genre = genreF.getText();
         String quantite = quantiteF.getText();
 
-        if (livreTitre.isEmpty() || auteur.isEmpty() || genre.isEmpty() || quantite.isEmpty()){
+        if (livreTitre.contains(",")) {
             JOptionPane.showMessageDialog(this,
-                    "Veuillez remplir tous les champs",
-                    "Erreur",
+                    "Le titre du livre ne doit pas contenir de virgules.",
+                    "Erreur de format",
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
-        if (livreTitre.contains(",")|| auteur.contains(",") || genre.contains(",") || quantite.contains(",")){
+
+        if (auteur.contains(",")) {
             JOptionPane.showMessageDialog(this,
-                    "Aucun champs ne peut avoir des virgules!",
-                    "Erreur",
+                    "Le nom de l'auteur ne doit pas contenir de virgules.",
+                    "Erreur de format",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (genre.contains(",")) {
+            JOptionPane.showMessageDialog(this,
+                    "Le genre du livre ne doit pas contenir de virgules.",
+                    "Erreur de format",
+                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+
+        if (quantite.contains(",")) {
+            JOptionPane.showMessageDialog(this,
+                    "La quantité ne doit pas contenir de virgules.",
+                    "Erreur de format",
                     JOptionPane.ERROR_MESSAGE);
             return false;
         }
         return true;
     }
-    public void actionPerformed( ActionEvent actionEvent ) {
+    public void actionPerformed(ActionEvent actionEvent) {
         String command = actionEvent.getActionCommand();
 
-        if (command.equals("Retirer")) {
-            try {
-                String livreId = livreF.getText();
-                String quantiterS = livreQuantiterF.getText();
-                if (quantiterS.isEmpty() || livreId.isEmpty()){
-                    JOptionPane.showMessageDialog(this,
-                            "Veuillez remplir tous les champs",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                try {
-                    int livreIdInt = Integer.parseInt(livreF.getText());
-                    int quantiter = Integer.parseInt(livreQuantiterF.getText());
-                    if (db.livreDisponible(livreId, quantiter)) {
-                        db.updateBookQuantity(livreId, quantiter * -1);
-                        refreshTable();
-                        livreF.setText("");
-                        livreQuantiterF.setText("");
-                        JOptionPane.showMessageDialog(this,
-                                quantiter+" livre/s a été rétiré/s!",
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE);
-                        return;
-                    } else if (!db.livreDisponible(livreId, quantiter)) {
-                        JOptionPane.showMessageDialog(this,
-                                "Livre n'existe pas ou pas assez de livres!",
-                                "Erreur",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-                } catch (NumberFormatException e){
-                    JOptionPane.showMessageDialog(this,
-                            "Les champs ne peuvent pas contenir de lettres ou d'espaces!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            } catch (IOException e){
-                JOptionPane.showMessageDialog(this,
-                        "Erreur système",
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
-                return;
-            }
+        switch (command) {
+            case "Retirer":
+                retirerLivre();
+                break;
+            case "Ajouter":
+                ajouterQuantite();
+                break;
+            case "Ajouter livre":
+                ajouterNouveauLivre();
+                break;
+            case "Supprimer définitivement":
+                supprimerLivreDefinitivement();
+                break;
         }
-        if (command.equals("Ajouter")) {
+    }
+
+    private void retirerLivre() {
+        try {
             String livreId = livreF.getText();
-            String quantiterS = livreQuantiterF.getText();
-            if (quantiterS.isEmpty() || livreId.isEmpty()){
-                JOptionPane.showMessageDialog(this,
-                        "Veuillez remplir tous les champs",
-                        "Erreur",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-            try{
-                int livreIdInt = Integer.parseInt(livreF.getText());
-                int quantiter = Integer.parseInt(livreQuantiterF.getText());
+            String quantiteStr = livreQuantiterF.getText();
 
-                if (db.livreExiste(livreId)) {
-                    db.updateBookQuantity(livreId, quantiter);
-                    refreshTable();
-                    livreF.setText("");
-                    livreQuantiterF.setText("");
+            if (livreId.isEmpty() || quantiteStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez remplir tous les champs pour retirer un livre.",
+                        "Erreur de saisie",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                int quantite = Integer.parseInt(quantiteStr);
+                if (quantite <= 0) {
                     JOptionPane.showMessageDialog(this,
-                            quantiter+" livre/s a été ajouté/s!",
-                            "Info",
-                            JOptionPane.INFORMATION_MESSAGE);
+                            "La quantité doit être un nombre positif.",
+                            "Erreur de valeur",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
-                } else if (!db.livreExiste(livreId)) {
+                }
+
+                if (!db.livreExiste(livreId)) {
                     JOptionPane.showMessageDialog(this,
-                            "Livre n'existe pas!",
+                            "Erreur : Le livre n'existe pas.",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-            } catch (NumberFormatException e){
+
+                if (!db.livreDisponible(livreId, quantite)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : Quantité insuffisante pour ce livre.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                db.mettreAJourQuantiteLivre(livreId, -quantite);
+                refreshTable();
+                livreF.setText("");
+                livreQuantiterF.setText("");
                 JOptionPane.showMessageDialog(this,
-                        "Les champs ne peuvent pas contenir de lettres ou d'espaces!",
-                        "Erreur",
+                        quantite + " exemplaire(s) retiré(s) avec succès.",
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                        "La quantité doit être un nombre entier.",
+                        "Erreur de format",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de la mise à jour des données.",
+                    "Erreur système",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    private void ajouterQuantite() {
+        try {
+            String livreId = livreF.getText();
+            String quantiteStr = livreQuantiterF.getText();
+
+            if (livreId.isEmpty() || quantiteStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Veuillez remplir tous les champs pour ajouter une quantité.",
+                        "Erreur de saisie",
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
+
+            try {
+                int quantite = Integer.parseInt(quantiteStr);
+                if (quantite <= 0) {
+                    JOptionPane.showMessageDialog(this,
+                            "La quantité doit être un nombre positif.",
+                            "Erreur de valeur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (!db.livreExiste(livreId)) {
+                    JOptionPane.showMessageDialog(this,
+                            "Erreur : Le livre n'existe pas.",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                db.mettreAJourQuantiteLivre(livreId, quantite);
+                refreshTable();
+                livreF.setText("");
+                livreQuantiterF.setText("");
+                JOptionPane.showMessageDialog(this,
+                        quantite + " exemplaire(s) ajouté(s) avec succès.",
+                        "Succès",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this,
+                        "La quantité doit être un nombre entier.",
+                        "Erreur de format",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de la mise à jour des données.",
+                    "Erreur système",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
-        if (command.equals("Ajouter livre")){
-            try{
-                if (verification()){
-                    String livreTitre = livreCF.getText();
-                    String auteur = auteurF.getText();
-                    String genre = genreF.getText();
-                    try{
-                        int quantite = Integer.parseInt(quantiteF.getText());
-                        Livre livre = new Livre(livreTitre,auteur,genre,quantite);
-                        if (!db.livreExiste(livre)){
-                            db.ajouterLivre(livre);
-                            refreshTable();
-                            livreCF.setText("");
-                            auteurF.setText("");
-                            genreF.setText("");
-                            quantiteF.setText("");
-                            JOptionPane.showMessageDialog(
-                                    AdminLivres.this,
-                                    "Livre ajouté!",
-                                    "Info:",
-                                    JOptionPane.INFORMATION_MESSAGE
-                            );
-                            return;
-                        } else {
-                            JOptionPane.showMessageDialog(
-                                    AdminLivres.this,
-                                    "Livre existe deja!",
-                                    "Erreur:",
-                                    JOptionPane.ERROR_MESSAGE
-                            );
-                            return;
-                        }
-                    } catch (NumberFormatException e){
-                        JOptionPane.showMessageDialog(this,
-                                "La quantité ne peut pas contenir de lettres ou d'espaces!",
-                                "Erreur:",
-                                JOptionPane.ERROR_MESSAGE);
-                        return;
+    }
+
+
+    private void ajouterNouveauLivre() {
+        try {
+            if (verification()) {
+                String livreTitre = livreCF.getText();
+                String auteur = auteurF.getText();
+                String genre = genreF.getText();
+                try {
+                    int quantite = Integer.parseInt(quantiteF.getText());
+                    Livre livre = new Livre(livreTitre, auteur, genre, quantite);
+                    if (!db.livreExiste(livre)) {
+                        db.ajouterLivre(livre);
+                        refreshTable();
+                        livreCF.setText("");
+                        auteurF.setText("");
+                        genreF.setText("");
+                        quantiteF.setText("");
+                        JOptionPane.showMessageDialog(
+                                AdminLivres.this,
+                                "Livre ajouté avec succès!",
+                                "Succès",
+                                JOptionPane.INFORMATION_MESSAGE
+                        );
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                AdminLivres.this,
+                                "Le livre existe déjà.",
+                                "Erreur",
+                                JOptionPane.ERROR_MESSAGE
+                        );
                     }
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(this,
+                            "La quantité doit être un nombre entier.",
+                            "Erreur de format",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            } catch (IOException e){
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de l'ajout du livre.",
+                    "Erreur système",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void supprimerLivreDefinitivement() {
+        try {
+            String livreId = livreIDF.getText();
+            if (livreId.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur système",
-                        "Erreur",
+                        "Veuillez remplir le champ \"Livre ID:\".",
+                        "Erreur de saisie",
                         JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
                 return;
             }
-        }
-        if (command.equals("Supprimer définitivement")){
-            try{
-                String livreId = livreIDF.getText();
-                if (livreId.isEmpty()){
-                    JOptionPane.showMessageDialog(this,
-                            "Veuillez remplir le champ \"Livre ID:\"!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (db.supprimerDefinitementCheck(livreId) && db.livreExiste(livreId)){
-                    db.supprimerLivre(livreId);
-                    refreshTable();
-                    livreIDF.setText("");
-                    JOptionPane.showMessageDialog(this,
-                            "Le livre a été supprimé!",
-                            "Info",
-                            JOptionPane.INFORMATION_MESSAGE);
-                } else if (!db.supprimerDefinitementCheck(livreId) || !db.livreExiste(livreId)){
-                    JOptionPane.showMessageDialog(this,
-                            "Livre n'existe pas ou le livre n'a pas une quantité de 0 ou le livre est emprunté!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (IOException e) {
+
+            if (!db.livreExiste(livreId)) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur système",
+                        "Erreur : Le livre n'existe pas.",
                         "Erreur",
                         JOptionPane.ERROR_MESSAGE);
-                e.printStackTrace();
+                return;
             }
+
+            if (!db.supprimerLivreDefinitivementVerification(livreId)) {
+                JOptionPane.showMessageDialog(this,
+                        "Erreur : Ce livre ne peut pas être supprimé. Assurez-vous qu'il n'est pas en cours d'emprunt et que sa quantité est nulle.",
+                        "Erreur",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            db.supprimerLivre(livreId);
+            refreshTable();
+            livreIDF.setText("");
+            JOptionPane.showMessageDialog(this,
+                    "Le livre a été supprimé avec succès.",
+                    "Succès",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Erreur lors de la suppression du livre.",
+                    "Erreur système",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         }
     }
 

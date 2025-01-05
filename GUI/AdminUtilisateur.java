@@ -151,34 +151,40 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
         if (nom.isEmpty()) {
             errorMessages.add("Le champ \"Nom d'utilisateur\" est requis.");
-        } else if (nom.length() > 10) {
-            errorMessages.add("Le nom d'utilisateur ne peut pas dépasser 10 caractères.");
-        } else if (nom.contains(" ") || nom.contains(",")) {
-            errorMessages.add("Le nom d'utilisateur ne peut contenir ni espaces ni virgules.");
+        } else {
+            if (nom.length() > 10) {
+                errorMessages.add("Le nom d'utilisateur ne peut pas dépasser 10 caractères.");
+            }
+            if (nom.contains(" ") || nom.contains(",")) {
+                errorMessages.add("Le nom d'utilisateur ne peut contenir ni espaces ni virgules.");
+            }
         }
 
         if (pass.isEmpty()) {
             errorMessages.add("Le champ \"Mot de passe\" est requis.");
-        } else if (pass.length() > 16) {
-            errorMessages.add("Le mot de passe ne peut pas dépasser 16 caractères.");
-        } else if (pass.contains(" ") || pass.contains(",")) {
-            errorMessages.add("Le mot de passe ne peut contenir ni espaces ni virgules.");
+        } else {
+            if (pass.length() > 16) {
+                errorMessages.add("Le mot de passe ne peut pas dépasser 16 caractères.");
+            }
+            if (pass.contains(" ") || pass.contains(",")) {
+                errorMessages.add("Le mot de passe ne peut contenir ni espaces ni virgules.");
+            }
         }
-
 
         if (!errorMessages.isEmpty()) {
             JOptionPane.showMessageDialog(
-                    AdminUtilisateur.this,
-                    String.join("\n", errorMessages),
-                    "Erreurs:",
+                    this,
+                    "Veuillez corriger les erreurs suivantes :\n" + String.join("\n", errorMessages),
+                    "Erreur de validation",
                     JOptionPane.ERROR_MESSAGE
             );
             enleverCharacteres();
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
+
     public void enleverCharacteres() {
         utilisateurF.setText("");
         utilisateurFCreate.setText("");
@@ -202,7 +208,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             String nom = utilisateurF.getText();
             if (db.aEmprunt(nom)){
                 JOptionPane.showMessageDialog(
-                        AdminUtilisateur.this,
+                        this,
                         "Impossible de supprimer le compte car a un emprunt en cours!",
                         "Erreur:",
                         JOptionPane.ERROR_MESSAGE
@@ -211,36 +217,33 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             }
 
             try {
-                if (db.utilisateurExisteSansPass(nom)) {
+                if (db.utilisateurExisteSansMotDePasse(nom)) {
                     db.supprimerUtilisateur(nom);
                     refreshTable();
                     enleverCharacteres();
                     JOptionPane.showMessageDialog(
-                            AdminUtilisateur.this,
-                            "Compte supprimer!",
-                            "Info:",
+                            this,
+                            "Compte supprimé avec succès!",
+                            "Succès",
                             JOptionPane.INFORMATION_MESSAGE
                     );
-                    return;
                 } else {
                     JOptionPane.showMessageDialog(
-                            AdminUtilisateur.this,
-                            "Compte n'existe pas!",
+                            this,
+                            "Ce compte n'existe pas.",
                             "Erreur:",
                             JOptionPane.ERROR_MESSAGE
                     );
-                    return;
                 }
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(this,
-                        "Erreur système",
-                        "Erreur",
+                        "Erreur système lors de la suppression.",
+                        "Erreur:",
                         JOptionPane.ERROR_MESSAGE);
                 e.printStackTrace();
-                return;
             }
-
         }
+
         if (command.equals("Ajouter")) {
             String nom = utilisateurFCreate.getText();
             String pass = motDePasseFCreate.getText();
@@ -248,28 +251,28 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
             if (verification()) {
                 try {
-                    if (!db.utilisateurExisteSansPass(nom)) {
+                    if (!db.utilisateurExisteSansMotDePasse(nom)) {
                         db.ajouterUtilisateur(utilisateur1);
                         refreshTable();
                         enleverCharacteres();
                         JOptionPane.showMessageDialog(
-                                AdminUtilisateur.this,
-                                "Compte ajouter!",
-                                "Info:",
+                                this,
+                                "Le compte a été ajouté avec succès !",
+                                "Succès",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
                     } else {
                         JOptionPane.showMessageDialog(
-                                AdminUtilisateur.this,
-                                "Compte existe deja!",
+                                this,
+                                "Impossible d'ajouter ce compte car un utilisateur avec le même nom existe déjà.",
                                 "Erreur:",
                                 JOptionPane.ERROR_MESSAGE
                         );
                     }
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this,
-                            "Erreur système",
-                            "Erreur",
+                            "Une erreur est survenue lors de l'ajout du compte.",
+                            "Erreur système:",
                             JOptionPane.ERROR_MESSAGE);
                     e.printStackTrace();
                 }

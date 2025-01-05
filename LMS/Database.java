@@ -5,439 +5,532 @@ import java.io.*;
 import java.io.IOException;
 
 public class Database {
-    private final File livresFichier = new File("db/livres.txt");
-    private final File utilisateursFichier = new File("db/utilisateurs.txt");
-    private final File empruntsFichier = new File ("db/emprunts.txt");
+    private final File fichierLivres = new File("db/livres.txt");
+    private final File fichierUtilisateurs = new File("db/utilisateurs.txt");
+    private final File fichierEmprunts = new File("db/emprunts.txt");
 
-    private void fichierExiste(File fichier){
+    private void verifierFichier(File fichier){
         if (!fichier.isFile()) {
             try{
                 if(fichier.createNewFile()){
-                    System.out.println("Fichier cree");
+                    System.out.println("Fichier créé");
                 }
-            } catch (IOException e){
+            } catch (IOException exception){
                 System.err.println("Erreur lors de la création du fichier : " + fichier.getName());
-                e.printStackTrace();
+                exception.printStackTrace();
             }
         }
     }
-    public boolean checkAdmin(String utilisateur, String motDePasse){
-        return utilisateur.equals("admin") && motDePasse.equals("7425");
+
+    public boolean verifierAdmin(String nomUtilisateur, String motDePasse){
+        return nomUtilisateur.equals("admin") && motDePasse.equals("7425");
     }
-    public boolean utilisateurExisteSansPass (String utilisateur) throws IOException {
-        fichierExiste(utilisateursFichier);
-        try (Scanner sc = new Scanner(utilisateursFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()){
+
+    public boolean utilisateurExisteSansMotDePasse(String nomUtilisateur) throws IOException {
+        verifierFichier(fichierUtilisateurs);
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
                     continue;
                 }
 
-                String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur)){
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(nomUtilisateur)){
                     return true;
                 }
             }
             return false;
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception){
+            exception.printStackTrace();
         }
         return false;
     }
 
-    public boolean utilisateurExiste (String utilisateur, String motDePasse) throws IOException {
-        fichierExiste(utilisateursFichier);
-        try (Scanner sc = new Scanner(utilisateursFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()){
+    public boolean utilisateurExiste(String nomUtilisateur, String motDePasse) throws IOException {
+        verifierFichier(fichierUtilisateurs);
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
                     continue;
                 }
 
-                String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur) && utilisateurs[1].trim().equals(motDePasse) ){
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(nomUtilisateur) && utilisateurs[1].trim().equals(motDePasse)){
                     return true;
                 }
             }
             return false;
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception){
+            exception.printStackTrace();
         }
         return false;
     }
-    public boolean checkUtilisateur(String utilisateur) throws IOException {
-        fichierExiste(utilisateursFichier);
-        if (utilisateur.equals("admin")){
+
+    public boolean verifierNomUtilisateur(String nomUtilisateur) throws IOException {
+        verifierFichier(fichierUtilisateurs);
+        if (nomUtilisateur.equals("admin")){
             return false;
         }
-        try (Scanner sc = new Scanner(utilisateursFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()){
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
                     continue;
                 }
 
-                String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur)){
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(nomUtilisateur)){
                     return false;
                 }
             }
             return true;
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception){
+            exception.printStackTrace();
         }
         return false;
     }
 
     public void ajouterUtilisateur(Utilisateur utilisateur) throws IOException {
-        fichierExiste(utilisateursFichier);
-        boolean utilisateurExiste = false;
-        List<String> lignesUtilisateur = new ArrayList<>();
-        try (Scanner sc = new Scanner(utilisateursFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()){
+        verifierFichier(fichierUtilisateurs);
+        boolean utilisateurExistant = false;
+        List<String> lignesUtilisateurs = new ArrayList<>();
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
                     continue;
                 }
 
-                String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur.getUsername())){
-                    String ligneActualiser = utilisateur.getUsername() + "," + utilisateur.getMotDePasse();
-                    lignesUtilisateur.add(ligneActualiser);
-                    utilisateurExiste = true;
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(utilisateur.getNomUtilisateur())){
+                    String ligneActualisee = utilisateur.getNomUtilisateur() + "," + utilisateur.getMotDePasse();
+                    lignesUtilisateurs.add(ligneActualisee);
+                    utilisateurExistant = true;
                 } else {
-                    lignesUtilisateur.add(donnee);
+                    lignesUtilisateurs.add(ligne);
                 }
             }
 
-            if (!utilisateurExiste){
-                String nouvelleLigne = utilisateur.getUsername() + "," + utilisateur.getMotDePasse();
-                lignesUtilisateur.add(nouvelleLigne);
+            if (!utilisateurExistant){
+                String nouvelleLigne = utilisateur.getNomUtilisateur() + "," + utilisateur.getMotDePasse();
+                lignesUtilisateurs.add(nouvelleLigne);
             }
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception){
+            exception.printStackTrace();
         }
 
         try{
-            ecrireFichier(lignesUtilisateur, utilisateursFichier);
-        } catch (IOException e) {
-            e.printStackTrace();
+            ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
-    public void supprimerUtilisateur(String utilisateur){
-        fichierExiste(utilisateursFichier);
-        List<String> lignesUtilisateur = new ArrayList<>();
-        try (Scanner sc = new Scanner(utilisateursFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()){
+
+    public void supprimerUtilisateur(String nomUtilisateur){
+        verifierFichier(fichierUtilisateurs);
+        List<String> lignesUtilisateurs = new ArrayList<>();
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
                     continue;
                 }
 
-                String[] utilisateurs = donnee.split(",");
-                if (utilisateurs.length > 0 && !(utilisateurs[0].trim().equals(utilisateur))){
-                    lignesUtilisateur.add(donnee);
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && !(utilisateurs[0].trim().equals(nomUtilisateur))){
+                    lignesUtilisateurs.add(ligne);
                 }
             }
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception){
+            exception.printStackTrace();
         }
 
         try{
-            ecrireFichier(lignesUtilisateur, utilisateursFichier);
-        } catch (IOException e) {
-            e.printStackTrace();
+            ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
 
     }
     public void ajouterLivre(Livre livre) throws IOException {
-        fichierExiste(livresFichier);
+        verifierFichier(fichierLivres);
+        if (livre.getQuantite() < 0) {
+            throw new IllegalArgumentException("La quantité de livres ne peut pas être négative");
+        }
+
+        String titreNormalise = livre.getTitre().trim().toLowerCase();
         List<String> lignesLivres = new ArrayList<>();
         boolean livreExistant = false;
 
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()) {
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
                     continue;
                 }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && Integer.parseInt(livres[4].trim()) == livre.getLivreId()) {
-                    String ligneActualiser = livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite() + "," + livre.getLivreId();
-                    lignesLivres.add(ligneActualiser);
+                String[] livres = ligne.split(",");
+                String titreExistantNormalise = livres[0].trim().toLowerCase();
+
+                if (titreExistantNormalise.equals(titreNormalise)) {
                     livreExistant = true;
-                } else {
-                    lignesLivres.add(donnee);
+                    break;
                 }
+                lignesLivres.add(ligne);
             }
         }
 
-        if (!livreExistant) {
-            String nouvelleLigne = livre.getTitre() + "," + livre.getAuteur() + "," + livre.getGenre() + "," + livre.getQuantite() + "," + livre.getLivreId();
-            lignesLivres.add(nouvelleLigne);
+        if (livreExistant) {
+            throw new IOException("Un livre avec ce titre existe déjà");
         }
+        String nouvelleLigne = livre.getTitre().trim() + "," + livre.getAuteur().trim() + "," + livre.getGenre().trim() + "," + livre.getQuantite() + "," + livre.getQuantite() + "," + livre.getLivreId();
+        lignesLivres.add(nouvelleLigne);
 
-        try {
-            ecrireFichier(lignesLivres, livresFichier);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ecrireDansFichier(lignesLivres, fichierLivres);
     }
-    public void supprimerLivre(String livreId) throws IOException {
-        fichierExiste(livresFichier);
+
+    public void supprimerLivre(String idLivre) throws IOException {
+        verifierFichier(fichierLivres);
         List<String> lignesLivres = new ArrayList<>();
 
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine().trim();
-                if (donnee.isEmpty()) {
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
                     continue;
                 }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && !(livres[4].equals(livreId))) {
-                    lignesLivres.add(donnee);
+                String[] livres = ligne.split(",");
+                if (livres.length > 0 && !(livres[5].equals(idLivre))) {
+                    lignesLivres.add(ligne);
                 }
             }
         }
         try {
-            ecrireFichier(lignesLivres, livresFichier);
-        } catch (IOException e) {
-            e.printStackTrace();
+            ecrireDansFichier(lignesLivres, fichierLivres);
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
     }
-    public boolean aEmprunt(String utilisateur){
-        fichierExiste(empruntsFichier);
-        try (Scanner sc = new Scanner(empruntsFichier)) {
-            while (sc.hasNextLine()){
-                String ligne = sc.nextLine();
-                if (!ligne.isEmpty()){
-                    String[] donnes = ligne.split(",");
-                    if (donnes[0].trim().equals(utilisateur)){
+
+    public boolean aEmprunt(String nomUtilisateur) {
+        verifierFichier(fichierEmprunts);
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[0].trim().equals(nomUtilisateur)) {
                         return true;
                     }
                 }
             }
             return false;
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return false;
     }
 
-    public boolean emprunterLivre(String utilisateur, String livreId) throws IOException {
-        fichierExiste(empruntsFichier);
-        if (!livreExiste(livreId) || !utilisateurExisteSansPass(utilisateur) || aEmprunt(utilisateur)){
+    public boolean emprunterLivre(String nomUtilisateur, String idLivre) throws IOException {
+        verifierFichier(fichierEmprunts);
+
+        if (!livreExiste(idLivre) || !utilisateurExisteSansMotDePasse(nomUtilisateur)) {
             return false;
         }
 
-        if (!livreDisponible(livreId, 1)){
-            return false;
-        } else if (livreDisponible(livreId, 1)){
-            updateBookQuantity(livreId, -1);
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[0].trim().equals(nomUtilisateur)) {
+                        return false;
+                    }
+                }
+            }
         }
+
+        int copiesDisponibles = 0;
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[5].trim().equals(idLivre)) {
+                        copiesDisponibles = Integer.parseInt(donnees[4].trim());
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (copiesDisponibles <= 0) {
+            return false;
+        }
+
+        mettreAJourCopiesDisponibles(idLivre, -1);
 
         java.time.LocalDate dateEmprunt = java.time.LocalDate.now();
         java.time.LocalDate dateRetour = dateEmprunt.plusDays(14);
 
-        String nouvelEmprunt = utilisateur + "," + getLivreTitre(livreId) + "," + livreId + "," + dateEmprunt + "," + dateRetour;
+        String nouvelEmprunt = nomUtilisateur.trim() + "," + obtenirTitreLivre(idLivre).trim() + "," + idLivre.trim() + "," + dateEmprunt + "," + dateRetour;
 
         List<String> lignesEmprunts = new ArrayList<>();
-        try (Scanner sc = new Scanner(empruntsFichier)) {
-            while (sc.hasNextLine()) {
-                lignesEmprunts.add(sc.nextLine());
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                lignesEmprunts.add(lecteur.nextLine());
             }
         }
         lignesEmprunts.add(nouvelEmprunt);
+        ecrireDansFichier(lignesEmprunts, fichierEmprunts);
 
-        ecrireFichier(lignesEmprunts, empruntsFichier);
         return true;
     }
 
-    public boolean retournerLivre(String utilisateur) throws IOException {
-        fichierExiste(empruntsFichier);
+    public boolean retournerLivre(String nomUtilisateur) throws IOException {
+        verifierFichier(fichierEmprunts);
         List<String> lignesEmprunts = new ArrayList<>();
+        boolean livreTrouve = false;
+        String idLivre = null;
 
-        try (Scanner sc = new Scanner(empruntsFichier)) {
-            while (sc.hasNextLine()) {
-                String ligne = sc.nextLine().trim();
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
                 if (ligne.isEmpty()) {
                     continue;
                 }
                 String[] donnees = ligne.split(",");
 
-                if (!donnees[0].equals(utilisateur)) {
+                if (!donnees[0].equals(nomUtilisateur)) {
                     lignesEmprunts.add(ligne);
                 } else {
-                    String livreId = donnees[2];
-                    ecrireFichier(lignesEmprunts, empruntsFichier);
-                    updateBookQuantity(livreId, 1);
-                    return true;
+                    livreTrouve = true;
+                    idLivre = donnees[2];
+                    java.time.LocalDate dateRetour = java.time.LocalDate.parse(donnees[4]);
+                    if (java.time.LocalDate.now().isAfter(dateRetour)) {
+                        System.out.println("Livre rendu en retard : " + donnees[1]);
+                    }
                 }
             }
+        }
+
+        if (livreTrouve && idLivre != null) {
+            ecrireDansFichier(lignesEmprunts, fichierEmprunts);
+            mettreAJourCopiesDisponibles(idLivre, 1);
+            return true;
         }
         return false;
     }
 
-    private String getLivreTitre(String livreId) throws IOException {
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String ligne = sc.nextLine();
+    private String obtenirTitreLivre(String idLivre) throws IOException {
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine();
                 if (!ligne.isEmpty()) {
                     String[] donnees = ligne.split(",");
-                    if (donnees[4].trim().equals(livreId)) {
+                    if (donnees[5].trim().equals(idLivre)) {
                         return donnees[0].trim();
                     }
                 }
             }
         }
-        throw new IOException("Livre non trouve!");
+        throw new IOException("Livre non trouvé !");
     }
 
-    public void updateBookQuantity(String livreId, int quantiter){
-        fichierExiste(livresFichier);
+    public void mettreAJourQuantiteLivre(String idLivre, int changementQuantite) throws IOException {
+        verifierFichier(fichierLivres);
         List<String> lignesLivres = new ArrayList<>();
-        try (Scanner sc = new Scanner(livresFichier)){
-            while (sc.hasNextLine()){
-                String donnee = sc.nextLine();
-                if (donnee.isEmpty()){
+        boolean livreTrouve = false;
+
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
                     continue;
                 }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[4].trim().equals(livreId)){
-                    int quantite = Integer.parseInt(livres[3]) + quantiter;
-                    String ligneActualiser = livres[0] + "," + livres[1] + "," + livres[2] + "," + quantite + "," + livreId;
-                    lignesLivres.add(ligneActualiser);
+                String[] livres = ligne.split(",");
+                if (livres.length > 0 && livres[5].trim().equals(idLivre)) {
+                    livreTrouve = true;
+                    int totalActuel = Integer.parseInt(livres[3].trim());
+                    int disponiblesActuels = Integer.parseInt(livres[4].trim());
+                    int nouveauTotal = totalActuel + changementQuantite;
+                    int nouveauDisponible = disponiblesActuels + changementQuantite;
+
+                    if (nouveauTotal < 0 || nouveauDisponible < 0) {
+                        throw new IllegalArgumentException("Impossible de réduire la quantité en dessous de 0");
+                    }
+                    if (nouveauDisponible > nouveauTotal) {
+                        throw new IllegalArgumentException("Les copies disponibles ne peuvent pas dépasser le total");
+                    }
+
+                    String ligneActualisee = livres[0] + "," + livres[1] + "," + livres[2] + "," + nouveauTotal + "," + nouveauDisponible + "," + idLivre;
+                    lignesLivres.add(ligneActualisee);
                 } else {
-                    lignesLivres.add(donnee);
+                    lignesLivres.add(ligne);
                 }
             }
-        } catch (IOException e){
-            e.printStackTrace();
         }
 
-        try{
-            ecrireFichier(lignesLivres, livresFichier);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (!livreTrouve) {
+            throw new IOException("Livre avec l'ID " + idLivre + " non trouvé");
         }
 
+        ecrireDansFichier(lignesLivres, fichierLivres);
     }
-    public boolean supprimerDefinitementCheck(String livreId){
-        fichierExiste(livresFichier);
-        fichierExiste(empruntsFichier);
-        try (Scanner sc = new Scanner(livresFichier)) {
-            boolean quantiteLivre = true;
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine();
-                if (donnee.isEmpty()) {
+
+    private void mettreAJourCopiesDisponibles(String idLivre, int nombre) {
+        verifierFichier(fichierLivres);
+        List<String> lignesLivres = new ArrayList<>();
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
                     continue;
                 }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[4].trim().equals(livreId)) {
-                    int quantite = Integer.parseInt(livres[3]);
-                    quantiteLivre = quantite == 0;
+                String[] livres = ligne.split(",");
+                if (livres.length > 0 && livres[5].trim().equals(idLivre)) {
+                    int totalCopies = Integer.parseInt(livres[3].trim());
+                    int disponibles = Integer.parseInt(livres[4].trim()) + nombre;
+
+                    if (disponibles < 0 || disponibles > totalCopies) {
+                        throw new IllegalStateException("Mise à jour invalide de la quantité de livres");
+                    }
+
+                    String ligneActualisee = livres[0] + "," + livres[1] + "," + livres[2] + "," + totalCopies + "," + disponibles + "," + idLivre;
+                    lignesLivres.add(ligneActualisee);
+                } else {
+                    lignesLivres.add(ligne);
                 }
             }
-            if (!quantiteLivre) {
-                return false;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
+            return;
         }
-        try (Scanner sc = new Scanner(empruntsFichier)) {
-            int quantiteReel = 0;
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine();
-                if (donnee.isEmpty()) {
-                    continue;
+
+        try {
+            ecrireDansFichier(lignesLivres, fichierLivres);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+
+    public boolean supprimerLivreDefinitivementVerification(String idLivre) throws IOException {
+        verifierFichier(fichierLivres);
+        verifierFichier(fichierEmprunts);
+
+        if (!livreExiste(idLivre)) {
+            return false;
+        }
+
+        boolean quantiteNulle = false;
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[5].trim().equals(idLivre)) {
+                        int quantiteTotale = Integer.parseInt(donnees[3].trim());
+                        int quantiteDisponible = Integer.parseInt(donnees[4].trim());
+                        quantiteNulle = (quantiteTotale == 0 && quantiteDisponible == 0);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!quantiteNulle) {
+            return false;
+        }
+
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[2].trim().equals(idLivre)) {
+                        return false;
+                    }
                 }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[2].equals(livreId)) {
-                    quantiteReel+=1;
-                }
             }
-            if (quantiteReel>0){
-                return false;
-            }
-        } catch (IOException e){
-            e.printStackTrace();
         }
+
         return true;
     }
 
-    public boolean livreDisponible(String livreId, int quantiterPrise) throws IOException {
-        fichierExiste(livresFichier);
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine();
-                if (donnee.isEmpty()) {
-                    continue;
-                }
+    public boolean livreDisponible(String idLivre, int quantiteRequise) throws IOException {
+        if (quantiteRequise <= 0) {
+            throw new IllegalArgumentException("La quantité demandée doit être positive");
+        }
 
-                String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[4].equals(livreId)) {
-                    int quantite = Integer.parseInt(livres[3]);
-                    return (quantite - quantiterPrise) >= 0;
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (!ligne.isEmpty()) {
+                    String[] donnees = ligne.split(",");
+                    if (donnees[5].trim().equals(idLivre)) {
+                        int disponibles = Integer.parseInt(donnees[4].trim());
+                        return disponibles >= quantiteRequise;
+                    }
                 }
             }
-        } catch (IOException e){
-            e.printStackTrace();
         }
         return false;
     }
+
     public boolean livreExiste(Livre livre) {
-        fichierExiste(livresFichier);
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine().trim();
+        verifierFichier(fichierLivres);
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String donnee = lecteur.nextLine().trim();
                 if (donnee.isEmpty()) {
                     continue;
                 }
 
                 String[] livres = donnee.split(",");
 
-                String livreTitre = livres[0].replaceAll("\\s", "").toLowerCase();
-                String livreT = livre.getTitre().replaceAll("\\s", "").toLowerCase();
+                String titreLivre = livres[0].replaceAll("\\s", "").toLowerCase();
+                String titreDonne = livre.getTitre().replaceAll("\\s", "").toLowerCase();
 
-                if (livreTitre.equals(livreT)) {
+                if (titreLivre.equals(titreDonne)) {
                     return true;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return false;
     }
 
-    public boolean livreExiste(String livreId){
-        fichierExiste(livresFichier);
-        try (Scanner sc = new Scanner(livresFichier)) {
-            while (sc.hasNextLine()) {
-                String donnee = sc.nextLine();
+    public boolean livreExiste(String idLivre) {
+        verifierFichier(fichierLivres);
+        try (Scanner lecteur = new Scanner(fichierLivres)) {
+            while (lecteur.hasNextLine()) {
+                String donnee = lecteur.nextLine();
                 if (donnee.isEmpty()) {
                     continue;
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[4].equals(livreId)){
+                if (livres.length > 0 && livres[5].equals(idLivre)) {
                     return true;
                 }
             }
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception) {
+            exception.printStackTrace();
         }
         return false;
     }
 
-    private void ecrireFichier(List<String> lignes, File fichier) throws IOException {
-        try (PrintWriter pw = new PrintWriter(new FileWriter(fichier))) {
-            for (String line : lignes) {
-                pw.println(line);
+    private void ecrireDansFichier(List<String> lignes, File fichier) throws IOException {
+        try (PrintWriter ecrivain = new PrintWriter(new FileWriter(fichier))) {
+            for (String ligne : lignes) {
+                ecrivain.println(ligne);
             }
         }
     }
