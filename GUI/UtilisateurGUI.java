@@ -359,9 +359,9 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             emprunterBouton.setVisible(false);
             retournerBouton.setVisible(true);
         } else if (infoEmprunt[0].equals("PAS_D_EMPRUNT")) {
-            livreEmprunter.setText("Livre emprunter:Aucun livre");
-            dateDEmprunt.setText("Date d'emprunt :Aucune");
-            dateDERemise.setText("Date de remise:Aucune");
+            livreEmprunter.setText("Livre emprunter: Aucun livre");
+            dateDEmprunt.setText("Date d'emprunt : Aucune");
+            dateDERemise.setText("Date de remise: Aucune");
             retournerBouton.setVisible(false);
             emprunterBouton.setVisible(true);
         }else{
