@@ -328,6 +328,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         }
     }
 
+
     private String[][] loadDataFromLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
@@ -422,17 +423,14 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         private void setupLayout() {
             setLayout(new BorderLayout());
 
-            // Header panel with large label
             JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
             JLabel headerLabel = new JLabel("Changer infos");
             headerLabel.setFont(new Font(headerLabel.getFont().getName(), Font.BOLD, 24));
             headerLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
             headerPanel.add(headerLabel);
 
-            // Main panel with grid layout
             JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
-            // Left panel for names
             JPanel leftPanel = new JPanel(new GridBagLayout());
             GridBagConstraints gbcLeft = new GridBagConstraints();
             gbcLeft.insets = new Insets(5, 5, 5, 5);
@@ -454,7 +452,6 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             gbcLeft.gridy = 4;
             leftPanel.add(changerNomButton, gbcLeft);
 
-            // Right panel for passwords
             JPanel rightPanel = new JPanel(new GridBagLayout());
             GridBagConstraints gbcRight = new GridBagConstraints();
             gbcRight.insets = new Insets(5, 5, 5, 5);
@@ -485,12 +482,10 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             mainPanel.add(leftPanel);
             mainPanel.add(rightPanel);
 
-            // Bottom panel for OK/Cancel buttons
             JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             bottomPanel.add(okButton);
             bottomPanel.add(cancelButton);
 
-            // Add borders
             leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
             rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
@@ -498,7 +493,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             add(mainPanel, BorderLayout.CENTER);
             add(bottomPanel, BorderLayout.SOUTH);
 
-            setPreferredSize(new Dimension(500, 400)); // Increased height to accommodate header
+            setPreferredSize(new Dimension(500, 400));
         }
 
         private void setupListeners() {
@@ -510,7 +505,8 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                 if (nouveauNom1.getText().equals(nouveauNom2.getText()) && !nouveauNom1.getText().isEmpty()) {
                     try {
                         if (!db.utilisateurExisteSansMotDePasse(nouveauNom1.getText())) {
-                            // Add name change logic here using your Database methods
+                            db.changerUtilisateur(nomUtilisateur, nouveauNom1.getText());
+
                             JOptionPane.showMessageDialog(this, "Nom changé avec succès!");
                             nouveauNom1.setText("");
                             nouveauNom2.setText("");
@@ -549,8 +545,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
                 if (newPass1.equals(newPass2) && !newPass1.isEmpty()) {
                     try {
-                        // Add password change logic here using your Database methods
-                        // First verify old password matches current password
+                        db.changerMotDePasse(oldPass, newPass1);
                         JOptionPane.showMessageDialog(this, "Mot de passe changé avec succès!");
                         ancienMotDePasse.setText("");
                         nouveauMotDePasse1.setText("");

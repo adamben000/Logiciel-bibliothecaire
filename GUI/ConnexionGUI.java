@@ -4,12 +4,11 @@ import LMS.Database;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnexionGUI extends JPanel implements ActionListener {
+public class ConnexionGUI extends JPanel  {
     JLabel titre = new JLabel("Page de connexion");
     JLabel utilisateurTitre = new JLabel("Nom d'utilisateur:");
     JTextField utilisateur = new JTextField("", 10);
@@ -181,61 +180,5 @@ public class ConnexionGUI extends JPanel implements ActionListener {
     private void enleverCharacteres() {
         utilisateur.setText("");
         motDePasse.setText("");
-    }
-
-    public void actionPerformed(ActionEvent actionEvent) {
-        String command = actionEvent.getActionCommand();
-
-        if (command.equals("Connexion")) {
-            String nom = utilisateur.getText();
-            String pass = new String(motDePasse.getPassword());
-
-            if (verification()) {
-                try {
-                    if (db.verifierAdmin(nom, pass)) {
-                        enleverCharacteres();
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "Connexion réussie en tant qu'administrateur.",
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-                        cardLayout.show(cardPanel, "AdminOptionStack");
-                    } else if (db.utilisateurExiste(nom, pass)) {
-                        enleverCharacteres();
-                        nomUtilisateur = nom;
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "Connexion réussie en tant qu'utilisateur.",
-                                "Info",
-                                JOptionPane.INFORMATION_MESSAGE
-                        );
-                        cardLayout.show(cardPanel, "Utilisateur");
-                    } else if (!db.utilisateurExisteSansMotDePasse(nom)) {
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "Aucun compte trouvé pour cet utilisateur. Veuillez vérifier le nom.",
-                                "Erreur de connexion",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    } else {
-                        JOptionPane.showMessageDialog(
-                                this,
-                                "Le mot de passe est incorrect. Veuillez réessayer.",
-                                "Erreur de connexion",
-                                JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                } catch (IOException e) {
-                    JOptionPane.showMessageDialog(
-                            this,
-                            "Erreur système lors de la tentative de connexion.",
-                            "Erreur système",
-                            JOptionPane.ERROR_MESSAGE
-                    );
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }

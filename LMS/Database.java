@@ -152,7 +152,62 @@ public class Database {
         } catch (IOException exception) {
             exception.printStackTrace();
         }
+    }
+    public void changerUtilisateur(String ancienUtilisateur, String nouveauUtilisateur){
+        verifierFichier(fichierUtilisateurs);
+        List<String> lignesUtilisateurs = new ArrayList<>();
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
+                    continue;
+                }
 
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(ancienUtilisateur)){
+                    String ligneActualisee = nouveauUtilisateur + "," + utilisateurs[1];
+                    lignesUtilisateurs.add(ligneActualisee);
+                } else {
+                lignesUtilisateurs.add(ligne);
+                }
+            }
+        } catch (IOException exception){
+            exception.printStackTrace();
+        }
+
+        try{
+            ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
+    }
+    public void changerMotDePasse(String ancienMotPasse, String nouveauMotDePasse){
+        verifierFichier(fichierUtilisateurs);
+        List<String> lignesUtilisateurs = new ArrayList<>();
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
+            while (lecteur.hasNextLine()){
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()){
+                    continue;
+                }
+
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(ancienMotPasse)){
+                    String ligneActualisee = utilisateurs[0] + "," + nouveauMotDePasse;
+                    lignesUtilisateurs.add(ligneActualisee);
+                } else {
+                    lignesUtilisateurs.add(ligne);
+                }
+            }
+        } catch (IOException exception){
+            exception.printStackTrace();
+        }
+
+        try{
+            ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
+        } catch (IOException exception) {
+            exception.printStackTrace();
+        }
     }
     public void ajouterLivre(Livre livre) throws IOException {
         verifierFichier(fichierLivres);
