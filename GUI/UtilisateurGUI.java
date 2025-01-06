@@ -322,10 +322,6 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                 e.printStackTrace();
             }
         }
-
-        else if (command.equals("Emprunté")) {
-
-        }
     }
 
 
@@ -502,63 +498,133 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             okButton.addActionListener(e -> dispose());
 
             changerNomButton.addActionListener(e -> {
-                if (nouveauNom1.getText().equals(nouveauNom2.getText()) && !nouveauNom1.getText().isEmpty()) {
-                    try {
-                        if (!db.utilisateurExisteSansMotDePasse(nouveauNom1.getText())) {
-                            db.changerUtilisateur(nomUtilisateur, nouveauNom1.getText());
+                String nouveauNomSaisi1 = nouveauNom1.getText();
+                String nouveauNomSaisi2 = nouveauNom2.getText();
 
-                            JOptionPane.showMessageDialog(this, "Nom changé avec succès!");
+                if (nouveauNomSaisi1.isEmpty() || nouveauNomSaisi2.isEmpty()) {
+                    JOptionPane.showMessageDialog(this,
+                            "Les champs ne peuvent pas être vides!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauNomSaisi1.length() > 10) {
+                    JOptionPane.showMessageDialog(this,
+                            "Le nom d'utilisateur ne peut pas dépasser 10 caractères!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauNomSaisi1.contains(",") || nouveauNomSaisi2.contains(",") || nouveauNomSaisi1.contains(" ") || nouveauNomSaisi2.contains(" ")){
+                    JOptionPane.showMessageDialog(this,
+                            "Le nom d'utilisateur ne peut pas contenir de virgule ou d'espace!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauNomSaisi1.equalsIgnoreCase("admin")) {
+                    JOptionPane.showMessageDialog(this,
+                            "Le nom d'utilisateur 'admin' est interdit!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauNomSaisi1.equals(nouveauNomSaisi2)) {
+                    try {
+                        if (!db.utilisateurExisteSansMotDePasse(nouveauNomSaisi1)) {
+                            db.changerUtilisateur(nomUtilisateur, nouveauNomSaisi1);
+
                             nouveauNom1.setText("");
                             nouveauNom2.setText("");
+
+                            JOptionPane.showMessageDialog(this, "Nom d'utilisateur changé avec succès!");
                         } else {
+                            nouveauNom1.setText("");
+                            nouveauNom2.setText("");
                             JOptionPane.showMessageDialog(this,
-                                    "Ce nom d'utilisateur existe déjà!",
+                                    "Ce nom d'utilisateur existe déjà ou est votre nom actuel!",
                                     "Erreur",
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException ex) {
+                        nouveauNom1.setText("");
+                        nouveauNom2.setText("");
                         JOptionPane.showMessageDialog(this,
-                                "Erreur lors du changement de nom",
+                                "Une erreur est survenue lors du changement de nom d'utilisateur.",
                                 "Erreur",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Les noms ne correspondent pas ou sont vides!",
+                            "Les noms saisis ne correspondent pas!",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 }
             });
 
             changerMotDePasseButton.addActionListener(e -> {
-                String oldPass = new String(ancienMotDePasse.getPassword());
-                String newPass1 = new String(nouveauMotDePasse1.getPassword());
-                String newPass2 = new String(nouveauMotDePasse2.getPassword());
+                String ancienMotDePasseSaisi = new String(ancienMotDePasse.getPassword());
+                String nouveauMotDePasseSaisi1 = new String(nouveauMotDePasse1.getPassword());
+                String nouveauMotDePasseSaisi2 = new String(nouveauMotDePasse2.getPassword());
 
-                if (oldPass.isEmpty()) {
+                if (ancienMotDePasseSaisi.isEmpty() || nouveauMotDePasseSaisi1.isEmpty() || nouveauMotDePasseSaisi2.isEmpty()) {
                     JOptionPane.showMessageDialog(this,
-                            "L'ancien mot de passe est requis!",
+                            "Tous les champs sont requis!",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                if (newPass1.equals(newPass2) && !newPass1.isEmpty()) {
+                if (nouveauMotDePasseSaisi1.length() > 16 || nouveauMotDePasseSaisi2.length() > 16) {
+                    JOptionPane.showMessageDialog(this,
+                            "Le mot de passe ne peut pas dépasser 16 caractères!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauMotDePasseSaisi1.contains(",") || nouveauMotDePasseSaisi2.contains(",") ||
+                        nouveauMotDePasseSaisi1.contains(" ") || nouveauMotDePasseSaisi2.contains(" ")
+                        || ancienMotDePasseSaisi.contains(" ") || ancienMotDePasseSaisi.contains(",")){
+                    JOptionPane.showMessageDialog(this,
+                            "Le mot de passe ne peut pas contenir de virgule ou d'espace!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                if (nouveauMotDePasseSaisi1.equals(nouveauMotDePasseSaisi2)) {
                     try {
-                        db.changerMotDePasse(oldPass, newPass1);
-                        JOptionPane.showMessageDialog(this, "Mot de passe changé avec succès!");
+                        if (db.changerMotDePasse(nomUtilisateur, ancienMotDePasseSaisi, nouveauMotDePasseSaisi1)) {
+                            ancienMotDePasse.setText("");
+                            nouveauMotDePasse1.setText("");
+                            nouveauMotDePasse2.setText("");
+                            JOptionPane.showMessageDialog(this, "Mot de passe changé avec succès!");
+                        } else {
+                            ancienMotDePasse.setText("");
+                            nouveauMotDePasse1.setText("");
+                            nouveauMotDePasse2.setText("");
+                            JOptionPane.showMessageDialog(this,
+                                    "L'ancien mot de passe est incorrect!",
+                                    "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (Exception ex) {
                         ancienMotDePasse.setText("");
                         nouveauMotDePasse1.setText("");
                         nouveauMotDePasse2.setText("");
-                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(this,
-                                "Erreur lors du changement de mot de passe",
+                                "Une erreur est survenue lors du changement de mot de passe.",
                                 "Erreur",
                                 JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Les nouveaux mots de passe ne correspondent pas ou sont vides!",
+                            "Les nouveaux mots de passe ne correspondent pas!",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                 }
