@@ -21,6 +21,8 @@ import javax.swing.RowFilter;
 public class UtilisateurGUI extends JPanel implements ActionListener {
 
     private Database db = new Database();
+    private JLabel nomUtilisateurL;
+    private String nomUtilisateur;
 
     JButton emprunterBouton = new JButton();
     JLabel livreEmprunter = new JLabel();
@@ -37,7 +39,6 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
     //settings, date et nom d'utilisateur
     private JPanel panelHaut;
 
-    private String nomUtilisateur;
     JTable j;
     private TableRowSorter<DefaultTableModel> sorter;
 
@@ -63,7 +64,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
         Font headerFont = new Font("Arial", Font.PLAIN, 16);
 
-        JLabel nomUtilisateurL = new JLabel("Utilisateur: " + this.nomUtilisateur);
+        nomUtilisateurL = new JLabel("Utilisateur: " + this.nomUtilisateur);
         nomUtilisateurL.setFont(headerFont);
 
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -346,10 +347,9 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         return data;
     }
 
-    public void empruntDetection(){
-        String utilisateur = this.nomUtilisateur;
-        String[] infoEmprunt = db.detecterEmprunt(utilisateur);
-        if (infoEmprunt.length > 1){
+    public void empruntDetection() {
+        String[] infoEmprunt = db.detecterEmprunt(this.nomUtilisateur);
+        if (infoEmprunt.length > 1) {
             livreEmprunter.setText("Livre emprunter: " + infoEmprunt[1]);
             dateDEmprunt.setText("Date d'emprunt: " + infoEmprunt[3]);
             dateDERemise.setText("Date de remise: " + infoEmprunt[4]);
@@ -361,7 +361,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             dateDERemise.setText("Date de remise: Aucune");
             retournerBouton.setVisible(false);
             emprunterBouton.setVisible(true);
-        }else{
+        } else {
             JOptionPane.showMessageDialog(this,
                     "Erreur lecture de fichier.",
                     "Erreur:",
@@ -501,42 +501,51 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                 String nouveauNomSaisi1 = nouveauNom1.getText();
                 String nouveauNomSaisi2 = nouveauNom2.getText();
 
-                if (nouveauNomSaisi1.isEmpty() || nouveauNomSaisi2.isEmpty()) {
-                    JOptionPane.showMessageDialog(this,
-                            "Les champs ne peuvent pas être vides!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (nouveauNomSaisi1.length() > 10) {
-                    JOptionPane.showMessageDialog(this,
-                            "Le nom d'utilisateur ne peut pas dépasser 10 caractères!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (nouveauNomSaisi1.contains(",") || nouveauNomSaisi2.contains(",") || nouveauNomSaisi1.contains(" ") || nouveauNomSaisi2.contains(" ")){
-                    JOptionPane.showMessageDialog(this,
-                            "Le nom d'utilisateur ne peut pas contenir de virgule ou d'espace!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
-                if (nouveauNomSaisi1.equalsIgnoreCase("admin")) {
-                    JOptionPane.showMessageDialog(this,
-                            "Le nom d'utilisateur 'admin' est interdit!",
-                            "Erreur",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-
                 if (nouveauNomSaisi1.equals(nouveauNomSaisi2)) {
                     try {
+                        if (nouveauNomSaisi1.length() > 10) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Le nom d'utilisateur ne peut pas dépasser 10 caractères!",
+                                    "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                            nouveauNom1.setText("");
+                            nouveauNom2.setText("");
+                            return;
+                        }
+
+                        if (nouveauNomSaisi1.equals(UtilisateurGUI.this.nomUtilisateur)) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Le nouveau nom d'utilisateur ne peut pas être identique à l'ancien!",
+                                    "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                            nouveauNom1.setText("");
+                            nouveauNom2.setText("");
+                            return;
+                        }
+
+                        if (nouveauNomSaisi1.equalsIgnoreCase("admin")) {
+                            JOptionPane.showMessageDialog(this,
+                                    "Le nom d'utilisateur 'admin' n'est pas autorisé!",
+                                    "Erreur",
+                                    JOptionPane.ERROR_MESSAGE);
+                            nouveauNom1.setText("");
+                            nouveauNom2.setText("");
+                            return;
+                        }
+
                         if (!db.utilisateurExisteSansMotDePasse(nouveauNomSaisi1)) {
-                            db.changerUtilisateur(nomUtilisateur, nouveauNomSaisi1);
+                            if (db.aEmprunt(UtilisateurGUI.this.nomUtilisateur)) {
+                                db.mettreAJourEmprunt(UtilisateurGUI.this.nomUtilisateur, nouveauNomSaisi1);
+                            }
+
+                            db.changerUtilisateur(UtilisateurGUI.this.nomUtilisateur, nouveauNomSaisi1);
+
+                            UtilisateurGUI.this.nomUtilisateur = nouveauNomSaisi1;
+                            nomUtilisateurL.setText("Utilisateur: " + nouveauNomSaisi1);
+
+                            this.nomUtilisateur = nouveauNomSaisi1;
+
+                            empruntDetection();
 
                             nouveauNom1.setText("");
                             nouveauNom2.setText("");

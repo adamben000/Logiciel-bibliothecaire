@@ -153,32 +153,58 @@ public class Database {
             exception.printStackTrace();
         }
     }
-    public void changerUtilisateur(String ancienUtilisateur, String nouveauUtilisateur){
+    public void changerUtilisateur(String ancienUtilisateur, String nouveauUtilisateur) throws IOException {
         verifierFichier(fichierUtilisateurs);
-        List<String> lignesUtilisateurs = new ArrayList<>();
-        try (Scanner lecteur = new Scanner(fichierUtilisateurs)){
-            while (lecteur.hasNextLine()){
-                String ligne = lecteur.nextLine().trim();
-                if (ligne.isEmpty()){
-                    continue;
-                }
+        verifierFichier(fichierEmprunts);
 
-                String[] utilisateurs = ligne.split(",");
-                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(ancienUtilisateur)){
-                    String ligneActualisee = nouveauUtilisateur + "," + utilisateurs[1];
-                    lignesUtilisateurs.add(ligneActualisee);
-                } else {
-                lignesUtilisateurs.add(ligne);
-                }
-            }
-        } catch (IOException exception){
-            exception.printStackTrace();
+        // Vérifier si le nouveau nom n'est pas déjà utilisé (sauf si c'est le même utilisateur)
+        if (!ancienUtilisateur.equals(nouveauUtilisateur) && utilisateurExisteSansMotDePasse(nouveauUtilisateur)) {
+            throw new IOException("Ce nom d'utilisateur existe déjà");
         }
 
-        try{
-            ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
-        } catch (IOException exception) {
-            exception.printStackTrace();
+        List<String> lignesUtilisateurs = new ArrayList<>();
+        String motDePasseActuel = null;
+
+        try (Scanner lecteur = new Scanner(fichierUtilisateurs)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) continue;
+
+                String[] utilisateurs = ligne.split(",");
+                if (utilisateurs.length > 0 && utilisateurs[0].trim().equals(ancienUtilisateur)) {
+                    motDePasseActuel = utilisateurs[1].trim();
+                    lignesUtilisateurs.add(nouveauUtilisateur + "," + motDePasseActuel);
+                } else {
+                    lignesUtilisateurs.add(ligne);
+                }
+            }
+        }
+
+        List<String> lignesEmprunts = new ArrayList<>();
+        boolean empruntTrouve = false;
+
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) continue;
+
+                String[] donnees = ligne.split(",");
+                if (donnees[0].trim().equals(ancienUtilisateur)) {
+                    empruntTrouve = true;
+                    lignesEmprunts.add(nouveauUtilisateur + "," +
+                            donnees[1] + "," +
+                            donnees[2] + "," +
+                            donnees[3] + "," +
+                            donnees[4]);
+                } else {
+                    lignesEmprunts.add(ligne);
+                }
+            }
+        }
+
+        ecrireDansFichier(lignesUtilisateurs, fichierUtilisateurs);
+        if (empruntTrouve) {
+            ecrireDansFichier(lignesEmprunts, fichierEmprunts);
         }
     }
     public boolean changerMotDePasse(String utilisateur, String ancienMotDePasse, String nouveauMotDePasse){
@@ -353,6 +379,7 @@ public class Database {
     public void mettreAJourEmprunt(String nomUtilisateur, String nouveauNomUtilisateur) throws IOException {
         verifierFichier(fichierEmprunts);
         List<String> lignesEmprunts = new ArrayList<>();
+        boolean utilisateurTrouve = false;
 
         try (Scanner lecteur = new Scanner(fichierEmprunts)) {
             while (lecteur.hasNextLine()) {
@@ -365,15 +392,16 @@ public class Database {
                 if (!donnees[0].equals(nomUtilisateur)) {
                     lignesEmprunts.add(ligne);
                 } else {
-                    System.out.println("yo");
+                    utilisateurTrouve = true;
                     String ligneActualisee = nouveauNomUtilisateur + "," + donnees[1] + "," + donnees[2] + "," + donnees[3] + "," + donnees[4];
                     lignesEmprunts.add(ligneActualisee);
                 }
+            }
 
+            if (utilisateurTrouve) {
                 ecrireDansFichier(lignesEmprunts, fichierEmprunts);
             }
-        }  throw new IOException("Erreur lors de la mise à jour du nom d'utilisateur dans emprunts.txt");
-
+        }
     }
 
     public int enRetard(String nomUtilisateur) throws IOException {
