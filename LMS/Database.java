@@ -305,7 +305,7 @@ public class Database {
         verifierFichier(fichierEmprunts);
         try (Scanner lecteur = new Scanner(fichierEmprunts)) {
             while (lecteur.hasNextLine()) {
-                String ligne = lecteur.nextLine();
+                String ligne = lecteur.nextLine().trim();
                 if (!ligne.isEmpty()) {
                     String[] donnees = ligne.split(",");
                     if (donnees[0].trim().equals(nomUtilisateur)) {
@@ -666,13 +666,13 @@ public class Database {
         verifierFichier(fichierLivres);
         try (Scanner lecteur = new Scanner(fichierLivres)) {
             while (lecteur.hasNextLine()) {
-                String donnee = lecteur.nextLine();
+                String donnee = lecteur.nextLine().trim();
                 if (donnee.isEmpty()) {
                     continue;
                 }
 
                 String[] livres = donnee.split(",");
-                if (livres.length > 0 && livres[5].equals(idLivre)) {
+                if (livres.length > 0 && livres[5].trim().equals(idLivre)) {
                     return true;
                 }
             }

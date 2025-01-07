@@ -1,2 +1,49 @@
-Les Misérables,Victor Hugo,Drame,6,6,1400
-Les Contemplations,Victor Hugo,Poesie,6,6,1970
+Les Misérables,Victor Hugo,Roman social,10,10,1432
+Madame Bovary,Gustave Flaubert,Roman réaliste,10,10,657
+Le Petit Prince,Antoine de Saint-Exupéry,Conte philosophique,10,10,1024
+Candide,Voltaire,Conte philosophique,10,10,891
+L'Étranger,Albert Camus,Roman existentialiste,10,10,1345
+Les Fleurs du mal,Charles Baudelaire,Recueil de poésie,10,10,1765
+À la recherche du temps perdu,Marcel Proust,Roman introspectif,10,10,564
+Germinal,Émile Zola,Roman naturaliste,10,10,1256
+Le Rouge et le Noir,Stendhal,Roman psychologique,10,10,342
+Notre-Dame de Paris,Victor Hugo,Roman historique,10,10,1907
+L'Éducation sentimentale,Gustave Flaubert,Roman d'apprentissage,10,10,877
+Les Confessions,Jean-Jacques Rousseau,Autobiographie philosophique,10,10,421
+La Peste,Albert Camus,Roman allégorique,10,10,1456
+La Chartreuse de Parme,Stendhal,Roman historique,10,10,1119
+Les Trois Mousquetaires,Alexandre Dumas,Roman,10,10,567
+Bel-Ami,Guy de Maupassant,Roman satirique,10,10,763
+L'Assommoir,Émile Zola,Roman naturaliste,10,10,1553
+Le Père Goriot,Honoré de Balzac,Roman de mœurs,10,10,1311
+La Princesse de Clèves,Madame de Lafayette,Roman classique,10,10,1487
+Le Comte de Monte-Cristo,Alexandre Dumas,Roman d'aventure,10,10,929
+Le Dernier Jour d’un condamné,Victor Hugo,Roman engagé,10,10,1383
+Une vie,Guy de Maupassant,Roman réaliste,10,10,1038
+Thérèse Raquin,Émile Zola,Roman naturaliste,10,10,716
+Du contrat social,Jean-Jacques Rousseau,Essai politique,10,10,1923
+La Condition humaine,André Malraux,Roman philosophique,10,10,543
+Les Chants de Maldoror,Lautréamont,Poésie surréaliste,10,10,1504
+Les Liaisons dangereuses,Choderlos de Laclos,Roman épistolaire,10,10,876
+Voyage au bout de la nuit,Louis-Ferdinand Céline,Roman satirique,10,10,789
+Huis clos,Jean-Paul Sartre,Pièce existentialiste,10,10,1269
+Cyrano de Bergerac,Edmond Rostand,Comédie héroïque,10,10,1134
+Le Bourgeois gentilhomme,Molière,Comédie-ballet,10,10,982
+Phèdre,Jean Racine,Tragédie classique,10,10,610
+Antigone,Jean Anouilh,Tragédie moderne,10,10,1894
+Les Justes,Albert Camus,Pièce engagée,10,10,1440
+La Cantatrice chauve,Eugène Ionesco,Théâtre de l'absurde,10,10,928
+La Nausée,Jean-Paul Sartre,Roman existentialiste,10,10,1203
+Les Cloches de Bâle,Louis Aragon,Roman social,10,10,1039
+Les Âmes mortes,Nicolas Gogol,Roman satirique,10,10,1247
+La Symphonie pastorale,André Gide,Roman poétique,10,10,1320
+Claudine à l'école,Colette,Roman autobiographique,10,10,756
+Le Spleen de Paris,Charles Baudelaire,Prose poétique,10,10,1821
+Une saison en enfer,Arthur Rimbaud,Poésie autobiographique,10,10,984
+Alcools,Guillaume Apollinaire,Poésie moderniste,10,10,1756
+Poèmes saturniens,Paul Verlaine,Poésie symboliste,10,10,1314
+Le Roman de Renart,Anonyme,Fable médiévale,10,10,1178
+Paroles,Jacques Prévert,Poésie engagée,10,10,1425
+Le Procès-verbal,J.M.G. Le Clézio,Roman introspectif,10,10,1149
+Tristan et Iseut,Anonyme,Roman courtois,10,10,1900
+La Gloire de mon père,Marcel Pagnol,Roman autobiographique,10,10,804
