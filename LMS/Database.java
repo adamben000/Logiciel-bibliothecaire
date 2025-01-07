@@ -349,6 +349,33 @@ public class Database {
 
         return true;
     }
+
+    public void mettreAJourEmprunt(String nomUtilisateur, String nouveauNomUtilisateur) throws IOException {
+        verifierFichier(fichierEmprunts);
+        List<String> lignesEmprunts = new ArrayList<>();
+
+        try (Scanner lecteur = new Scanner(fichierEmprunts)) {
+            while (lecteur.hasNextLine()) {
+                String ligne = lecteur.nextLine().trim();
+                if (ligne.isEmpty()) {
+                    continue;
+                }
+                String[] donnees = ligne.split(",");
+
+                if (!donnees[0].equals(nomUtilisateur)) {
+                    lignesEmprunts.add(ligne);
+                } else {
+                    System.out.println("yo");
+                    String ligneActualisee = nouveauNomUtilisateur + "," + donnees[1] + "," + donnees[2] + "," + donnees[3] + "," + donnees[4];
+                    lignesEmprunts.add(ligneActualisee);
+                }
+
+                ecrireDansFichier(lignesEmprunts, fichierEmprunts);
+            }
+        }  throw new IOException("Erreur lors de la mise à jour du nom d'utilisateur dans emprunts.txt");
+
+    }
+
     public int enRetard(String nomUtilisateur) throws IOException {
         verifierFichier(fichierEmprunts);
 

@@ -253,6 +253,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
             if (verification()) {
                 try {
+                    if (nom.equalsIgnoreCase("admin")) {
+                        JOptionPane.showMessageDialog(this,
+                                "Le nom d'utilisateur 'admin' est interdit!",
+                                "Erreur",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+
                     if (!db.utilisateurExisteSansMotDePasse(nom)) {
                         db.ajouterUtilisateur(utilisateur1);
                         refreshTable();
