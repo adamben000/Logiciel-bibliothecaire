@@ -397,6 +397,13 @@ public class AdminLivres extends JPanel implements ActionListener {
                 try {
                     int quantite = Integer.parseInt(quantiteF.getText());
                     Livre livre = new Livre(livreTitre, auteur, genre, quantite);
+                    if (quantite <= 0) {
+                        JOptionPane.showMessageDialog(this,
+                                "La quantité doit être un nombre positif.",
+                                "Erreur de valeur",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
                     if (!db.livreExiste(livre)) {
                         db.ajouterLivre(livre);
                         refreshTable();
