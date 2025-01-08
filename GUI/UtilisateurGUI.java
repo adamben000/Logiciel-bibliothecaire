@@ -587,10 +587,16 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
-
                 if (nouveauMotDePasseSaisi1.length() > 16 || nouveauMotDePasseSaisi2.length() > 16) {
                     JOptionPane.showMessageDialog(this,
                             "Le mot de passe ne peut pas dépasser 16 caractères!",
+                            "Erreur",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (nouveauMotDePasseSaisi1.length() < 4 || nouveauMotDePasseSaisi2.length() < 4) {
+                    JOptionPane.showMessageDialog(this,
+                            "Le mot de passe doit avoir un minimum de 4 caractères.",
                             "Erreur",
                             JOptionPane.ERROR_MESSAGE);
                     return;

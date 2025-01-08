@@ -168,6 +168,9 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             if (pass.length() > 16) {
                 errorMessages.add("Le mot de passe ne peut pas dépasser 16 caractères.");
             }
+            if (pass.length() < 4) {
+                errorMessages.add("Le mot de passe doit avoir un minimum de 4 caractères.");
+            }
             if (pass.contains(" ") || pass.contains(",")) {
                 errorMessages.add("Le mot de passe ne peut contenir ni espaces ni virgules.");
             }
