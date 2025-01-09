@@ -6,8 +6,6 @@ Un système de gestion de bibliothèque développé par Adam Benmoussa, Achraf B
 
 Notre logiciel de gestion de bibliothèque offre une solution complète aux défis actuels d'organisation et de gestion des livres. Le système propose une interface utilisateur intuitive permettant aux utilisateurs d'emprunter et de retourner des livres facilement, tout en offrant aux administrateurs des outils puissants de gestion.
 
-![image](https://github.com/user-attachments/assets/26e048df-41a7-4019-ac26-47f8e10a3406)
-
 Diagramme de classes:
 Image: 
 ![image](https://github.com/user-attachments/assets/26e048df-41a7-4019-ac26-47f8e10a3406)
