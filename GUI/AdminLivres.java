@@ -52,16 +52,16 @@ public class AdminLivres extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
 
         // Chargement des données des livres depuis le fichier
-        String[][] data = chargerLesDonneesDesLivres();
-        String[] columnNames = {"Livres", "Auteur", "Genre", "Quantité", "Disponibles", "ID"};
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        String[][] Donnees = chargerLesDonneesDesLivres();
+        String[] nomsDesColonnes = {"Livres", "Auteur", "Genre", "Quantité", "Disponibles", "ID"};
+        DefaultTableModel modele = new DefaultTableModel(Donnees, nomsDesColonnes) {
             @Override
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int rangee, int column) {
                 return false; // Les cellules ne sont pas éditables
             }
         };
 
-        j = new JTable(model); // Création du tableau
+        j = new JTable(modele); // Création du tableau
         j.getTableHeader().setReorderingAllowed(false); // Désactivation du réarrangement des colonnes
         j.setRowSelectionAllowed(false); // Désactivation de la sélection des lignes
         j.setColumnSelectionAllowed(false); // Désactivation de la sélection des colonnes
@@ -197,27 +197,27 @@ public class AdminLivres extends JPanel implements ActionListener {
 
     // Fonction pour charger les données des livres depuis le fichier
     private String[][] chargerLesDonneesDesLivres() {
-        ArrayList<String[]> dataList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                dataList.add(rowData);
+        ArrayList<String[]> listeDeDonnees = new ArrayList<>();
+        try (BufferedReader lecteur = new BufferedReader(new FileReader("db/livres.txt"))) {
+            String ligne;
+            while ((ligne = lecteur.readLine()) != null) {
+                String[] donneesDeLigne = ligne.split(",");
+                listeDeDonnees.add(donneesDeLigne);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Erreur lors du chargement des livres. Vérifiez le fichier.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-        return dataList.toArray(new String[0][]);
+        return listeDeDonnees.toArray(new String[0][]);
     }
 
     // Fonction pour rafraîchir le tableau après modification
     public void actualiserLeTableau() {
-        DefaultTableModel model = (DefaultTableModel) j.getModel();
-        model.setRowCount(0);
-        String[][] data = chargerLesDonneesDesLivres();
-        for (String[] row : data) {
-            model.addRow(row);
+        DefaultTableModel modele = (DefaultTableModel) j.getModel();
+        modele.setRowCount(0);
+        String[][] Donnees = chargerLesDonneesDesLivres();
+        for (String[] rangee : Donnees) {
+            modele.addRow(rangee);
         }
     }
 

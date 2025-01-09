@@ -45,39 +45,39 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         setLayout(laGrid);
 
         // Charger les données des emprunts, livres et utilisateurs
-        String[][] data = loadDataEmprunts();
-        String[] columnNames = {"Utilisateur", "Livre emprunté", "ID", "Date d'Emprunt", "Date de retour"};
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        String[][] Donnees = loadDataEmprunts();
+        String[] nomsDesColonnes = {"Utilisateur", "Livre emprunté", "ID", "Date d'Emprunt", "Date de retour"};
+        DefaultTableModel modele = new DefaultTableModel(Donnees, nomsDesColonnes) {
             @Override
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int rangee, int column) {
                 return false; // Rendre les cellules non éditables
             }
         };
 
         // Charger les livres disponibles
-        String[][] data1 = chargerLesDonneesDesLivres();
-        String[] columnNames1 = {"Nom des livres", "ID", "Quantité", "Disponibles"};
-        DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
+        String[][] Donnees1 = chargerLesDonneesDesLivres();
+        String[] nomsDesColonnes1 = {"Nom des livres", "ID", "Quantité", "Disponibles"};
+        DefaultTableModel modele2 = new DefaultTableModel(Donnees1, nomsDesColonnes1) {
             @Override
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int rangee, int column) {
                 return false;
             }
         };
 
         // Charger les utilisateurs enregistrés
-        String[][] data2 = chargerLesNomsDUtilisateurAPartirDuFichier();
-        String[] columnNames2 = {"Utilisateurs"};
-        DefaultTableModel model3 = new DefaultTableModel(data2, columnNames2) {
+        String[][] Donnees2 = chargerLesNomsDUtilisateurAPartirDuFichier();
+        String[] nomsDesColonnes2 = {"Utilisateurs"};
+        DefaultTableModel modele3 = new DefaultTableModel(Donnees2, nomsDesColonnes2) {
             @Override
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int rangee, int column) {
                 return false;
             }
         };
 
         // Créer les tables pour afficher les données
-        j = new JTable(model);
-        j1 = new JTable(model2);
-        j2 = new JTable(model3);
+        j = new JTable(modele);
+        j1 = new JTable(modele2);
+        j2 = new JTable(modele3);
 
         // Centrer les données des utilisateurs
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
@@ -307,58 +307,58 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
     // Charger les données des emprunts depuis un fichier
     private String[][] loadDataEmprunts() {
-        ArrayList<String[]> dataList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("db/emprunts.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                String[] empruntData = {rowData[0], rowData[1], rowData[2], rowData[3], rowData[4]};
-                dataList.add(empruntData);
+        ArrayList<String[]> listeDesDonnes = new ArrayList<>();
+        try (BufferedReader lecteur = new BufferedReader(new FileReader("db/emprunts.txt"))) {
+            String ligne;
+            while ((ligne = lecteur.readLine()) != null) {
+                String[] donneesDeLigne = ligne.split(",");
+                String[] empruntData = {donneesDeLigne[0], donneesDeLigne[1], donneesDeLigne[2], donneesDeLigne[3], donneesDeLigne[4]};
+                listeDesDonnes.add(empruntData);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
-        String[][] data = new String[dataList.size()][];
-        for (int i = 0; i < dataList.size(); i++) {
-            data[i] = dataList.get(i);
+        String[][] Donnees = new String[listeDesDonnes.size()][];
+        for (int i = 0; i < listeDesDonnes.size(); i++) {
+            Donnees[i] = listeDesDonnes.get(i);
         }
-        return data;
+        return Donnees;
     }
 
     // Charger les livres depuis un fichier
     private String[][] chargerLesDonneesDesLivres() {
-        ArrayList<String[]> dataList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                String[] bookData = {rowData[0], rowData[5],rowData[3],rowData[4]};
-                dataList.add(bookData);
+        ArrayList<String[]> listeDesDonnes = new ArrayList<>();
+        try (BufferedReader lecteur = new BufferedReader(new FileReader("db/livres.txt"))) {
+            String ligne;
+            while ((ligne = lecteur.readLine()) != null) {
+                String[] donneesDeLigne = ligne.split(",");
+                String[] donneesLivres = {donneesDeLigne[0], donneesDeLigne[5],donneesDeLigne[3],donneesDeLigne[4]};
+                listeDesDonnes.add(donneesLivres);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
-        String[][] data = new String[dataList.size()][];
-        for (int i = 0; i < dataList.size(); i++) {
-            data[i] = dataList.get(i);
+        String[][] Donnees = new String[listeDesDonnes.size()][];
+        for (int i = 0; i < listeDesDonnes.size(); i++) {
+            Donnees[i] = listeDesDonnes.get(i);
         }
-        return data;
+        return Donnees;
     }
 
     // Charger les noms des utilisateurs depuis un fichier
     private String[][] chargerLesNomsDUtilisateurAPartirDuFichier() {
-        ArrayList<String[]> dataList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
+        ArrayList<String[]> listeDesDonnes = new ArrayList<>();
+        try (BufferedReader lecteur = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
+            String ligne;
+            while ((ligne = lecteur.readLine()) != null) {
 
-                String[] rowData = line.split(",");
-                if (rowData.length > 0) {
-                    dataList.add(new String[]{rowData[0]});
+                String[] donneesDeLigne = ligne.split(",");
+                if (donneesDeLigne.length > 0) {
+                    listeDesDonnes.add(new String[]{donneesDeLigne[0]});
                 }
             }
         } catch (IOException e) {
@@ -367,41 +367,41 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         }
 
 
-        String[][] data = new String[dataList.size()][1];
-        for (int i = 0; i < dataList.size(); i++) {
-            data[i] = dataList.get(i);
+        String[][] Donnees = new String[listeDesDonnes.size()][1];
+        for (int i = 0; i < listeDesDonnes.size(); i++) {
+            Donnees[i] = listeDesDonnes.get(i);
         }
-        return data;
+        return Donnees;
     }
 
     // Actualiser les tables pour afficher les dernières données
     public void actualiserLeTableau() {
-        DefaultTableModel model = (DefaultTableModel) j.getModel();
-        model.setRowCount(0);
+        DefaultTableModel modele = (DefaultTableModel) j.getModel();
+        modele.setRowCount(0);
 
-        String[][] data = loadDataEmprunts();
-        for (String[] row : data) {
-            model.addRow(row);
+        String[][] Donnees = loadDataEmprunts();
+        for (String[] rangee : Donnees) {
+            modele.addRow(rangee);
         }
     }
 
     public void actualiserLeTableau2() {
-        DefaultTableModel model2 = (DefaultTableModel) j1.getModel();
-        model2.setRowCount(0);
+        DefaultTableModel modele2 = (DefaultTableModel) j1.getModel();
+        modele2.setRowCount(0);
 
-        String[][] data1 = chargerLesDonneesDesLivres();
-        for (String[] row : data1) {
-            model2.addRow(row);
+        String[][] Donnees1 = chargerLesDonneesDesLivres();
+        for (String[] rangee : Donnees1) {
+            modele2.addRow(rangee);
         }
     }
 
     public void actualiserLeTableau3() {
-        DefaultTableModel model2 = (DefaultTableModel) j2.getModel();
-        model2.setRowCount(0);
+        DefaultTableModel modele2 = (DefaultTableModel) j2.getModel();
+        modele2.setRowCount(0);
 
-        String[][] data1 = chargerLesNomsDUtilisateurAPartirDuFichier();
-        for (String[] row : data1) {
-            model2.addRow(row);
+        String[][] Donnees1 = chargerLesNomsDUtilisateurAPartirDuFichier();
+        for (String[] rangee : Donnees1) {
+            modele2.addRow(rangee);
         }
     }
 

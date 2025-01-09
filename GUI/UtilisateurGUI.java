@@ -266,17 +266,22 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         recherchePanel.add(rechercheF);
 
         // Charger les données des livres
-        String[][] data = chargerLesDonneesDesLivres();
-        String[] columnNames = {"Livres", "Auteur", "Genre", "Disponibles", "ID"};
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        String[][] donnees = chargerLesDonneesDesLivres();
+        String[] nomsDesColonnes = {"Livres", "Auteur", "Genre", "Disponibles", "ID"};
+        DefaultTableModel modele = new DefaultTableModel(donnees, nomsDesColonnes) {
             @Override
-            public boolean isCellEditable(int row, int column) {
+            public boolean isCellEditable(int rangee, int column) {
                 return false;
             }
         };
 
-        j = new JTable(model);
-        sorter = new TableRowSorter<>(model);
+        j = new JTable(modele);
+        j.getTableHeader().setReorderingAllowed(false); // Désactivation du réarrangement des colonnes
+        j.setRowSelectionAllowed(false); // Désactivation de la sélection des lignes
+        j.setColumnSelectionAllowed(false); // Désactivation de la sélection des colonnes
+        j.setFocusable(false); // Le tableau ne prend pas le focus
+        j.getTableHeader().setResizingAllowed(false); // Désactivation du redimensionnement des colonnes
+        sorter = new TableRowSorter<>(modele);
         j.setRowSorter(sorter);
 
         JScrollPane sp = new JScrollPane(j);
@@ -346,24 +351,24 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
     // Charger les données des livres à partir du fichier
     private String[][] chargerLesDonneesDesLivres() {
-        ArrayList<String[]> dataList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] rowData = line.split(",");
-                String[] bookData = {rowData[0], rowData[1], rowData[2], rowData[4], rowData[5]};
-                dataList.add(bookData);
+        ArrayList<String[]> donneesList = new ArrayList<>();
+        try (BufferedReader lecteur = new BufferedReader(new FileReader("db/livres.txt"))) {
+            String ligne;
+            while ((ligne = lecteur.readLine()) != null) {
+                String[] donneesRangee = ligne.split(",");
+                String[] donneesLivres = {donneesRangee[0], donneesRangee[1], donneesRangee[2], donneesRangee[4], donneesRangee[5]};
+                donneesList.add(donneesLivres);
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
-        String[][] data = new String[dataList.size()][];
-        for (int i = 0; i < dataList.size(); i++) {
-            data[i] = dataList.get(i);
+        String[][] donnees = new String[donneesList.size()][];
+        for (int i = 0; i < donneesList.size(); i++) {
+            donnees[i] = donneesList.get(i);
         }
-        return data;
+        return donnees;
     }
 
     // Détection des emprunts pour mettre à jour l'affichage
@@ -391,12 +396,12 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
     // Charger les données des livres à partir d'un fichier
     public void actualiserLeTableau() {
-        DefaultTableModel model = (DefaultTableModel) j.getModel();
-        model.setRowCount(0);
+        DefaultTableModel modele = (DefaultTableModel) j.getModel();
+        modele.setRowCount(0);
 
-        String[][] data1 = chargerLesDonneesDesLivres();
-        for (String[] row : data1) {
-            model.addRow(row);
+        String[][] donnees1 = chargerLesDonneesDesLivres();
+        for (String[] rangee : donnees1) {
+            modele.addRow(rangee);
         }
     }
 

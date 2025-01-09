@@ -52,11 +52,11 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         setLayout(laGrid);
 
         // Charger les utilisateurs depuis un fichier
-        String[][] data = chargerLesNomsDUtilisateurAPartirDuFichier();
+        String[][] donnees = chargerLesNomsDUtilisateurAPartirDuFichier();
         String[] columnNames = {"Utilisateurs"};
 
         // Modèle de table avec des données non modifiables
-        DefaultTableModel model = new DefaultTableModel(data, columnNames) {
+        DefaultTableModel model = new DefaultTableModel(donnees, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false; // Empêche la modification des noms d'utilisateurs
@@ -216,8 +216,8 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
-        String[][] data = chargerLesNomsDUtilisateurAPartirDuFichier();
-        for (String[] row : data) {
+        String[][] donnees = chargerLesNomsDUtilisateurAPartirDuFichier();
+        for (String[] row : donnees) {
             model.addRow(row);
         }
     }
@@ -312,14 +312,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
     private String[][] chargerLesNomsDUtilisateurAPartirDuFichier () {
         // Charge les utilisateurs depuis un fichier
-        ArrayList<String[]> dataList = new ArrayList<>();
+        ArrayList<String[]> listeDeDonnees = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
 
-                String[] rowData = line.split(",");
-                if (rowData.length > 0) {
-                    dataList.add(new String[]{rowData[0]});
+                String[] donneesDeLigne = line.split(",");
+                if (donneesDeLigne.length > 0) {
+                    listeDeDonnees.add(new String[]{donneesDeLigne[0]});
                 }
             }
         } catch (IOException e) {
@@ -327,10 +327,10 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        String[][] data = new String[dataList.size()][1];
-        for (int i = 0; i < dataList.size(); i++) {
-            data[i] = dataList.get(i);
+        String[][] donnees = new String[listeDeDonnees.size()][1];
+        for (int i = 0; i < listeDeDonnees.size(); i++) {
+            donnees[i] = listeDeDonnees.get(i);
         }
-        return data;
+        return donnees;
     }
 }
