@@ -20,6 +20,7 @@ import javax.swing.RowFilter;
 
 public class UtilisateurGUI extends JPanel implements ActionListener {
 
+    // Instance de la base de données
     private Database db = new Database();
     private JLabel nomUtilisateurL;
     private String nomUtilisateur;
@@ -28,35 +29,38 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
     JLabel livreEmprunter = new JLabel();
     JLabel dateDEmprunt = new JLabel();
     JLabel dateDERemise = new JLabel();
-    JButton retournerBouton  = new JButton();
+    JButton retournerBouton = new JButton();
 
-    //ajouter, retourner livre
+    // Panel pour ajouter/retourner un livre
     private JPanel panelGauche;
 
-    //recherche de livre
+    // Panel pour la recherche de livres
     private JPanel panelCentre;
 
-    //settings, date et nom d'utilisateur
+    // Panel pour les paramètres, la date et le nom d'utilisateur
     private JPanel panelHaut;
 
     JTable j;
     private TableRowSorter<DefaultTableModel> sorter;
 
+    // Méthode pour rechercher dans la table
+    //Inpirer de ce code: https://www.tutorialspoint.com/how-to-implement-the-search-functionality-of-a-jtable-in-java
     private void searchTable(String searchText) {
         if (searchText.trim().length() == 0) {
-            sorter.setRowFilter(null);
+            sorter.setRowFilter(null); // Réinitialiser le filtre si aucune recherche
         } else {
-            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText)); // Appliquer le filtre
         }
     }
 
+    // Constructeur de l'interface utilisateur
     public UtilisateurGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame, String nomUtilisateur) {
         setSize(1003, 600);
         this.nomUtilisateur = nomUtilisateur;
 
         setLayout(new BorderLayout());
 
-        //Panel Haut##############################################################################
+        // Panel du haut ######################################################################
         panelHaut = new JPanel(new BorderLayout());
         panelHaut.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panelHaut.setPreferredSize(new Dimension(800, 50));
@@ -64,15 +68,18 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
         Font headerFont = new Font("Arial", Font.PLAIN, 16);
 
+        // Afficher le nom de l'utilisateur
         nomUtilisateurL = new JLabel("Utilisateur: " + this.nomUtilisateur);
         nomUtilisateurL.setFont(headerFont);
 
+        // Afficher la date du jour
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         Date date = new Date();
         String dateForma = dateFormat.format(date);
         JLabel dateDuJourL = new JLabel(dateForma);
         dateDuJourL.setFont(headerFont);
 
+        // Ajouter un bouton pour les paramètres avec une icône
         ImageIcon originalIcon = new ImageIcon("GUI/assets/parametres.png");
         Image scaledImage = originalIcon.getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH);
         Icon icon = new ImageIcon(scaledImage);
@@ -82,6 +89,8 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         parametresB.setFocusPainted(false);
         parametresB.setPreferredSize(new Dimension(35, 35));
         parametresB.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Organiser les composants du panel du haut
         JPanel contenantGauche = new JPanel(new FlowLayout(FlowLayout.LEFT));
         JPanel contenantCentre = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JPanel contenantDroite = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -99,21 +108,23 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                 BorderFactory.createEmptyBorder(5, 10, 5, 10)
         ));
 
-        // Panel Gauche####################################################################################
-        panelGauche = new JPanel();
+        // Panel de gauche ###################################################################
         panelGauche = new JPanel(new BorderLayout());
         panelGauche.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         panelGauche.setPreferredSize(new Dimension(400, 550));
         add(panelGauche, BorderLayout.WEST);
+
+        // Ajouter un bouton pour se déconnecter
         JPanel deconnexionPanel = new JPanel();
         deconnexionPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         JButton deconnexionB = new JButton("Deconnexion");
         deconnexionPanel.add(deconnexionB);
-        panelGauche.add(deconnexionPanel,BorderLayout.SOUTH);
+        panelGauche.add(deconnexionPanel, BorderLayout.SOUTH);
 
+        // Contenu principal pour l'emprunt/retour de livre
         JPanel mainPanelGauche = new JPanel();
         emprunterBouton.setText("Emprunter");
-        livreEmprunter.setText("Livre emprunter: ");
+        livreEmprunter.setText("Livre emprunté: ");
         dateDEmprunt.setText("Date d'emprunt: ");
         dateDERemise.setText("Date de remise: ");
         retournerBouton.setText("Retournez votre livre");
@@ -122,24 +133,25 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.fill = GridBagConstraints.HORIZONTAL;
         gbc1.insets = new Insets(10, 10, 10, 10);
-        gbc1.gridx = 0; gbc1.gridy = 0;
+
+        gbc1.gridx = 0;
+        gbc1.gridy = 0;
         mainPanelGauche.add(emprunterBouton, gbc1);
-        gbc1.gridx = 0; gbc1.gridy = 1;
+        gbc1.gridy = 1;
         mainPanelGauche.add(livreEmprunter, gbc1);
-        gbc1.gridx = 0; gbc1.gridy = 2;
+        gbc1.gridy = 2;
         mainPanelGauche.add(dateDEmprunt, gbc1);
-        gbc1.gridx = 0; gbc1.gridy = 3;
+        gbc1.gridy = 3;
         mainPanelGauche.add(dateDERemise, gbc1);
-        gbc1.gridx = 0; gbc1.gridy = 4; gbc1.gridwidth = 2;
+        gbc1.gridy = 4;
+        gbc1.gridwidth = 2;
         mainPanelGauche.add(retournerBouton, gbc1);
-        gbc1.gridx = 0; gbc1.gridy = 4; gbc1.gridwidth = 2;
-        mainPanelGauche.add(emprunterBouton, gbc1);
+
         panelGauche.add(mainPanelGauche, BorderLayout.CENTER);
 
-
-
-
+        // Ajouter des événements pour les boutons d'emprunt et de retour
         emprunterBouton.addActionListener(e -> {
+            // Gestion de l'emprunt de livre
             JPanel empruntPopup = new JPanel();
             JLabel idL = new JLabel("Livre ID:");
             JTextField idF = new JTextField(10);
@@ -223,13 +235,15 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         });
 
 
-        // Panel Centre####################################################################################
+        // Panel du centre ######################################################################
         panelCentre = new JPanel();
         panelCentre.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         add(panelCentre, BorderLayout.CENTER);
 
+        // Ajouter le champ de recherche et la table des livres
         JLabel rechercheL = new JLabel("Recherche:");
         JTextField rechercheF = new JTextField(15);
+
         rechercheF.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -245,16 +259,14 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             public void changedUpdate(DocumentEvent e) {
                 searchTable(rechercheF.getText());
             }
-
         });
 
-        JPanel recherchePanel = new JPanel();
-        recherchePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        JPanel recherchePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
         recherchePanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        rechercheL.setFont(new Font("Arial", Font.PLAIN, 14));
         recherchePanel.add(rechercheL);
         recherchePanel.add(rechercheF);
 
+        // Charger les données des livres
         String[][] data = loadDataFromLivres();
         String[] columnNames = {"Livres", "Auteur", "Genre", "Disponibles", "ID"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
@@ -265,26 +277,34 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         };
 
         j = new JTable(model);
-        j.getTableHeader().setReorderingAllowed(false);
-        j.setRowSelectionAllowed(false);
-        j.setColumnSelectionAllowed(false);
-        j.setFocusable(false);
-        j.getTableHeader().setResizingAllowed(false);
         sorter = new TableRowSorter<>(model);
         j.setRowSorter(sorter);
+
         JScrollPane sp = new JScrollPane(j);
         sp.setPreferredSize(new Dimension(585, 450));
+
         panelCentre.add(recherchePanel, BorderLayout.NORTH);
         panelCentre.add(sp, BorderLayout.CENTER);
 
-        deconnexionB.addActionListener(e ->{frame.setSize(600,400);frame.setTitle("Connexion-Librairie");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "Connexion");});
+        // Bouton pour déconnexion
+        deconnexionB.addActionListener(e -> {
+            frame.setSize(600, 400);
+            frame.setTitle("Connexion-Librairie");
+            frame.setLocationRelativeTo(null);
+            cardLayout.show(cardPanel, "Connexion");
+        });
+
         retournerBouton.addActionListener(this);
+
         parametresB.addActionListener(e -> {
-            ParametresDialog dialog = new ParametresDialog((JFrame) SwingUtilities.getWindowAncestor(this), db, nomUtilisateur);dialog.setVisible(true);});
+            ParametresDialog dialog = new ParametresDialog((JFrame) SwingUtilities.getWindowAncestor(this), db, nomUtilisateur);
+            dialog.setVisible(true);
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
+        // Gestion des actions (boutons)
         String command = actionEvent.getActionCommand();
         if (command.equals("Retournez votre livre")) {
             String utilisateur = this.nomUtilisateur;
@@ -325,7 +345,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         }
     }
 
-
+    // Charger les données des livres à partir du fichier
     private String[][] loadDataFromLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
@@ -347,6 +367,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         return data;
     }
 
+    // Détection des emprunts pour mettre à jour l'affichage
     public void empruntDetection() {
         String[] infoEmprunt = db.detecterEmprunt(this.nomUtilisateur);
         if (infoEmprunt.length > 1) {
@@ -369,6 +390,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         }
     }
 
+    // Charger les données des livres à partir d'un fichier
     public void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);

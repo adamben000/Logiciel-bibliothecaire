@@ -2,27 +2,36 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class AdminGUI_optionStack extends JPanel{
-    JLabel titre = new JLabel ("Page Administrateur");
+public class AdminGUI_optionStack extends JPanel {
+    // Déclaration des composants graphiques
+    JLabel titre = new JLabel("Page Administrateur");
     JButton utilisateurs_Page = new JButton("Utilisateurs");
     JButton livres_Page = new JButton("Livres");
     JButton emprunts_Page = new JButton("Emprunts");
     JButton deconnexion = new JButton("Deconnexion");
+
+    // Layout et contraintes pour organiser les composants
     GridBagLayout gridLayout = new GridBagLayout();
     GridBagConstraints gbc = new GridBagConstraints();
 
-    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame frame){
-
+    // Constructeur de la classe AdminGUI_optionStack
+    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+        // Définir le layout de la page
         setLayout(gridLayout);
 
+        // Paramétrage des contraintes pour la disposition des composants
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10, 10, 10, 10); // Espacement autour des composants
 
-        gbc.gridx = 0; gbc.gridy = 0; gbc.gridwidth = 2;
-        titre.setFont(new Font("Arial", Font.BOLD, 24));
-        titre.setHorizontalAlignment(SwingConstants.CENTER);
+        // Titre de la page administrateur
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        titre.setFont(new Font("Arial", Font.BOLD, 24)); // Police et taille du titre
+        titre.setHorizontalAlignment(SwingConstants.CENTER); // Centrer le titre
         add(titre, gbc);
 
+        // Ajout des boutons sur la page
         gbc.gridx = 0; gbc.gridy = 1;
         add(utilisateurs_Page, gbc);
 
@@ -35,40 +44,65 @@ public class AdminGUI_optionStack extends JPanel{
         gbc.gridx = 0; gbc.gridy = 4;
         add(deconnexion, gbc);
 
-        deconnexion.addActionListener(e -> cardLayout.show(cardPanel, "Connexion"));
+        // Action pour le bouton de déconnexion
+        deconnexion.addActionListener(e -> {
+            cardLayout.show(cardPanel, "Connexion"); // Retour à la page de connexion
+        });
+
+        // Action pour le bouton "Utilisateurs"
         utilisateurs_Page.addActionListener(e -> {
+            // Rafraîchir la table des utilisateurs avant de passer à la vue AdminUtilisateur
             Component[] components = cardPanel.getComponents();
             for (Component component : components) {
                 if (component instanceof AdminUtilisateur) {
                     AdminUtilisateur adminUtilisateur = (AdminUtilisateur) component;
-                    adminUtilisateur.refreshTable();
+                    adminUtilisateur.refreshTable(); // Rafraîchir la table des utilisateurs
                 }
             }
-            frame.setSize(800,600);frame.setTitle("Utilisateurs-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminUtilisateur");});
+            // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminUtilisateur
+            frame.setSize(800,600);
+            frame.setTitle("Utilisateurs-Librairie-Management");
+            frame.setLocationRelativeTo(null);
+            cardLayout.show(cardPanel, "AdminUtilisateur"); // Afficher la page AdminUtilisateur
+        });
 
-
-        livres_Page.addActionListener(e ->{
+        // Action pour le bouton "Livres"
+        livres_Page.addActionListener(e -> {
+            // Rafraîchir la table des livres avant de passer à la vue AdminLivres
             Component[] components = cardPanel.getComponents();
             for (Component component : components) {
                 if (component instanceof AdminLivres) {
                     AdminLivres adminLivres = (AdminLivres) component;
-                    adminLivres.refreshTable();
+                    adminLivres.refreshTable(); // Rafraîchir la table des livres
                 }
             }
-            frame.setSize(800,600);frame.setTitle("Livres-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminLivres");});
+            // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminLivres
+            frame.setSize(800,600);
+            frame.setTitle("Livres-Librairie-Management");
+            frame.setLocationRelativeTo(null);
+            cardLayout.show(cardPanel, "AdminLivres"); // Afficher la page AdminLivres
+        });
 
-        emprunts_Page.addActionListener(e ->{
+        // Action pour le bouton "Emprunts"
+        emprunts_Page.addActionListener(e -> {
+            // Rafraîchir les tables des emprunts avant de passer à la vue AdminEmprunts
             Component[] components = cardPanel.getComponents();
             for (Component component : components) {
                 if (component instanceof AdminEmprunts) {
                     AdminEmprunts adminEmprunts = (AdminEmprunts) component;
-                    adminEmprunts.refreshTable();
-                    adminEmprunts.refreshTable2();
-                    adminEmprunts.refreshTable3();
+                    adminEmprunts.refreshTable(); // Rafraîchir la première table des emprunts
+                    adminEmprunts.refreshTable2(); // Rafraîchir la deuxième table des emprunts
+                    adminEmprunts.refreshTable3(); // Rafraîchir la troisième table des emprunts
                 }
             }
-            frame.setSize(1000, 600);frame.setTitle("Emprunts-Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminEmprunts");});
+            // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminEmprunts
+            frame.setSize(1000, 600);
+            frame.setTitle("Emprunts-Librairie-Management");
+            frame.setLocationRelativeTo(null);
+            cardLayout.show(cardPanel, "AdminEmprunts"); // Afficher la page AdminEmprunts
+        });
 
+        // Rendre le panneau visible
         setVisible(true);
     }
 }

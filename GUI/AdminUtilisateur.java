@@ -20,11 +20,12 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     JPanel panel3 = new JPanel();
     GridLayout laGrid = new GridLayout(2, 1);
 
-    // Panel 2
+    // Panel 2 pour la suppression d'un utilisateur
     JLabel utilisateur = new JLabel("Utilisateur:");
     JTextField utilisateurF = new JTextField("", 10);
     JButton supprimerB = new JButton("Supprimer");
 
+    // Panel 3 pour la création d'un utilisateur
     JLabel utilisateurLCreate = new JLabel("Utilisateur:");
     JTextField utilisateurFCreate = new JTextField("", 10);
 
@@ -33,13 +34,15 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     JButton ajouterB = new JButton("Ajouter");
     JButton retourB = new JButton("Retour");
 
+    // Déclaration des composants pour l'accès à la base de données
     GridBagConstraints gbc = new GridBagConstraints();
-
     private Database db = new Database();
 
+    // Panneau de navigation et layout
     CardLayout cardLayout;
     JPanel cardPanel;
 
+    // Tableau des utilisateurs
     JTable j;
 
     public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
@@ -48,28 +51,31 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         setSize(800, 600);
         setLayout(laGrid);
 
+        // Charger les utilisateurs depuis un fichier
         String[][] data = loadUsernamesFromFile();
         String[] columnNames = {"Utilisateurs"};
 
+        // Modèle de table avec des données non modifiables
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // I put this prevent admin from editing the usernames
+                return false; // Empêche la modification des noms d'utilisateurs
             }
         };
 
+        // Initialisation du tableau
         j = new JTable(model);
         j.setBounds(30, 40, 200, 300);
 
-        // centrer les noms
+        // Centrage des données dans la table
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( JLabel.CENTER );
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         centerRenderer.setVerticalAlignment(JLabel.CENTER);
         for (int i = 0; i < j.getColumnCount(); i++) {
             j.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        // enlever le bleu quand on clique
+        // Paramètres pour empêcher la sélection de lignes ou de colonnes
         j.getTableHeader().setReorderingAllowed(false);
         j.setRowSelectionAllowed(false);
         j.setColumnSelectionAllowed(false);
@@ -80,11 +86,11 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         panel1.setLayout(new BorderLayout());
         panel1.add(sp, BorderLayout.CENTER);
 
+        // Panneau de boutons en bas
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
 
-        // Panel 2
+        // Panel pour la suppression d'un utilisateur
         panel2.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
@@ -105,7 +111,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         gbc.gridy = 2;
         panel2.add(retourB, gbc);
 
-        // panel 3
+        // Panel pour la création d'un utilisateur
         panel3.setLayout(new GridBagLayout());
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.fill = GridBagConstraints.HORIZONTAL;
@@ -130,6 +136,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         gbc1.gridwidth = 2;
         panel3.add(ajouterB, gbc1);
 
+        // Ajouter les panneaux à la fenêtre principale
         add(panel1, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
 
@@ -138,14 +145,21 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         panel2.setBorder(new LineBorder(Color.BLACK, 1));
         panel3.setBorder(new LineBorder(Color.BLACK, 1));
 
+        // Ajout des écouteurs d'événements
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
-        retourB.addActionListener(e -> {frame.setSize(600, 400);frame.setTitle("Librairie-Management");frame.setLocationRelativeTo(null);cardLayout.show(cardPanel, "AdminOptionStack");});
-        setVisible(true);
+        retourB.addActionListener(e -> {
+            frame.setSize(600, 400);
+            frame.setTitle("Librairie-Management");
+            frame.setLocationRelativeTo(null);
+            cardLayout.show(cardPanel, "AdminOptionStack");
+        });
 
+        setVisible(true);
     }
 
     private boolean verification() {
+        // Vérifie que les champs de création sont valides
         String nom = utilisateurFCreate.getText();
         String pass = motDePasseFCreate.getText();
 
@@ -191,12 +205,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     }
 
     public void enleverCharacteres() {
+        // Vide les champs de saisie
         utilisateurF.setText("");
         utilisateurFCreate.setText("");
         motDePasseFCreate.setText("");
     }
 
     public void refreshTable() {
+        // Rafraîchit la table des utilisateurs
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
@@ -207,6 +223,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
+        // Gère les actions de suppression et d'ajout
         String command = actionEvent.getActionCommand();
 
         if (command.equals("Supprimer")) {
@@ -270,7 +287,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
                         enleverCharacteres();
                         JOptionPane.showMessageDialog(
                                 this,
-                                "Le compte a été ajouté avec succès !",
+                                "Le compte a été ajouté avec succès!",
                                 "Succès",
                                 JOptionPane.INFORMATION_MESSAGE
                         );
@@ -292,7 +309,9 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             }
         }
     }
+
     private String[][] loadUsernamesFromFile () {
+        // Charge les utilisateurs depuis un fichier
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
             String line;
@@ -307,7 +326,6 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             JOptionPane.showMessageDialog(this, "Erreur lors du chargement des utilisateurs. Fichier manquant ou inaccessible.", "Erreur", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
 
         String[][] data = new String[dataList.size()][1];
         for (int i = 0; i < dataList.size(); i++) {

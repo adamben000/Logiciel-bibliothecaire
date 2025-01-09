@@ -12,21 +12,21 @@ import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-
 public class AdminEmprunts extends JPanel implements ActionListener {
+    // Déclaration des panels
     JPanel panel1 = new JPanel();
     JPanel panel4 = new JPanel();
     JPanel panel2 = new JPanel();
     JPanel panel3 = new JPanel();
     GridLayout laGrid = new GridLayout(2,1);
 
-    // Panel 2
+    // Panel 2 - Champs de texte et boutons pour retourner un livre
     JLabel utilisateurL = new JLabel("Utilisateur:");
     JTextField utilisateurF = new JTextField("", 10);
-    JButton retournerLeLivreB = new JButton("Retourner le livre") ;
+    JButton retournerLeLivreB = new JButton("Retourner le livre");
     JButton retourB = new JButton("Retour");
 
-    // Panel 3
+    // Panel 3 - Champs de texte et boutons pour emprunter un livre
     JLabel utilisateurEmpruntL = new JLabel("Utilisateur:");
     JTextField utilisateurEmpruntF = new JTextField("", 10);
     JLabel LivreEmprunterL = new JLabel("Livre ID:");
@@ -35,6 +35,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
     GridBagConstraints gbc = new GridBagConstraints();
 
+    // Déclaration des tableaux pour afficher les informations
     JTable j;
     JTable j1;
     JTable j2;
@@ -43,17 +44,19 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     public AdminEmprunts(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
         setLayout(laGrid);
 
+        // Charger les données des emprunts, livres et utilisateurs
         String[][] data = loadDataEmprunts();
-        String[] columnNames = {"Utilisateur", "Livre emprunté","ID","Date d'Emprunt", "Date de retour"};
+        String[] columnNames = {"Utilisateur", "Livre emprunté", "ID", "Date d'Emprunt", "Date de retour"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return false; // Rendre les cellules non éditables
             }
         };
 
+        // Charger les livres disponibles
         String[][] data1 = loadDataFromLivres();
-        String[] columnNames1 = {"Nom des livres","ID", "Quantité", "Disponibles",};
+        String[] columnNames1 = {"Nom des livres", "ID", "Quantité", "Disponibles"};
         DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -61,6 +64,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             }
         };
 
+        // Charger les utilisateurs enregistrés
         String[][] data2 = loadUsernamesFromFile();
         String[] columnNames2 = {"Utilisateurs"};
         DefaultTableModel model3 = new DefaultTableModel(data2, columnNames2) {
@@ -70,20 +74,20 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             }
         };
 
-
+        // Créer les tables pour afficher les données
         j = new JTable(model);
         j1 = new JTable(model2);
         j2 = new JTable(model3);
 
+        // Centrer les données des utilisateurs
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         centerRenderer.setVerticalAlignment(JLabel.CENTER);
-
         for (int i = 0; i < j2.getColumnCount(); i++) {
             j2.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-
+        // Ajouter les tables dans des panneaux de défilement
         JScrollPane sp = new JScrollPane(j);
         JScrollPane sp1 = new JScrollPane(j1);
         JScrollPane sp2 = new JScrollPane(j2);
@@ -92,19 +96,16 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         panel1.add(sp, BorderLayout.CENTER);
 
         panel4.setLayout(new GridLayout(2, 1));
-
-
         j1.setFillsViewportHeight(true);
         j2.setFillsViewportHeight(true);
 
+        // Ajouter les panneaux de livres et utilisateurs dans panel4
         panel4.add(sp1);
         panel4.add(sp2);
-
-
         sp1.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         sp2.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-
+        // Désactiver la possibilité de réordonner et de sélectionner des cellules
         for (JTable table : new JTable[]{j, j1, j2}) {
             table.getTableHeader().setReorderingAllowed(false);
             table.setRowSelectionAllowed(false);
@@ -113,16 +114,16 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             table.getTableHeader().setResizingAllowed(false);
         }
 
-
+        // Configuration des panels pour l'interface
         JPanel topPanel = new JPanel(new GridLayout(1,2));
         JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
-
 
         panel2.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(10, 10, 10, 10);
 
+        // Ajouter les éléments dans panel2 (pour retourner un livre)
         gbc.gridx = 0; gbc.gridy = 0;
         panel2.add(utilisateurL, gbc);
 
@@ -135,6 +136,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
         panel2.add(retourB, gbc);
 
+        // Ajouter les éléments dans panel3 (pour emprunter un livre)
         panel3.setLayout(new GridBagLayout());
         GridBagConstraints gbc1 = new GridBagConstraints();
         gbc1.fill = GridBagConstraints.HORIZONTAL;
@@ -153,14 +155,15 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         gbc1.gridx = 0; gbc1.gridy = 3; gbc1.gridwidth = 2;
         panel3.add(emprunteB, gbc1);
 
+        // Ajouter les panels dans topPanel et bottomPanel
         add(topPanel);
         add(bottomPanel);
-
         topPanel.add(panel1);
         topPanel.add(panel4);
         bottomPanel.add(panel2);
         bottomPanel.add(panel3);
 
+        // Ajouter les écouteurs d'événements pour les boutons
         retournerLeLivreB.addActionListener(this);
         emprunteB.addActionListener(this);
         retourB.addActionListener(e -> {
@@ -169,10 +172,11 @@ public class AdminEmprunts extends JPanel implements ActionListener {
             frame.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminOptionStack");
         });
+
+        // Appliquer une bordure autour des panels
         panel2.setBorder(new LineBorder(Color.BLACK, 1));
         panel3.setBorder(new LineBorder(Color.BLACK, 1));
         setVisible(true);
-
     }
 
     public void actionPerformed(ActionEvent actionEvent) {
@@ -301,6 +305,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         }
     }
 
+    // Charger les données des emprunts depuis un fichier
     private String[][] loadDataEmprunts() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/emprunts.txt"))) {
@@ -322,6 +327,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         return data;
     }
 
+    // Charger les livres depuis un fichier
     private String[][] loadDataFromLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
@@ -343,6 +349,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         return data;
     }
 
+    // Charger les noms des utilisateurs depuis un fichier
     private String[][] loadUsernamesFromFile() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
@@ -367,6 +374,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         return data;
     }
 
+    // Actualiser les tables pour afficher les dernières données
     public void refreshTable() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
