@@ -23,8 +23,8 @@ https://miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoy
 ## Fonctionnalités Principales
 
 ### Pour les Utilisateurs
-- Système de connexion et création de compte sécurisé
-- Interface intuitive pour la recherche de livres
+- Système de connexion et création de compte
+- Interface pour la recherche de livres
 - Emprunt et retour de livres simplifiés
 - Gestion du profil utilisateur
 - Consultation des emprunts en cours
@@ -33,7 +33,7 @@ https://miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoy
 - Gestion complète des utilisateurs
 - Gestion du catalogue de livres
 - Suivi des emprunts et retours
-- Interface d'administration dédiée
+- Interface d'administration
 
 ## Architecture Technique
 
@@ -82,11 +82,21 @@ Le logiciel propose plusieurs interfaces adaptées aux différents utilisateurs 
 
 ## Tests et Validation
 
-Le système a été rigoureusement testé pour assurer :
-- La validation des entrées utilisateur
-- La gestion sécurisée des comptes
-- La fiabilité des opérations d'emprunt/retour
-- La cohérence des données
+Entrées utilisateur/mot de passe :
+
+Champs non vides.
+Respect des critères (longueur, caractères spéciaux, etc.).
+Rejet des doublons et des espaces inutiles.
+
+Quantité des livres (Admin Livres) :
+
+Vérifier les nombres valides (positifs).
+Rejet des champs vides ou non numériques.
+
+Création d’un livre :
+
+Rejet des champs vides ou contenant uniquement des espaces.
+Validation des données obligatoires (titre, auteur, etc.).
 
 ## Équipe de Développement
 
@@ -102,7 +112,7 @@ Le système a été rigoureusement testé pour assurer :
 
 ## Perspectives d'Évolution
 
-- Amélioration continue de l'interface utilisateur
+- Amélioration de l'interface utilisateur
 - Ajout de nouvelles fonctionnalités de gestion
 - Optimisation des performances
 - Extension des capacités de recherche
