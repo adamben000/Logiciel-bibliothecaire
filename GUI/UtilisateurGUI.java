@@ -135,8 +135,6 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         gbc1.insets = new Insets(10, 10, 10, 10);
 
         gbc1.gridx = 0;
-        gbc1.gridy = 0;
-        mainPanelGauche.add(emprunterBouton, gbc1);
         gbc1.gridy = 1;
         mainPanelGauche.add(livreEmprunter, gbc1);
         gbc1.gridy = 2;
@@ -146,6 +144,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         gbc1.gridy = 4;
         gbc1.gridwidth = 2;
         mainPanelGauche.add(retournerBouton, gbc1);
+        mainPanelGauche.add(emprunterBouton, gbc1);
 
         panelGauche.add(mainPanelGauche, BorderLayout.CENTER);
 
