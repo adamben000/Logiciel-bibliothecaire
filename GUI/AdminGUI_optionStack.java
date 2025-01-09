@@ -15,7 +15,7 @@ public class AdminGUI_optionStack extends JPanel {
     GridBagConstraints gbc = new GridBagConstraints();
 
     // Constructeur de la classe AdminGUI_optionStack
-    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public AdminGUI_optionStack(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         // Définir le layout de la page
         setLayout(gridLayout);
 
@@ -56,13 +56,13 @@ public class AdminGUI_optionStack extends JPanel {
             for (Component component : components) {
                 if (component instanceof AdminUtilisateur) {
                     AdminUtilisateur adminUtilisateur = (AdminUtilisateur) component;
-                    adminUtilisateur.refreshTable(); // Rafraîchir la table des utilisateurs
+                    adminUtilisateur.actualiserLeTableau(); // Rafraîchir la table des utilisateurs
                 }
             }
             // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminUtilisateur
-            frame.setSize(800,600);
-            frame.setTitle("Utilisateurs-Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(800,600);
+            cadre.setTitle("Utilisateurs-Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminUtilisateur"); // Afficher la page AdminUtilisateur
         });
 
@@ -73,13 +73,13 @@ public class AdminGUI_optionStack extends JPanel {
             for (Component component : components) {
                 if (component instanceof AdminLivres) {
                     AdminLivres adminLivres = (AdminLivres) component;
-                    adminLivres.refreshTable(); // Rafraîchir la table des livres
+                    adminLivres.actualiserLeTableau(); // Rafraîchir la table des livres
                 }
             }
             // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminLivres
-            frame.setSize(800,600);
-            frame.setTitle("Livres-Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(800,600);
+            cadre.setTitle("Livres-Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminLivres"); // Afficher la page AdminLivres
         });
 
@@ -90,15 +90,15 @@ public class AdminGUI_optionStack extends JPanel {
             for (Component component : components) {
                 if (component instanceof AdminEmprunts) {
                     AdminEmprunts adminEmprunts = (AdminEmprunts) component;
-                    adminEmprunts.refreshTable(); // Rafraîchir la première table des emprunts
-                    adminEmprunts.refreshTable2(); // Rafraîchir la deuxième table des emprunts
-                    adminEmprunts.refreshTable3(); // Rafraîchir la troisième table des emprunts
+                    adminEmprunts.actualiserLeTableau(); // Rafraîchir la première table des emprunts
+                    adminEmprunts.actualiserLeTableau2(); // Rafraîchir la deuxième table des emprunts
+                    adminEmprunts.actualiserLeTableau3(); // Rafraîchir la troisième table des emprunts
                 }
             }
             // Modifier la taille et le titre de la fenêtre avant de montrer la page AdminEmprunts
-            frame.setSize(1000, 600);
-            frame.setTitle("Emprunts-Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(1000, 600);
+            cadre.setTitle("Emprunts-Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminEmprunts"); // Afficher la page AdminEmprunts
         });
 

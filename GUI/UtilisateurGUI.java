@@ -54,7 +54,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
     }
 
     // Constructeur de l'interface utilisateur
-    public UtilisateurGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame, String nomUtilisateur) {
+    public UtilisateurGUI(CardLayout cardLayout, JPanel cardPanel, JFrame cadre, String nomUtilisateur) {
         setSize(1003, 600);
         this.nomUtilisateur = nomUtilisateur;
 
@@ -163,7 +163,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             empruntPopup.add(idF, gbc);
 
             int result = JOptionPane.showConfirmDialog(
-                    frame,
+                    cadre,
                     empruntPopup,
                     "ID",
                     JOptionPane.OK_CANCEL_OPTION,
@@ -209,7 +209,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                     }
 
                     if (db.emprunterLivre(utilisateur, livreId)) {
-                        refreshTable();
+                        actualiserLeTableau();
                         idF.setText("");
                         empruntDetection();
 
@@ -266,7 +266,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         recherchePanel.add(rechercheF);
 
         // Charger les données des livres
-        String[][] data = loadDataFromLivres();
+        String[][] data = chargerLesDonneesDesLivres();
         String[] columnNames = {"Livres", "Auteur", "Genre", "Disponibles", "ID"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
@@ -287,16 +287,16 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
         // Bouton pour déconnexion
         deconnexionB.addActionListener(e -> {
-            frame.setSize(600, 400);
-            frame.setTitle("Connexion-Librairie");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(600, 400);
+            cadre.setTitle("Connexion-Librairie");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "Connexion");
         });
 
         retournerBouton.addActionListener(this);
 
         parametresB.addActionListener(e -> {
-            ParametresDialog dialog = new ParametresDialog((JFrame) SwingUtilities.getWindowAncestor(this), db, nomUtilisateur);
+            BoiteDeDialogueParametres dialog = new BoiteDeDialogueParametres((JFrame) SwingUtilities.getWindowAncestor(this), db, nomUtilisateur);
             dialog.setVisible(true);
         });
     }
@@ -311,7 +311,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
                 int joursRetard = db.enRetard(utilisateur);
                 if (db.retournerLivre(utilisateur)) {
-                    refreshTable();
+                    actualiserLeTableau();
 
                     if (joursRetard > 0) {
                         JOptionPane.showMessageDialog(this,
@@ -319,14 +319,14 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
                                 "Info",
                                 JOptionPane.INFORMATION_MESSAGE);
                         empruntDetection();
-                        refreshTable();
+                        actualiserLeTableau();
                     } else {
                         JOptionPane.showMessageDialog(this,
                                 "Livre retourné avec succès !",
                                 "Info",
                                 JOptionPane.INFORMATION_MESSAGE);
                         empruntDetection();
-                        refreshTable();
+                        actualiserLeTableau();
                     }
                 } else {
                     JOptionPane.showMessageDialog(this,
@@ -345,7 +345,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
     }
 
     // Charger les données des livres à partir du fichier
-    private String[][] loadDataFromLivres() {
+    private String[][] chargerLesDonneesDesLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
             String line;
@@ -390,17 +390,17 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
     }
 
     // Charger les données des livres à partir d'un fichier
-    public void refreshTable() {
+    public void actualiserLeTableau() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
-        String[][] data1 = loadDataFromLivres();
+        String[][] data1 = chargerLesDonneesDesLivres();
         for (String[] row : data1) {
             model.addRow(row);
         }
     }
 
-    class ParametresDialog extends JDialog {
+    class BoiteDeDialogueParametres extends JDialog {
         private JTextField nouveauNom1;
         private JTextField nouveauNom2;
         private JPasswordField ancienMotDePasse;
@@ -413,18 +413,18 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
         private Database db;
         private String nomUtilisateur;
 
-        public ParametresDialog(JFrame parent, Database db, String nomUtilisateur) {
+        public BoiteDeDialogueParametres(JFrame parent, Database db, String nomUtilisateur) {
             super(parent, "Paramètres", true);
             this.db = db;
             this.nomUtilisateur = nomUtilisateur;
-            initializeComponents();
-            setupLayout();
-            setupListeners();
+            initialiserLesComposants();
+            configurationMiseEnPage();
+            configurerLesListeners();
             pack();
             setLocationRelativeTo(parent);
         }
 
-        private void initializeComponents() {
+        private void initialiserLesComposants() {
             nouveauNom1 = new JTextField(15);
             nouveauNom2 = new JTextField(15);
             ancienMotDePasse = new JPasswordField(15);
@@ -437,7 +437,7 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
             changerMotDePasseButton = new JButton("Changer");
         }
 
-        private void setupLayout() {
+        private void configurationMiseEnPage() {
             setLayout(new BorderLayout());
 
             JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -448,72 +448,72 @@ public class UtilisateurGUI extends JPanel implements ActionListener {
 
             JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 0));
 
-            JPanel leftPanel = new JPanel(new GridBagLayout());
+            JPanel panelGauche = new JPanel(new GridBagLayout());
             GridBagConstraints gbcLeft = new GridBagConstraints();
             gbcLeft.insets = new Insets(5, 5, 5, 5);
             gbcLeft.fill = GridBagConstraints.HORIZONTAL;
 
             gbcLeft.gridx = 0;
             gbcLeft.gridy = 0;
-            leftPanel.add(new JLabel("Nouveau Nom:"), gbcLeft);
+            panelGauche.add(new JLabel("Nouveau Nom:"), gbcLeft);
 
             gbcLeft.gridy = 1;
-            leftPanel.add(nouveauNom1, gbcLeft);
+            panelGauche.add(nouveauNom1, gbcLeft);
 
             gbcLeft.gridy = 2;
-            leftPanel.add(new JLabel("Réécrire Nouveau Nom:"), gbcLeft);
+            panelGauche.add(new JLabel("Réécrire Nouveau Nom:"), gbcLeft);
 
             gbcLeft.gridy = 3;
-            leftPanel.add(nouveauNom2, gbcLeft);
+            panelGauche.add(nouveauNom2, gbcLeft);
 
             gbcLeft.gridy = 4;
-            leftPanel.add(changerNomButton, gbcLeft);
+            panelGauche.add(changerNomButton, gbcLeft);
 
-            JPanel rightPanel = new JPanel(new GridBagLayout());
+            JPanel panelDroit = new JPanel(new GridBagLayout());
             GridBagConstraints gbcRight = new GridBagConstraints();
             gbcRight.insets = new Insets(5, 5, 5, 5);
             gbcRight.fill = GridBagConstraints.HORIZONTAL;
 
             gbcRight.gridx = 0;
             gbcRight.gridy = 0;
-            rightPanel.add(new JLabel("Ancien Mot de Passe:"), gbcRight);
+            panelDroit.add(new JLabel("Ancien Mot de Passe:"), gbcRight);
 
             gbcRight.gridy = 1;
-            rightPanel.add(ancienMotDePasse, gbcRight);
+            panelDroit.add(ancienMotDePasse, gbcRight);
 
             gbcRight.gridy = 2;
-            rightPanel.add(new JLabel("Nouveau Mot de Passe:"), gbcRight);
+            panelDroit.add(new JLabel("Nouveau Mot de Passe:"), gbcRight);
 
             gbcRight.gridy = 3;
-            rightPanel.add(nouveauMotDePasse1, gbcRight);
+            panelDroit.add(nouveauMotDePasse1, gbcRight);
 
             gbcRight.gridy = 4;
-            rightPanel.add(new JLabel("Réécrire Nouveau Mot de Passe:"), gbcRight);
+            panelDroit.add(new JLabel("Réécrire Nouveau Mot de Passe:"), gbcRight);
 
             gbcRight.gridy = 5;
-            rightPanel.add(nouveauMotDePasse2, gbcRight);
+            panelDroit.add(nouveauMotDePasse2, gbcRight);
 
             gbcRight.gridy = 6;
-            rightPanel.add(changerMotDePasseButton, gbcRight);
+            panelDroit.add(changerMotDePasseButton, gbcRight);
 
-            mainPanel.add(leftPanel);
-            mainPanel.add(rightPanel);
+            mainPanel.add(panelGauche);
+            mainPanel.add(panelDroit);
 
-            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-            bottomPanel.add(okButton);
-            bottomPanel.add(cancelButton);
+            JPanel panelInferieur = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            panelInferieur.add(okButton);
+            panelInferieur.add(cancelButton);
 
-            leftPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            rightPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panelGauche.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+            panelDroit.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             add(headerPanel, BorderLayout.NORTH);
             add(mainPanel, BorderLayout.CENTER);
-            add(bottomPanel, BorderLayout.SOUTH);
+            add(panelInferieur, BorderLayout.SOUTH);
 
             setPreferredSize(new Dimension(500, 400));
         }
 
-        private void setupListeners() {
+        private void configurerLesListeners() {
             cancelButton.addActionListener(e -> dispose());
 
             okButton.addActionListener(e -> dispose());

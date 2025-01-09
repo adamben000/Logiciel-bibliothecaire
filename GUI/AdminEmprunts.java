@@ -41,7 +41,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     JTable j2;
     private Database db = new Database();
 
-    public AdminEmprunts(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public AdminEmprunts(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         setLayout(laGrid);
 
         // Charger les données des emprunts, livres et utilisateurs
@@ -55,7 +55,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         };
 
         // Charger les livres disponibles
-        String[][] data1 = loadDataFromLivres();
+        String[][] data1 = chargerLesDonneesDesLivres();
         String[] columnNames1 = {"Nom des livres", "ID", "Quantité", "Disponibles"};
         DefaultTableModel model2 = new DefaultTableModel(data1, columnNames1) {
             @Override
@@ -65,7 +65,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         };
 
         // Charger les utilisateurs enregistrés
-        String[][] data2 = loadUsernamesFromFile();
+        String[][] data2 = chargerLesNomsDUtilisateurAPartirDuFichier();
         String[] columnNames2 = {"Utilisateurs"};
         DefaultTableModel model3 = new DefaultTableModel(data2, columnNames2) {
             @Override
@@ -167,9 +167,9 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         retournerLeLivreB.addActionListener(this);
         emprunteB.addActionListener(this);
         retourB.addActionListener(e -> {
-            frame.setSize(600, 400);
-            frame.setTitle("Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(600, 400);
+            cadre.setTitle("Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminOptionStack");
         });
 
@@ -204,8 +204,8 @@ public class AdminEmprunts extends JPanel implements ActionListener {
 
                 int joursRetard = db.enRetard(utilisateur);
                 if (db.retournerLivre(utilisateur)) {
-                    refreshTable();
-                    refreshTable2();
+                    actualiserLeTableau();
+                    actualiserLeTableau2();
                     utilisateurF.setText("");
                     LivreEmprunterF.setText("");
 
@@ -281,8 +281,8 @@ public class AdminEmprunts extends JPanel implements ActionListener {
                 }
 
                 if (db.emprunterLivre(utilisateur, livreId)) {
-                    refreshTable();
-                    refreshTable2();
+                    actualiserLeTableau();
+                    actualiserLeTableau2();
                     utilisateurEmpruntF.setText("");
                     LivreEmprunterF.setText("");
                     JOptionPane.showMessageDialog(this,
@@ -328,7 +328,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     }
 
     // Charger les livres depuis un fichier
-    private String[][] loadDataFromLivres() {
+    private String[][] chargerLesDonneesDesLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
             String line;
@@ -350,7 +350,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     }
 
     // Charger les noms des utilisateurs depuis un fichier
-    private String[][] loadUsernamesFromFile() {
+    private String[][] chargerLesNomsDUtilisateurAPartirDuFichier() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {
             String line;
@@ -375,7 +375,7 @@ public class AdminEmprunts extends JPanel implements ActionListener {
     }
 
     // Actualiser les tables pour afficher les dernières données
-    public void refreshTable() {
+    public void actualiserLeTableau() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
@@ -385,21 +385,21 @@ public class AdminEmprunts extends JPanel implements ActionListener {
         }
     }
 
-    public void refreshTable2() {
+    public void actualiserLeTableau2() {
         DefaultTableModel model2 = (DefaultTableModel) j1.getModel();
         model2.setRowCount(0);
 
-        String[][] data1 = loadDataFromLivres();
+        String[][] data1 = chargerLesDonneesDesLivres();
         for (String[] row : data1) {
             model2.addRow(row);
         }
     }
 
-    public void refreshTable3() {
+    public void actualiserLeTableau3() {
         DefaultTableModel model2 = (DefaultTableModel) j2.getModel();
         model2.setRowCount(0);
 
-        String[][] data1 = loadUsernamesFromFile();
+        String[][] data1 = chargerLesNomsDUtilisateurAPartirDuFichier();
         for (String[] row : data1) {
             model2.addRow(row);
         }

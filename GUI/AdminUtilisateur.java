@@ -45,14 +45,14 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
     // Tableau des utilisateurs
     JTable j;
 
-    public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public AdminUtilisateur(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setSize(800, 600);
         setLayout(laGrid);
 
         // Charger les utilisateurs depuis un fichier
-        String[][] data = loadUsernamesFromFile();
+        String[][] data = chargerLesNomsDUtilisateurAPartirDuFichier();
         String[] columnNames = {"Utilisateurs"};
 
         // Modèle de table avec des données non modifiables
@@ -149,9 +149,9 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         supprimerB.addActionListener(this);
         ajouterB.addActionListener(this);
         retourB.addActionListener(e -> {
-            frame.setSize(600, 400);
-            frame.setTitle("Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(600, 400);
+            cadre.setTitle("Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminOptionStack");
         });
 
@@ -211,12 +211,12 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         motDePasseFCreate.setText("");
     }
 
-    public void refreshTable() {
+    public void actualiserLeTableau() {
         // Rafraîchit la table des utilisateurs
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
 
-        String[][] data = loadUsernamesFromFile();
+        String[][] data = chargerLesNomsDUtilisateurAPartirDuFichier();
         for (String[] row : data) {
             model.addRow(row);
         }
@@ -241,7 +241,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
             try {
                 if (db.utilisateurExisteSansMotDePasse(nom)) {
                     db.supprimerUtilisateur(nom);
-                    refreshTable();
+                    actualiserLeTableau();
                     enleverCharacteres();
                     JOptionPane.showMessageDialog(
                             this,
@@ -283,7 +283,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
 
                     if (!db.utilisateurExisteSansMotDePasse(nom)) {
                         db.ajouterUtilisateur(utilisateur1);
-                        refreshTable();
+                        actualiserLeTableau();
                         enleverCharacteres();
                         JOptionPane.showMessageDialog(
                                 this,
@@ -310,7 +310,7 @@ public class AdminUtilisateur extends JPanel implements ActionListener {
         }
     }
 
-    private String[][] loadUsernamesFromFile () {
+    private String[][] chargerLesNomsDUtilisateurAPartirDuFichier () {
         // Charge les utilisateurs depuis un fichier
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/utilisateurs.txt"))) {

@@ -34,7 +34,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
     private Database db = new Database(); // Référence à la base de données
 
     // Constructeur pour initialiser l'interface graphique
-    public RegistreGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public RegistreGUI(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setLayout(gridLayout); // Utilisation du GridBagLayout
@@ -80,7 +80,7 @@ public class RegistreGUI extends JPanel implements ActionListener {
         // Ajout des actions pour les boutons
         enregistrer.addActionListener(this);
         retour.addActionListener(e -> {
-            frame.setTitle("Connexion-Librairie");
+            cadre.setTitle("Connexion-Librairie");
             cardLayout.show(cardPanel, "Connexion");
         });
     }

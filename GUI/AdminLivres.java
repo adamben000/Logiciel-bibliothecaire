@@ -48,11 +48,11 @@ public class AdminLivres extends JPanel implements ActionListener {
 
     private Database db = new Database();
 
-    public AdminLivres(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public AdminLivres(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         setLayout(new BorderLayout());
 
         // Chargement des données des livres depuis le fichier
-        String[][] data = loadDataFromLivres();
+        String[][] data = chargerLesDonneesDesLivres();
         String[] columnNames = {"Livres", "Auteur", "Genre", "Quantité", "Disponibles", "ID"};
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
@@ -186,9 +186,9 @@ public class AdminLivres extends JPanel implements ActionListener {
 
         // Action pour le bouton retour
         retourB.addActionListener(e -> {
-            frame.setSize(600, 400);
-            frame.setTitle("Librairie-Management");
-            frame.setLocationRelativeTo(null);
+            cadre.setSize(600, 400);
+            cadre.setTitle("Librairie-Management");
+            cadre.setLocationRelativeTo(null);
             cardLayout.show(cardPanel, "AdminOptionStack");
         });
 
@@ -196,7 +196,7 @@ public class AdminLivres extends JPanel implements ActionListener {
     }
 
     // Fonction pour charger les données des livres depuis le fichier
-    private String[][] loadDataFromLivres() {
+    private String[][] chargerLesDonneesDesLivres() {
         ArrayList<String[]> dataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader("db/livres.txt"))) {
             String line;
@@ -212,10 +212,10 @@ public class AdminLivres extends JPanel implements ActionListener {
     }
 
     // Fonction pour rafraîchir le tableau après modification
-    public void refreshTable() {
+    public void actualiserLeTableau() {
         DefaultTableModel model = (DefaultTableModel) j.getModel();
         model.setRowCount(0);
-        String[][] data = loadDataFromLivres();
+        String[][] data = chargerLesDonneesDesLivres();
         for (String[] row : data) {
             model.addRow(row);
         }
@@ -324,7 +324,7 @@ public class AdminLivres extends JPanel implements ActionListener {
                 }
 
                 db.mettreAJourQuantiteLivre(livreId, -quantite); // Mettre à jour la quantité
-                refreshTable(); // Rafraîchir le tableau
+                actualiserLeTableau(); // Rafraîchir le tableau
                 livreF.setText(""); // Réinitialiser les champs
                 livreQuantiterF.setText("");
                 JOptionPane.showMessageDialog(this,
@@ -381,7 +381,7 @@ public class AdminLivres extends JPanel implements ActionListener {
                 }
 
                 db.mettreAJourQuantiteLivre(livreId, quantite); // Mettre à jour la quantité
-                refreshTable(); // Rafraîchir le tableau
+                actualiserLeTableau(); // Rafraîchir le tableau
                 livreF.setText(""); // Réinitialiser les champs
                 livreQuantiterF.setText("");
                 JOptionPane.showMessageDialog(this,
@@ -425,7 +425,7 @@ public class AdminLivres extends JPanel implements ActionListener {
                     }
                     if (!db.livreExiste(livre)) {
                         db.ajouterLivre(livre); // Ajouter le livre à la base de données
-                        refreshTable(); // Rafraîchir le tableau
+                        actualiserLeTableau(); // Rafraîchir le tableau
                         livreCF.setText(""); // Réinitialiser les champs
                         auteurF.setText("");
                         genreF.setText("");
@@ -474,7 +474,7 @@ public class AdminLivres extends JPanel implements ActionListener {
 
             if (db.livreExiste(livreId)) {
                 db.supprimerLivre(livreId); // Supprimer le livre de la base de données
-                refreshTable(); // Rafraîchir le tableau
+                actualiserLeTableau(); // Rafraîchir le tableau
                 livreIDF.setText(""); // Réinitialiser les champs
                 JOptionPane.showMessageDialog(this,
                         "Le livre a été supprimé avec succès.",

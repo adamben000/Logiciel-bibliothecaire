@@ -34,7 +34,7 @@ public class ConnexionGUI extends JPanel {
     private Database db = new Database();
 
     // Constructeur qui initialise les composants et configure les actions
-    public ConnexionGUI(CardLayout cardLayout, JPanel cardPanel, JFrame frame) {
+    public ConnexionGUI(CardLayout cardLayout, JPanel cardPanel, JFrame cadre) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
         setLayout(gridLayout); // Utiliser GridBagLayout pour la mise en page
@@ -111,10 +111,10 @@ public class ConnexionGUI extends JPanel {
                             }
                         }
 
-                        cardPanel.add(new UtilisateurGUI(cardLayout, cardPanel, frame, nomUtilisateur), "Utilisateur");
-                        frame.setSize(1003, 600); // Modifier la taille de la fenêtre
-                        frame.setTitle("Utilisateurs-Librairie"); // Titre de la fenêtre
-                        frame.setLocationRelativeTo(null); // Centrer la fenêtre
+                        cardPanel.add(new UtilisateurGUI(cardLayout, cardPanel, cadre, nomUtilisateur), "Utilisateur");
+                        cadre.setSize(1003, 600); // Modifier la taille de la fenêtre
+                        cadre.setTitle("Utilisateurs-Librairie"); // Titre de la fenêtre
+                        cadre.setLocationRelativeTo(null); // Centrer la fenêtre
                         cardLayout.show(cardPanel, "Utilisateur"); // Afficher la vue utilisateur
 
                         // Actualiser les informations pour l'utilisateur
@@ -122,7 +122,7 @@ public class ConnexionGUI extends JPanel {
                         for (Component component1 : components1) {
                             if (component1 instanceof UtilisateurGUI) {
                                 UtilisateurGUI Utilisateur = (UtilisateurGUI) component1;
-                                Utilisateur.refreshTable();
+                                Utilisateur.actualiserLeTableau();
                                 Utilisateur.empruntDetection();
                             }
                         }
@@ -147,7 +147,7 @@ public class ConnexionGUI extends JPanel {
 
         // Action lorsque le bouton de création de compte est cliqué
         creationDeCompteBouton.addActionListener(e -> {
-            frame.setTitle("Registre-Librairie");
+            cadre.setTitle("Registre-Librairie");
             cardLayout.show(cardPanel, "Registre"); // Passer à la vue de création de compte
         });
     }
