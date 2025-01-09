@@ -10,8 +10,8 @@ Diagramme de classes:
 Image: 
 ![image](https://github.com/user-attachments/assets/26e048df-41a7-4019-ac26-47f8e10a3406)
 
-Mira:
-https://miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
+Miro:
+https://Miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
 
 ### Problématiques Résolues
 
@@ -69,8 +69,8 @@ Image Page Livres:
 Image Page Emprunts:
 ![image](https://github.com/user-attachments/assets/37f43682-96e4-4b57-a0e3-d9b0af411f30)
 
-Mira:
-https://miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
+Miro:
+https://Miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
 
 ## Interface Utilisateur
 
@@ -120,7 +120,7 @@ Validation des données obligatoires (titre, auteur, etc.).
 Image Diagramme Grantt:
 ![image](https://github.com/user-attachments/assets/63df534d-a31b-4118-b143-02cfa603d988)
 
-Mira:
-https://miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
+Miro:
+https://Miro.com/welcomeonboard/SkJaYWtqaERzMFV6Wm1WdUdCUkhad2EwN1QxME43eVJOSUoyZjM2R2RweXBsVW55cWZRc1ZONEgwY25ScGlxWmFXbGNiN3VmMFhkamhpaEZjSEVwTzROZjZSSjBzMDNHRTB6YTNOWlRkN0tXckZkM1VhVWF2SlpwVDNhTGRXTG0hZQ==?share_link_id=850374970762
 ---
 Projet développé dans le cadre du cours ICS4U.
